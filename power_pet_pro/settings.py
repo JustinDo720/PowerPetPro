@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'djoser',
     'rest_framework_simplejwt',
     'corsheaders',
+    'users',
+    'django_extensions',
 
 
     # Default Django Apps
@@ -188,9 +190,16 @@ REST_FRAMEWORK = {
     }
 }
 
-# Email Config For Sending Emails
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.getenv('POWER_PET_PRO_EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('POWER_PET_PRO_EMAIL_PASSWORD')
-EMAIL_USE_TLS = True
+# # Email Config For Sending Emails
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_HOST_USER = os.getenv('POWER_PET_PRO_EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.getenv('POWER_PET_PRO_EMAIL_PASSWORD')
+# EMAIL_USE_TLS = True
+
+# Django Extensions
+SHELL_PLUS_PRE_IMPORTS = [
+    'from power_pet_pro_app.models import Profile, Category, Products',
+    'from django.contrib.auth.models import User',
+    'from faker import Faker'
+]
