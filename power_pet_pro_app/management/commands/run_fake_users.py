@@ -38,6 +38,7 @@ class Command(BaseCommand):
             # we will make up our random number
             phone_number = int(''.join([str(random.randint(1, 9)) for turns in range(10)]))
 
+            # Make sure to .save() each object
             try:
                 # We are going to set this user as superuser
                 if name.lower() == 'justi':
