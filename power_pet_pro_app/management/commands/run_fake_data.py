@@ -93,18 +93,21 @@ class Command(BaseCommand):
         # Note that products itself is the dictionary so access the key 'products' to grab the list of items
         for category, products in STORE.items():
             # lets register the categories
-            new_category = Category.objects.create(name=category)
+            category_slug = category.lower().replace(' ', '-')
+            new_category = Category.objects.create(name=category, slug=category_slug)
             new_category.save()
-            print('Registered Category: ' + new_category)
+            print('Registered Category: ' + category)
 
             # lets build our products
             for product in products['products']:
+                product_slug = product.lower().replace(' ', '-')
                 new_product = Product.objects.create(
                     category=new_category,
                     name=product,
+                    slug=product_slug,
                     description=fake.paragraph(nb_sentences=5, variable_nb_sentences=False),
                     price=random.randint(1, 300),
                 )
                 new_product.save()
-                print('New product added: ' + new_product)
+                print('New product added: ' + product)
 

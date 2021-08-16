@@ -1,9 +1,22 @@
 from django.db import models
 from io import BytesIO
 from django.core.files import File
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser, UserManager
 
 # Create your models here.
+
+
+class UserAccountManager(UserManager):
+
+    # we want to override create_user method: create_user() missing 1 required positional argument: 'username'
+    def create_user(self, email=None, password=None, **extra_fields):
+        # Here we are setting email in the username field which means that it will accept the email as a username
+        return super().create_user(email, email=email, password=password, **extra_fields)
+
+    # we want to override createsuperuser method: create_user() missing 1 required positional argument: 'username'
+    def create_superuser(self, email=None, password=None, **extra_fields):
+        # Same goes for the superuser
+        return super().create_superuser(email, email=email, password=password, **extra_fields)
 
 
 class Profile(models.Model):

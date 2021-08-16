@@ -185,10 +185,9 @@ SIMPLE_JWT = {
 
 # Restframework
 REST_FRAMEWORK = {
-    # 'DEFAULT_PERMISSION_CLASSES': [
-    #     'rest_framework.permissions.IsAuthenticated',
-    #
-    # ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -196,12 +195,22 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
 }
 
-# # Email Config For Sending Emails
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_HOST_USER = os.getenv('POWER_PET_PRO_EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = os.getenv('POWER_PET_PRO_EMAIL_PASSWORD')
-# EMAIL_USE_TLS = True
+# Djoser Settings
+DJOSER = {
+    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'SEND_ACTIVATION_EMAIL': True,
+    'LOGIN_FIELD': "email",
+    'SERIALIZERS': {},
+}
+
+# Email Config For Sending Emails
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = os.getenv('POWER_PET_PRO_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('POWER_PET_PRO_EMAIL_PASSWORD')
+EMAIL_USE_TLS = True
 
 # Django Extensions
 SHELL_PLUS_PRE_IMPORTS = [
