@@ -1,3 +1,4 @@
 venv
 /__pycache__/
 db.sqlite3
+power_pet_pro_app/media/

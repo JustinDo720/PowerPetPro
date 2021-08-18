@@ -13,11 +13,18 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    category_name = serializers.SerializerMethodField('get_category_name')
+
+    def get_category_name(self, product):
+        category = Category.objects.get(id=product.category.id)
+        return category.name
+
     class Meta:
         model = Product
         fields = (
             'id',
             'category',
+            'category_name',
             'name',
             'description',
             'price',

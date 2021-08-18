@@ -2,6 +2,7 @@ from django.db import models
 from io import BytesIO
 from django.core.files import File
 from django.contrib.auth.models import User, AbstractUser, UserManager
+from PIL import Image
 
 # Create your models here.
 
