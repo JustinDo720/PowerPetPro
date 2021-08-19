@@ -5,7 +5,7 @@ from .serializers import ProductSerializer, CategorySerializer, ProfileSerialize
 from .models import Product, Category, Profile
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 # Create your views here.
 
 
@@ -41,3 +41,4 @@ class ProfileList(ListAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     pagination_class = PageNumberPagination
+    permission_classes = (IsAuthenticated,)

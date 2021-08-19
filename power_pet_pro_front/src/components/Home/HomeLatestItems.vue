@@ -7,32 +7,38 @@
     <div class="columns">
       <div class="column" v-for="(product, index) in latestProducts.results" :key="index">
         <div class="card">
-          <div class="card-image">
+          <div class="card-image" v-if="product.get_thumbnail">
             <figure class="image is-4by3">
-              <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
+              <!-- We need to bind src to use product in the tag. Dont use image or get_image use thumbnail -->
+              <img :src="product.get_thumbnail" alt="Product image">
             </figure>
           </div>
           <div class="card-content">
             <div class="media">
-              <div class="media-left">
-                <figure class="image is-48x48">
-                  <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                </figure>
-              </div>
               <div class="media-content">
                 <p class="title is-4">{{ product.name }}</p>
+                <p class="subtitle is-6">{{ product.category_name }}</p>
               </div>
             </div>
 
             <div class="content">
-              {{ product.description }}
+              {{ product.limited_description }}...
+              <a href="#">
+                View Details
+              </a>
             </div>
             <footer class="card-footer">
-               <p>Category: {{ product.category_name }}</p>
+              <button class="button is-primary">
+                <span class="icon is-small">
+                  <i class="fas fa-plus"></i>
+                </span>
+                <span>
+                  Add To Cart
+                </span>
+              </button>
             </footer>
           </div>
         </div>
-        {{ product }}
       </div>
     </div>
   </div>

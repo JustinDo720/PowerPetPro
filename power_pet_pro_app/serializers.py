@@ -14,10 +14,16 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     category_name = serializers.SerializerMethodField('get_category_name')
+    limited_description = serializers.SerializerMethodField('get_limited_description')
 
     def get_category_name(self, product):
         category = Category.objects.get(id=product.category.id)
         return category.name
+
+
+    def get_limited_description(self, product):
+        limited_description = product.description[:125]  # 50 characters
+        return limited_description
 
     class Meta:
         model = Product
@@ -27,6 +33,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'category_name',
             'name',
             'description',
+            'limited_description',
             'price',
             'date_added',
             # These are for the images
