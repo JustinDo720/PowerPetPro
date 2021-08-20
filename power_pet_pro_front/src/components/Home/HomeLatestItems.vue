@@ -22,12 +22,10 @@
             </div>
 
             <div class="content">
-              {{ product.limited_description }}...
-              <a href="#">
-                View Details
-              </a>
+              ${{ product.price }}
             </div>
-            <footer class="card-footer">
+            <div class="is-centered">
+              <footer class="card-footer ">
               <button class="button is-primary">
                 <span class="icon is-small">
                   <i class="fas fa-plus"></i>
@@ -37,6 +35,8 @@
                 </span>
               </button>
             </footer>
+            </div>
+
           </div>
         </div>
       </div>
