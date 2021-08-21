@@ -60,13 +60,13 @@ class ProductDetail(APIView):
     def get_object(self, category_slug, product_slug):
         # lets check if the obj exist
         try:
-            return Product.objects.filter(category_slug=category_slug).get(slug=product_slug)
+            return Product.objects.filter(category__slug=category_slug).get(slug=product_slug)
         except Product.DoesNotExist:
             raise Http404
 
     # time to override the get function: make sure to pass in the slugs
-    def get(self, category_slug, product_slug, format=None):
+    def get(self, request, category_slug, product_slug, format=None):
         # we need to get the product so
         product = self.get_object(category_slug, product_slug)  # so we are using that get_obj function passing in args
-        serializer = ProductSerialzier(product, many=False)
+        serializer = ProductSerializer(product, many=False)
         return Response(serializer.data)
