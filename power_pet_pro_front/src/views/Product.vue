@@ -25,7 +25,7 @@
             <input type="number" class="input" v-model="quantity">
           </div>
           <div class="control">
-            <button class="button is-primary">
+            <button class="button is-primary" @click="addToCart()">
               <span class="icon is-small">
                 <i class="fas fa-plus"></i>
               </span>
@@ -56,11 +56,22 @@ export default{
       const category_slug = this.$route.params.category_slug
       const product_slug = this.$route.params.product_slug
       axios.get(`product_detail/${category_slug}/${product_slug}/`).then((response)=>{
-        console.log(response.data)
         this.product = response.data
       })
+    },
+    addToCart(){
+      if (isNaN(this.quantity) || this.quantity < 1){
+        this.quantity = 1
+      }
+
+      const item={
+        product: this.product,
+        quantity: this.quantity,
+      }
+      this.$store.commit('addToCart', {item:item})
 
     }
+
   },
   created(){
     // getProduct will grab the route params --> Category Slug and Product Slug

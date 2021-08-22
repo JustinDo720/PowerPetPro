@@ -18,5 +18,8 @@ export default {
     MessageBar,
     Footer,
   },
+  beforeCreate(){
+    this.$store.commit('initializeStore')
+  },
 };
 </script>

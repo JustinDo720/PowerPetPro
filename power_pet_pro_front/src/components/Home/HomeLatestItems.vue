@@ -36,7 +36,7 @@
             <!-- We just need to wrap the card with columns and the inner html is a column itself and then boom center -->
             <div class="columns is-multiline">
               <footer class="card-footer column has-text-centered is-half is-offset-one-quarter">
-                <button class="button is-primary">
+                <button class="button is-primary" @click="addToCart(product)">
                   <span class="icon is-small">
                     <i class="fas fa-plus"></i>
                   </span>
@@ -74,6 +74,9 @@ export default {
       // what we want to do is push to our product url. the product_abs_url is like: /category_slug/product_slug/
       this.$router.push(product_url)
     },
+    addToCart(storeItem){
+      this.$store.commit('addToCart', {item: storeItem})
+    }
   },
   mounted() {
     axios.get(this.apiURL).then((response) => {

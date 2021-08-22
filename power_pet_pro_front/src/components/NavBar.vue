@@ -73,7 +73,7 @@
         </div>
         <div class="navbar-item">
           <button class="button is-medium">
-            <i class="fas fa-shopping-bag"></i>
+            <i class="fas fa-shopping-bag"></i> ({{ cartLength }})
           </button>
         </div>
       </div>
@@ -82,6 +82,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
   name: "NavBar",
   data() {
@@ -90,6 +91,17 @@ export default {
       showAccount: false,
     };
   },
+  computed:{
+    ...mapState(['cart']),
+    cartLength(){
+      // return this.$store.state.cart.items.length
+      let totalLength = 0
+      for(let i=0; i < this.cart.items.length; i++){
+        totalLength += this.cart.items[i].quantity
+      }
+      return totalLength
+    }
+  }
 };
 </script>
 
