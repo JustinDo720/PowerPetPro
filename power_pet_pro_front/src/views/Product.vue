@@ -40,6 +40,8 @@
 
 <script>
 import axios from "axios";
+// toast is like messages in django + bootstrap
+import { toast } from 'bulma-toast';
 
 export default{
   name:'Product',
@@ -50,14 +52,17 @@ export default{
     }
   },
   methods:{
-    getProduct(){
+    // we want to make sure getProduct is async before setIsLoading false will come before our axios request
+    async getProduct(){
+      this.$store.commit('setIsLoading', true)
       // These params are set in router using /:category_slug/:product_slug
       // The reason why we want these slugs is because we will use them to access our ProductDetail API
       const category_slug = this.$route.params.category_slug
       const product_slug = this.$route.params.product_slug
-      axios.get(`product_detail/${category_slug}/${product_slug}/`).then((response)=>{
+      await axios.get(`product_detail/${category_slug}/${product_slug}/`).then((response)=>{
         this.product = response.data
       })
+      this.$store.commit('setIsLoading', false)
     },
     addToCart(){
       if (isNaN(this.quantity) || this.quantity < 1){
@@ -70,6 +75,15 @@ export default{
       }
       this.$store.commit('addToCart', {item:item})
 
+      // once we add our item then lets toast
+      toast({
+        message : 'The Product was added to your cart',
+        type : 'is-success',
+        dismissible : true,
+        pauseOnHover : true,
+        duration : 2000, // milliseconds
+        position : 'bottom-right'
+      })
     }
 
   },

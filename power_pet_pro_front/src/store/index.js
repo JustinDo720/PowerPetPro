@@ -41,12 +41,16 @@ export default createStore({
       if(exists.length){ // if the length is bigger than 0 which means the product is already there then we increase quantity
         console.log(`Before Quantity: ${exists[0].quantity} & Item Quantity: ${item.item.quantity}`)
         exists[0].quantity = parseInt(exists[0].quantity) + parseInt(item.item.quantity)
-        console.log(`After Quantity: ${exists[0].quantity} & Item Quantity: ${item.quantity}`)
+        console.log(`After Quantity: ${exists[0].quantity} & Item Quantity: ${item.item.quantity}`)
       }else{
         state.cart.items.push(item)
       }
 
       localStorage.setItem('cart', JSON.stringify(state.cart))
+    },
+    // Now we could use setIsLoading for where we want to load usually before our api request because it takes some time
+    setIsLoading(state, status){
+      state.isLoading = status
     }
   },
   actions: {

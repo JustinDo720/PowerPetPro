@@ -73,7 +73,10 @@
         </div>
         <div class="navbar-item">
           <button class="button is-medium">
-            <i class="fas fa-shopping-bag"></i> ({{ cartLength }})
+            <span class="icon is-small">
+               <i class="fas fa-shopping-bag"></i>
+            </span>
+            <span>({{ cartLength }})</span>
           </button>
         </div>
       </div>

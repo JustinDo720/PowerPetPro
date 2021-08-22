@@ -75,7 +75,12 @@ export default {
       this.$router.push(product_url)
     },
     addToCart(storeItem){
-      this.$store.commit('addToCart', {item: storeItem})
+      // Remember Item has to be an obj or product and quantity because addToCart mutation checks for current items
+      let item ={
+        product: storeItem,
+        quantity: 1, // 1 is our default because in our Home page we only offer one item
+      }
+      this.$store.commit('addToCart', {item: item})
     }
   },
   mounted() {
