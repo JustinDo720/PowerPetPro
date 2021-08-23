@@ -5,7 +5,8 @@ from .serializers import ProductSerializer, CategorySerializer, ProfileSerialize
 from .models import Product, Category, Profile
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from django.http import Http404
 # Create your views here.
 
 
@@ -41,3 +42,31 @@ class ProfileList(ListAPIView):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     pagination_class = PageNumberPagination
+    permission_classes = (IsAuthenticated,)
+
+
+# class ProductDetail(APIView):     ## id format
+#     """
+#     List details about ONE specific product given the product id
+#     """
+#
+#     def get(self, request, product_id):
+#         product = Product.objects.get(id=product_id)
+#         serializer = ProductSerializer(product, many=False)
+#         return Response(serializer.data)
+
+# Slug
+class ProductDetail(APIView):
+    def get_object(self, category_slug, product_slug):
+        # lets check if the obj exist
+        try:
+            return Product.objects.filter(category__slug=category_slug).get(slug=product_slug)
+        except Product.DoesNotExist:
+            raise Http404
+
+    # time to override the get function: make sure to pass in the slugs
+    def get(self, request, category_slug, product_slug, format=None):
+        # we need to get the product so
+        product = self.get_object(category_slug, product_slug)  # so we are using that get_obj function passing in args
+        serializer = ProductSerializer(product, many=False)
+        return Response(serializer.data)

@@ -2,6 +2,8 @@ from django.db import models
 from io import BytesIO
 from django.core.files import File
 from django.contrib.auth.models import User, AbstractUser, UserManager
+from PIL import Image
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -35,7 +37,7 @@ class Profile(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True, blank=True)    # auto generated slug using slugify
 
     class Meta:
         # With ordering we will be able to see all the categories arranged
@@ -46,13 +48,28 @@ class Category(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return f'/{self.slug}'
+        return f'/{self.slug}/' # Missing trailing /
+
+    def _get_unique_slug(self):
+        slug = slugify(self.name)
+        unique_slug = slug
+        number = 1
+        while Category.objects.filter(slug=unique_slug).exists():
+            unique_slug = f'{slug}-{number}'    # This way we can have a unique slug for every category
+            number += 1
+        return unique_slug
+
+    # upon saving the Category
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._get_unique_slug()
+        super().save(*args, **kwargs)
 
 
 class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=255)
-    slug = models.SlugField()
+    slug = models.SlugField(unique=True, blank=True)
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     image = models.ImageField(upload_to='product_image/', blank=True, null=True)
@@ -97,9 +114,25 @@ class Product(models.Model):
 
         # We are going to use BytesIO to save our image as bytes
         thumb_io = BytesIO()
-        img.save(thumb_io, 'jpeg', quality=85)
+        img.save(thumb_io, 'png', quality=85)
 
         # We need to construct a File object ourselves
         thumbnail = File(thumb_io, name=image.name)
 
         return thumbnail
+
+    def _get_unique_slug(self):
+        slug = slugify(self.name)
+        unique_slug = slug
+        number = 1
+        while Product.objects.filter(slug=unique_slug).exists():
+            unique_slug = f'{slug}-{number}'    # This way we can have a unique slug for every product
+            number += 1
+        return unique_slug
+
+    # upon saving the Product
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._get_unique_slug()
+        super().save(*args, **kwargs)
+

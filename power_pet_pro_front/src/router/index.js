@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
+import Product from '../views/Product.vue'
 
 const routes = [
   {
@@ -16,6 +17,11 @@ const routes = [
   //   component: () =>
   //     import(/* webpackChunkName: "about" */ "../views/About.vue"),
   // },
+  {
+    path:'/product_detail/:category_slug/:product_slug/', // we have : to catch these values
+    name:'Product',
+    component: Product,
+  }
 ];
 
 const router = createRouter({
