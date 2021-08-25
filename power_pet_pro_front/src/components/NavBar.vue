@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar is-transparent extended-navbar has-shadow is-dark">
+  <nav class="navbar is-transparent extended-navbar has-shadow is-dark columns">
     <!-- Navbar Brand-->
     <div class="navbar-brand">
       <a href="/">
@@ -24,17 +24,36 @@
       <span aria-hidden="true"></span>
       <span aria-hidden="true"></span>
     </a>
-    <!-- Start Navbar aka left side -->
-    <div class="navbar-start">
-      <a class="navbar-item"> Shop </a>
-    </div>
     <!-- We are going to use is-active to trigger our burger -->
     <div
       id="navbarBurger"
       class="navbar-menu"
       v-bind:class="{ 'is-active': showMobileMenu }"
     >
-      <div class="navbar-item">
+        <!-- Start Navbar aka left side -->
+      <div class="navbar-start">
+          <button  class='button navbar-item is-large buttonTransparent' data-show="quickview" data-target="quickviewDefault">
+            <span class="icon is-small">
+              <i class="fas fa-bars"></i>
+            </span>
+          </button>
+      </div>
+
+      <div id="quickviewDefault" class="quickview">
+        <header class="quickview-header">
+          <p class="title">Quickview title</p>
+          <span class="delete" data-dismiss="quickview"></span>
+        </header>
+        <div class="quickview-body">
+          <div class="quickview-block">
+            ...
+          </div>
+        </div>
+        <footer class="quickview-footer">
+        </footer>
+      </div>
+
+      <div class="navbar-item column is-three-fifths">
         <div class="control has-icons-left has-icons-right">
           <input class="input is-rounded" type="text" placeholder="Search" />
           <span class="icon is-small is-left">
@@ -112,5 +131,9 @@ export default {
 .extended-navbar {
   font-size: 1.125rem;
   padding: 1rem 4rem;
+}
+.buttonTransparent{
+  background-color:transparent;
+  border: none;
 }
 </style>
