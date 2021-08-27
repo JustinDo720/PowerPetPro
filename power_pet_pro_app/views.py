@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django.http import Http404
+from rest_framework import status
 # Create your views here.
 
 
@@ -24,14 +25,15 @@ class ProductList(ListCreateAPIView):
     pagination_class = PageNumberPagination
 
 
-class CategoryList(ListCreateAPIView):
+class CategoryList(APIView):
     """
     List all of the categories in our database
     """
 
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    pagination_class = PageNumberPagination
+    def get(self, request):
+        categories = Category.objects.all() # Note that these categories are already ordered by name
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class ProfileList(ListAPIView):
@@ -57,6 +59,10 @@ class ProfileList(ListAPIView):
 
 # Slug
 class ProductDetail(APIView):
+    """
+    Provides details about a single product given the category_slug and product_slug
+    """
+
     def get_object(self, category_slug, product_slug):
         # lets check if the obj exist
         try:
@@ -70,3 +76,22 @@ class ProductDetail(APIView):
         product = self.get_object(category_slug, product_slug)  # so we are using that get_obj function passing in args
         serializer = ProductSerializer(product, many=False)
         return Response(serializer.data)
+
+
+class CategoryDetail(APIView):
+    """
+    Provides details about a single category given the category_slug
+    """
+
+    def get_object(self, category_slug):
+        try:
+            # return Category.objects.filter(slug=category_slug) <-- using filter gives queryset <- queryset no attr
+            return Category.objects.get(slug=category_slug)
+        except Category.DoesNotExist:
+            raise Http404
+
+    def get(self, request, category_slug, format=None):
+        category = self.get_object(category_slug)
+        serializer = CategorySerializer(category, many=False)
+        return Response(serializer.data)
+

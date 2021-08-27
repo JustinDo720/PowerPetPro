@@ -32,6 +32,7 @@
     >
         <!-- Start Navbar aka left side -->
       <div class="navbar-start">
+        <!-- quick view controller once they press this button it will open up our id=quickviewDeault -->
           <button  class='button navbar-item is-large buttonTransparent' data-show="quickview" data-target="quickviewDefault">
             <span class="icon is-small">
               <i class="fas fa-bars"></i>
@@ -39,14 +40,36 @@
           </button>
       </div>
 
+      <!-- Our quickview menu which will appear to the right once our button is clicked -->
       <div id="quickviewDefault" class="quickview">
         <header class="quickview-header">
-          <p class="title">Quickview title</p>
+          <!-- Using span allows you to be leveled -->
+          <span>
+            <h3 class="title is-3">
+              <strong>
+                Categories
+              </strong>
+            </h3>
+          </span>
           <span class="delete" data-dismiss="quickview"></span>
         </header>
         <div class="quickview-body">
           <div class="quickview-block">
-            ...
+            <aside class="menu ml-2 mt-2">
+              <p class="menu-label">
+                General
+              </p>
+              <ul class="menu-list">
+                <li v-for="(category, index) in store_categories" :key="index">
+                  <router-link :to="{name:'Category', params: {
+                    'category_slug' : category.get_absolute_url
+                  }}">
+                    {{ category.name }}
+                  </router-link>
+                </li>
+              </ul>
+
+            </aside>
           </div>
         </div>
         <footer class="quickview-footer">
@@ -105,12 +128,15 @@
 
 <script>
 import {mapState} from 'vuex'
+import axios from "axios";
+
 export default {
   name: "NavBar",
   data() {
     return {
       showMobileMenu: false,
       showAccount: false,
+      store_categories: [],
     };
   },
   computed:{
@@ -123,6 +149,14 @@ export default {
       }
       return totalLength
     }
+  },
+  created(){
+    // we want to grab our categories
+    axios.get('/category_list/').then((response)=>{
+      console.log(response.data)
+      this.store_categories = response.data // we are setting our store_categories array to data array
+
+    })
   }
 };
 </script>
