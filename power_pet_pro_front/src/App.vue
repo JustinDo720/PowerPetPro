@@ -1,8 +1,9 @@
 <template>
   <div id="nav">
     <MessageBar class="mb-3 p-4"></MessageBar>
-    <NavBar></NavBar>
-    <router-view />
+    <!-- Triggers a reload which helps bringing down the quickview -->
+    <NavBar :key="$route.fullPath"></NavBar>
+    <router-view :key="$route.fullPath"/>
     <div class="is-loading-bar has-text-centered" :class="{'is-loading': this.isLoading}">
       <div class="lds-dual-ring">
       </div>

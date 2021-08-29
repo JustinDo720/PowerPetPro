@@ -33,7 +33,9 @@
         <!-- Start Navbar aka left side -->
       <div class="navbar-start">
         <!-- quick view controller once they press this button it will open up our id=quickviewDeault -->
-          <button  class='button navbar-item is-large buttonTransparent' data-show="quickview" data-target="quickviewDefault">
+          <button  class='button navbar-item is-large buttonTransparent'
+                   data-show="quickview"
+                   data-target="quickviewDefault">
             <span class="icon is-small">
               <i class="fas fa-bars"></i>
             </span>
@@ -61,9 +63,10 @@
               </p>
               <ul class="menu-list">
                 <li v-for="(category, index) in store_categories" :key="index">
-                  <router-link :to="{name:'Category', params: {
-                    'category_slug' : category.get_absolute_url
-                  }}">
+                  <router-link data-dismiss='quickview'
+                               :to="{name:'Category', params: {
+                                      'category_slug' : category.get_absolute_url
+                                    }}">
                     {{ category.name }}
                   </router-link>
                 </li>
@@ -153,7 +156,6 @@ export default {
   created(){
     // we want to grab our categories
     axios.get('/category_list/').then((response)=>{
-      console.log(response.data)
       this.store_categories = response.data // we are setting our store_categories array to data array
 
     })

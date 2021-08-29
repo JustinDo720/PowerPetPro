@@ -81,6 +81,9 @@ class ProductDetail(APIView):
 class CategoryDetail(APIView):
     """
     Provides details about a single category given the category_slug
+        1) We need to retrieve the category
+        2) Use that category to access all the products that are under those categories
+        3) Return them as an array of items
     """
 
     def get_object(self, category_slug):
@@ -92,6 +95,7 @@ class CategoryDetail(APIView):
 
     def get(self, request, category_slug, format=None):
         category = self.get_object(category_slug)
-        serializer = CategorySerializer(category, many=False)
+        product_category = Product.objects.filter(category=category.id).all()
+        serializer = ProductSerializer(product_category, many=True)
         return Response(serializer.data)
 
