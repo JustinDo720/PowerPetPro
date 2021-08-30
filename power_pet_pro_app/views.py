@@ -99,3 +99,12 @@ class CategoryDetail(APIView):
         serializer = ProductSerializer(product_category, many=True)
         return Response(serializer.data)
 
+
+class LatestProducts(APIView):
+    """
+    List the first 5 items that are in our Products model
+    """
+    def get(self, request):
+        latest_products = Product.objects.all()[:5]     # 5 items [start:stop] stop excludes similar to range
+        serializer = ProductSerializer(latest_products, many=True)
+        return Response(serializer.data)
