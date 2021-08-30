@@ -1,12 +1,14 @@
 <template>
   <div id="nav">
-    <MessageBar></MessageBar>
+    <MessageBar class="mb-3 p-4"></MessageBar>
     <NavBar></NavBar>
-    <router-view />
-    <div class="is-loading-bar has-text-centered" :class="{'is-loading': this.isLoading}">
-      <div class="lds-dual-ring">
-
-      </div>
+    <!-- route.fullPath will trigger a reload once our router changes -->
+    <router-view :key="$route.fullPath" />
+    <div
+      class="is-loading-bar has-text-centered"
+      :class="{ 'is-loading': this.isLoading }"
+    >
+      <div class="lds-dual-ring"></div>
     </div>
     <Footer></Footer>
   </div>
@@ -16,7 +18,8 @@
 import NavBar from "./components/NavBar";
 import MessageBar from "./components/MessageBar";
 import Footer from "./components/Footer";
-import { mapState } from 'vuex';
+import { mapState } from "vuex";
+import bulmaQuickview from "bulma-quickview/src/js";
 
 export default {
   components: {
@@ -24,18 +27,22 @@ export default {
     MessageBar,
     Footer,
   },
-  computed:{
-    ...mapState(['isLoading'])
+  computed: {
+    ...mapState(["isLoading"]),
   },
-  beforeCreate(){
-    this.$store.commit('initializeStore')
+  beforeCreate() {
+    this.$store.commit("initializeStore");
+  },
+  mounted() {
+    var quickviews = bulmaQuickview.attach(); // quickviews now contains an array of all Quickview instances
   },
 };
 </script>
 
 <style lang="scss">
-@import '../node_modules/bulma';
-
+@import "../node_modules/bulma";
+@import "~bulma";
+@import "~bulma-quickview";
 
 .lds-dual-ring {
   display: inline-block;

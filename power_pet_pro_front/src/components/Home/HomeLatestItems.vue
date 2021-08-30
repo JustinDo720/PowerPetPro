@@ -3,50 +3,13 @@
     <h1 class="title is-size-2 has-text-centered">Latest Products</h1>
     <!-- This component shows the 5 latest products-->
     <div class="columns">
-      <div
-        class="column"
-        v-for="(product, index) in latestProducts.results"
+      <!-- Make sure the latestProducts have .results as this is an Generic ListCreateAPIView-->
+      <ProductBox
+        v-for="(product, index) in latestProducts"
         :key="index"
+        :product="product"
       >
-        <div class="card">
-          <div class="card-image" v-if="product.get_thumbnail">
-            <a href="#" @click="viewDetails(product.get_absolute_url)">
-              <figure class="image is-4by3">
-                <!-- We need to bind src to use product in the tag. Dont use image or get_image use thumbnail -->
-                <img :src="product.get_thumbnail" alt="Product image" />
-              </figure>
-            </a>
-
-          </div>
-          <div class="card-content has-text-centered">
-            <div class="media">
-              <div class="media-content">
-                <a href="#" @click="viewDetails(product.get_absolute_url)">
-                  <p class="title is-3" >{{ product.name }}</p>
-                </a>
-                <p class="subtitle is-6 tag is-light is-rounded mt-5">{{ product.category_name }}</p>
-              </div>
-            </div>
-
-            <div class="content">
-              <span class="subtitle is-4">
-                ${{ product.price }}
-              </span>
-            </div>
-            <!-- We just need to wrap the card with columns and the inner html is a column itself and then boom center -->
-            <div class="columns is-multiline">
-              <footer class="card-footer column has-text-centered is-half is-offset-one-quarter">
-                <button class="button is-primary" @click="addToCart(product)">
-                  <span class="icon is-small">
-                    <i class="fas fa-plus"></i>
-                  </span>
-                  <span> Add To Cart </span>
-                </button>
-              </footer>
-            </div>
-          </div>
-        </div>
-      </div>
+      </ProductBox>
     </div>
   </div>
 </template>
@@ -54,37 +17,20 @@
 <script>
 import { mapState } from "vuex";
 import axios from "axios";
+import ProductBox from "../ProductBox";
 
 export default {
   name: "HomeLatestItems",
-  data() {
-    return {
-      // NOTE: http:// is necessary or else Uncaught (in promise) Error: Network Error
-      apiURL: "http://localhost:8000/product_list/",
-    };
+  components: { ProductBox },
+  props: {
+    ProductBox,
   },
   computed: {
     ...mapState(["latestProducts"]),
   },
-  methods:{
-    viewDetails(product_abs_url){
-      console.log(product_abs_url)
-      let product_url = '/product_detail' + product_abs_url
-      console.log(product_url)
-      // what we want to do is push to our product url. the product_abs_url is like: /category_slug/product_slug/
-      this.$router.push(product_url)
-    },
-    addToCart(storeItem){
-      // Remember Item has to be an obj or product and quantity because addToCart mutation checks for current items
-      let item ={
-        product: storeItem,
-        quantity: 1, // 1 is our default because in our Home page we only offer one item
-      }
-      this.$store.commit('addToCart', {item: item})
-    }
-  },
   mounted() {
-    axios.get(this.apiURL).then((response) => {
+    // We just need to grab product_list page 1 and that already has 5 products given our Pagination
+    axios.get("product_list/latest_products").then((response) => {
       this.$store.commit("grabLatestProducts", {
         latestProductsProxy: response.data,
       });
