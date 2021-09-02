@@ -82,7 +82,9 @@
 
       <div class="navbar-item column is-three-fifths">
         <div class="control has-icons-left has-icons-right">
-          <input class="input is-rounded" type="text" placeholder="Search" />
+          <input class="input is-rounded" type="text"
+                 placeholder="Search" v-model="searchTerm"
+                 @keydown.enter="addSearch"/>
           <span class="icon is-small is-left">
             <i class="fas fa-search"></i>
           </span>
@@ -141,6 +143,7 @@ export default {
       showMobileMenu: false,
       showAccount: false,
       store_categories: [],
+      searchTerm: '',
     };
   },
   computed: {
@@ -153,6 +156,13 @@ export default {
       }
       return totalLength;
     },
+  },
+  methods:{
+    async addSearch(){
+      await this.$store.commit('addSearch', {searchTerm: this.searchTerm})
+      this.$router.push({'name':'Search'})
+      this.searchTerm = ''
+    }
   },
   created() {
     // we want to grab our categories

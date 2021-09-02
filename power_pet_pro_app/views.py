@@ -8,6 +8,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django.http import Http404
 from rest_framework import status
+from rest_framework.decorators import api_view
+from django.db.models import Q
 # Create your views here.
 
 
@@ -108,3 +110,16 @@ class LatestProducts(APIView):
         latest_products = Product.objects.all()[:5]     # 5 items [start:stop] stop excludes similar to range
         serializer = ProductSerializer(latest_products, many=True)
         return Response(serializer.data)
+
+
+@api_view(['POST']) # when making an api view you have to specify which methods you want so
+def search(request):
+    query = request.data.get('query', '')
+
+    if query:
+        # We could make some big queries like containing certain words from our query
+        products = Product.objects.filter(Q(name__icontains=query) | Q(description__icontains=query))
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+    else:
+        return Response({'products': []})

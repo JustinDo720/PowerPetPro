@@ -10,6 +10,7 @@ export default createStore({
     isAuthenticated: false,
     accessToken: "",
     isLoading: false, // We are going to add a loading bar for things that are loading
+    searchTerm: "",
   },
   mutations: {
     // mutations have state as their parameters as they're the only ones that could actually change state
@@ -60,6 +61,9 @@ export default createStore({
     setIsLoading(state, status) {
       state.isLoading = status;
     },
+    addSearch(state, searchTerm){
+      state.searchTerm = searchTerm.searchTerm;
+    }
   },
   actions: {
     // actions have context to access things like states but they can't change them unless you perform action (commit)
