@@ -71,7 +71,7 @@ export default {
         product: this.product,
         quantity: this.quantity,
       };
-      this.$store.commit("addToCart", { item: item });
+      this.$store.commit("addToCart", { item_object: item });
 
       // once we add our item then lets toast
       toast({

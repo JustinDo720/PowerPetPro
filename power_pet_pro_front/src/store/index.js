@@ -30,32 +30,24 @@ export default createStore({
       }
     },
     // Let's go ahead and make a function that changes the cart items
-    addToCart(state, item) {
-      // check if item exist in cart if so we will just increase quantity
-      const exists = state.cart.items.filter(
-        (cart_item) => cart_item.id === item.id
-      );
+    addToCart(state, item_object) {
+      let item = item_object.item_object // this will allow us to just access products or quantity must easier
 
-      // We need to make sure that exists[0].quantity is a number we could add or else we get NaN
-      if (exists[0].quantity === null) {
-        exists[0].quantity = 0; // setting exists to 0 will give us a number to add with quantity
+      // We want to check if the product exist using the ids.
+      const exists = state.cart.items.filter(cart_item => cart_item.product.id === item.product.id)
+      // if our exists has a length > 0 that means the product exist and we need to handle that
+      if(exists.length){
+        // each time the product exists we are incrementing our quantity for a specific product instead of adding same
+        exists[0].quantity = parseInt(exists[0].quantity) + parseInt(item.quantity)
+      }else{
+        // this is a new product so we want to just push this to our cart
+        state.cart.items.push(item)
       }
 
-      if (exists.length) {
-        // if the length is bigger than 0 which means the product is already there then we increase quantity
-        console.log(
-          `Before Quantity: ${exists[0].quantity} & Item Quantity: ${item.item.quantity}`
-        );
-        exists[0].quantity =
-          parseInt(exists[0].quantity) + parseInt(item.item.quantity);
-        console.log(
-          `After Quantity: ${exists[0].quantity} & Item Quantity: ${item.item.quantity}`
-        );
-      } else {
-        state.cart.items.push(item);
-      }
-
+      // regardless of exists, we need to update our localstorage cart with state card for initializeStore
       localStorage.setItem("cart", JSON.stringify(state.cart));
+      console.log(JSON.parse(localStorage.getItem("cart")));
+
     },
     // Now we could use setIsLoading for where we want to load usually before our api request because it takes some time
     setIsLoading(state, status) {

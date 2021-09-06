@@ -120,12 +120,15 @@
           </div>
         </div>
         <div class="navbar-item">
-          <button class="button is-medium">
-            <span class="icon is-small">
-              <i class="fas fa-shopping-bag"></i>
-            </span>
-            <span>({{ cartLength }})</span>
-          </button>
+          <router-link :to="{name:'Cart'}">
+              <button class="button is-medium">
+              <span class="icon is-small">
+                <i class="fas fa-shopping-bag"></i>
+              </span>
+              <span>({{ cartLength }})</span>
+            </button>
+          </router-link>
+
         </div>
       </div>
     </div>

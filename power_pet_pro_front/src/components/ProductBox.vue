@@ -54,7 +54,7 @@ export default {
         product: storeItem,
         quantity: 1, // 1 is our default because in our Home page we only offer one item
       };
-      this.$store.commit("addToCart", { item: item });
+      this.$store.commit("addToCart", { item_object: item });
     },
   },
 };
