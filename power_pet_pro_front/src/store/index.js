@@ -46,7 +46,6 @@ export default createStore({
 
       // regardless of exists, we need to update our localstorage cart with state card for initializeStore
       localStorage.setItem("cart", JSON.stringify(state.cart));
-      console.log(JSON.parse(localStorage.getItem("cart")));
 
     },
     // Now we could use setIsLoading for where we want to load usually before our api request because it takes some time
@@ -55,7 +54,7 @@ export default createStore({
     },
     addSearch(state, searchTerm){
       state.searchTerm = searchTerm.searchTerm;
-    }
+    },
   },
   actions: {
     // actions have context to access things like states but they can't change them unless you perform action (commit)
