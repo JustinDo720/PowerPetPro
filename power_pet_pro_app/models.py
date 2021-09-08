@@ -105,7 +105,7 @@ class Product(models.Model):
             else:
                 return ''
 
-    def make_thumbnail(self, image, size=(300, 200)):
+    def make_thumbnail(self, image, size=(300, 300)):
         img = Image.open(image)
         # We are going to convert to RGB to make sure everything is fine
         img.convert('RGB')
@@ -132,7 +132,9 @@ class Product(models.Model):
 
     # upon saving the Product
     def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        # Making sure to run slug if slug wasn't put in (This makes an automatic slug)
         if not self.slug:
             self.slug = self._get_unique_slug()
-        super().save(*args, **kwargs)
 

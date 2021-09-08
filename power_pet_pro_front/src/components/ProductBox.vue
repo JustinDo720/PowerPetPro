@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="column has-text-centered">
+    <div class="column has-text-centered is-narrow">
       <div class="box">
         <a href="#" @click="viewDetails(product.get_absolute_url)">
           <figure class="image is-5by4 mb-4">
@@ -19,9 +19,7 @@
             class="
               card-footer
               column
-              has-text-centered
-              is-half is-offset-one-quarter
-            "
+              has-text-centered"
           >
             <button class="button is-primary" @click="addToCart(product)">
               <span class="icon is-small">
@@ -56,7 +54,7 @@ export default {
         product: storeItem,
         quantity: 1, // 1 is our default because in our Home page we only offer one item
       };
-      this.$store.commit("addToCart", { item: item });
+      this.$store.commit("addToCart", { item_object: item });
     },
   },
 };
