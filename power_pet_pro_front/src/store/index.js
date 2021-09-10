@@ -11,6 +11,7 @@ export default createStore({
     accessToken: "",
     isLoading: false, // We are going to add a loading bar for things that are loading
     searchTerm: "",
+    testMessage: {},
   },
   mutations: {
     // mutations have state as their parameters as they're the only ones that could actually change state
