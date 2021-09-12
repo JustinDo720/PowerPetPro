@@ -5,7 +5,7 @@ from .serializers import ProductSerializer, CategorySerializer, ProfileSerialize
 from .models import Product, Category, Profile
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
 from django.http import Http404
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -123,3 +123,16 @@ def search(request):
         return Response(serializer.data)
     else:
         return Response({'products': []})
+
+
+# Admin use only
+class PostProduct(APIView):
+    permission_classes = (IsAdminUser,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -126,15 +126,12 @@ class Product(models.Model):
         unique_slug = slug
         number = 1
         while Product.objects.filter(slug=unique_slug).exists():
-            unique_slug = f'{slug}-{number}'    # This way we can have a unique slug for every product
+            unique_slug = f'{slug}-{number}'
             number += 1
         return unique_slug
 
     # upon saving the Product
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        # Making sure to run slug if slug wasn't put in (This makes an automatic slug)
         if not self.slug:
             self.slug = self._get_unique_slug()
-
+        super().save(*args, **kwargs)

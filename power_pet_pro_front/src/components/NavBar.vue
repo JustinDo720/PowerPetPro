@@ -113,8 +113,13 @@
             </div>
             <div class="dropdown-menu" id="dropdown-menu3" role="menu">
               <div class="dropdown-content">
-                <a href="#" class="dropdown-item"> Log In </a>
-                <a href="#" class="dropdown-item"> Create Account </a>
+                <router-link :to="{name:'Login'}" >
+                  <a class="dropdown-item" @click="showAccount = !showAccount"> Log In </a>
+                </router-link>
+                <router-link  :to="{name:'Register'}">
+                  <a class="dropdown-item" @click="showAccount = !showAccount"> Create Account </a>
+                </router-link>
+
               </div>
             </div>
           </div>
@@ -144,9 +149,9 @@ export default {
   data() {
     return {
       showMobileMenu: false,
-      showAccount: false,
       store_categories: [],
       searchTerm: '',
+      showAccount: false
     };
   },
   computed: {
@@ -165,7 +170,7 @@ export default {
       await this.$store.commit('addSearch', {searchTerm: this.searchTerm})
       this.$router.push({'name':'Search'})
       this.searchTerm = ''
-    }
+    },
   },
   created() {
     // we want to grab our categories

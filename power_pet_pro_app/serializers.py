@@ -20,10 +20,12 @@ class ProductSerializer(serializers.ModelSerializer):
         category = Category.objects.get(id=product.category.id)
         return category.name
 
-
     def get_limited_description(self, product):
-        limited_description = product.description[:125]  # 50 characters
-        return limited_description
+        if product.description:
+            limited_description = product.description[:125]  # 50 characters
+            return limited_description
+        else:
+            return ''
 
     class Meta:
         model = Product

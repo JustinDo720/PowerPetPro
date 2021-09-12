@@ -39,7 +39,7 @@ export default createStore({
       // if our exists has a length > 0 that means the product exist and we need to handle that
       if(exists.length){
         // each time the product exists we are incrementing our quantity for a specific product instead of adding same
-        exists[0].quantity = parseInt(exists[0].quantity) + parseInt(item.quantity)
+        exists[0].quantity = parseInt(exists[0].quantity) + parseInt(item.quantity) // exists[0].quantity = total quant
       }else{
         // this is a new product so we want to just push this to our cart
         state.cart.items.push(item)

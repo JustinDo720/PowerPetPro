@@ -60,7 +60,8 @@ export default{
         if(this.cart.items[item_index].quantity >= 2){
           totalPrice += (this.cart.items[item_index].quantity * this.cart.items[item_index].product.price)
         }else{
-          totalPrice += this.cart.items[item_index].product.price
+          // Since we are doing calculations we need the number form. Price is in string format
+          totalPrice += Number(this.cart.items[item_index].product.price)
         }
       }
       // Once we finish to need to make sure we update our localstorage
