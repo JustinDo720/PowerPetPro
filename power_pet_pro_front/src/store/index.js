@@ -8,7 +8,9 @@ export default createStore({
       items: [],
     },
     isAuthenticated: false,
+    username:"",
     accessToken: "",
+    refreshToken: "",
     isLoading: false, // We are going to add a loading bar for things that are loading
     searchTerm: "",
     testMessage: {},
@@ -56,9 +58,40 @@ export default createStore({
     addSearch(state, searchTerm){
       state.searchTerm = searchTerm.searchTerm;
     },
+    loginUser(state, {username, accessToken, refreshToken}){
+      state.username = username
+      state.accessToken = accessToken
+      state.refreshToken = refreshToken
+      console.log(state.accessToken, state.refreshToken)
+    }
   },
   actions: {
     // actions have context to access things like states but they can't change them unless you perform action (commit)
+    registerUser(context, {username, email, password}){
+      axios.post('/auth/users/',{
+        'username': username,
+        'email': email,
+        'password': password
+      })
+    },
+    loginUser(context, {username, email, password}){
+      axios.post('auth/jwt/create/',{
+        username: username,
+        email: email,
+        password: password
+      }).then((response)=>{
+        context.commit('loginUser',{
+          username: username,
+          accessToken: response.data.access,
+          refreshToken: response.data.refresh
+        })
+      })
+    }
   },
   modules: {},
+  getters: {
+    isAuth(state){
+      return state.accessToken !== ''
+    }
+  },
 });

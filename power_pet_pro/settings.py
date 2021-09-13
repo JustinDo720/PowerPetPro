@@ -202,16 +202,22 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_ACTIVATION_EMAIL': True,
+    'SEND_CONFIRMATION_EMAIL': False,
+    'SEND_ACTIVATION_EMAIL': False,
     'LOGIN_FIELD': "email",
-    'SERIALIZERS': {},
+    'SERIALIZERS': {
+        'user_create': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
+        'user': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
 }
 
 # Email Config For Sending Emails
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.getenv('POWER_PET_PRO_EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('POWER_PET_PRO_EMAIL_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv('POWER_PET_PRO_EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.getenv('POWER_PET_PRO_EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # Django Extensions

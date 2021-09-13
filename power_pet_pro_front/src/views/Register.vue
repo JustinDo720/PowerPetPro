@@ -68,10 +68,19 @@ export default{
   methods:{
     register(){
       if(this.register_username && this.register_email && this.register_password){
-        axios.post('auth/users/',{
+        this.$store.dispatch("registerUser",{
           username: this.register_username,
           email: this.register_email,
           password: this.register_password
+        }).then(()=>{
+          this.$store.dispatch("loginUser", {
+            username: this.register_username,
+            email: this.register_email,
+            password: this.register_password
+          }).then(()=>{
+            this.$router.push({name:'Home'})
+          })
+
         })
       }
 

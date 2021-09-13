@@ -93,7 +93,7 @@
 
       <!-- End Navbar aka right side -->
       <div class="navbar-end">
-        <div class="navbar-item">
+        <div class="navbar-item" v-if="!isAuth">
           <div class="dropdown" :class="{ 'is-active': showAccount }">
             <div class="dropdown-trigger">
               <button
@@ -124,6 +124,11 @@
             </div>
           </div>
         </div>
+        <div class="navbar-item" v-if="isAuth">
+          <p>
+            Welcome, {{ username }}!
+          </p>
+        </div>
         <div class="navbar-item">
           <router-link :to="{name:'Cart'}">
               <button class="button is-medium">
@@ -141,7 +146,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import axios from "axios";
 
 export default {
@@ -155,7 +160,8 @@ export default {
     };
   },
   computed: {
-    ...mapState(["cart"]),
+    ...mapState(["cart", "username"]),
+    ...mapGetters(['isAuth']),
     cartLength() {
       // return this.$store.state.cart.items.length
       let totalLength = 0;

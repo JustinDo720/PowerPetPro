@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Category, Product, Profile
-
+from djoser.serializers import UserCreateSerializer
+from django.contrib.auth.models import User
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -70,3 +71,10 @@ class ProfileSerializer(serializers.ModelSerializer):
             'zip_code',
             'username_field'
         )
+
+
+# Custom Register Serializer
+class MyUserCreationSerializer(UserCreateSerializer):
+    class Meta(UserCreateSerializer.Meta):
+        model = User
+        fields = ('username', 'email', 'password')
