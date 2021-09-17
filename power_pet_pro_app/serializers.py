@@ -2,6 +2,8 @@ from rest_framework import serializers
 from .models import Category, Product, Profile
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth.models import User
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
 
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -78,3 +80,14 @@ class MyUserCreationSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
         fields = ('username', 'email', 'password')
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    @classmethod
+    def get_token(cls, user):
+        token = super().get_token(user)
+
+        # Add Custom Claims
+        token['user_id'] = user.id
+
+        return token

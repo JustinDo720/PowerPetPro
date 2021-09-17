@@ -13,5 +13,6 @@ urlpatterns = [
     path('category_list/category_detail/<slug:category_slug>/', views.CategoryDetail.as_view(), name='category_detail'),
     path('product_list/latest_products/', views.LatestProducts.as_view(), name='latest_products'),
     path('product_list/search/', views.search, name='search'),
-    path('post_product/', views.PostProduct.as_view(), name='post_product')
+    path('post_product/', views.PostProduct.as_view(), name='post_product'),
+    path('api/token/', views.MyTokenObtainPairView.as_view(), name='token')
 ]

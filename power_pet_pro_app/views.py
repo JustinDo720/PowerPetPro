@@ -10,6 +10,8 @@ from django.http import Http404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.db.models import Q
+from rest_framework_simplejwt.views import TokenObtainPairView
+from power_pet_pro_app.serializers import MyTokenObtainPairSerializer
 # Create your views here.
 
 
@@ -136,3 +138,7 @@ class PostProduct(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

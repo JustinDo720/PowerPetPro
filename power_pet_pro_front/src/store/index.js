@@ -1,5 +1,6 @@
 import { createStore } from "vuex";
 import axios from "axios";
+import Cookies from 'cookies-js';
 
 export default createStore({
   state: {
@@ -31,6 +32,49 @@ export default createStore({
         // we dont have cart in our localstorage so lets set it
         localStorage.setItem("cart", JSON.stringify(state.cart));
       }
+
+      state.username = Cookies('username')
+      state.accessToken = Cookies('accessToken')
+      state.refreshToken  = Cookies('refreshToken')
+
+      console.log(state.username)
+
+      // if (Cookies.get('username') && Cookies.get('accessToken') && Cookies.get('refreshToken')){
+      //   const username = Cookies('username')
+      //   const accessToken = Cookies('accessToken')
+      //   const refreshToken  = Cookies('refreshToken')
+      //
+      //   console.log('We got accessToken initially: ' + accessToken)
+      //
+      //   axios.post('/auth/jwt/verify/', {
+      //     token: accessToken
+      //   }).then(()=>{
+      //       state.username = username
+      //       state.accessToken = accessToken
+      //       state.refreshToken = refreshToken
+      //       console.log(`
+      //       From our Reinitialize Store:
+      //       Username: ${state.username}
+      //       accessToken: ${state.accessToken}
+      //       refreshToken: ${state.refreshToken}
+      //       `)
+      //   }).catch(()=>{
+      //     axios.post('/auth/jwt/refresh/',{
+      //       refresh: refreshToken
+      //     }).then((response)=>{
+      //       console.log(response.data.access)
+      //       state.username = username
+      //       state.accessToken =response.data.access
+      //       state.refreshToken = refreshToken
+      //       console.log(`
+      //       From our catch error Reinitialize Store:
+      //       Username1: ${state.username}
+      //       accessToken1: ${state.accessToken}
+      //       refreshToken1: ${state.refreshToken}
+      //       `)
+      //     })
+      //   })
+      // }
     },
     // Let's go ahead and make a function that changes the cart items
     addToCart(state, item_object) {
@@ -62,6 +106,10 @@ export default createStore({
       state.username = username
       state.accessToken = accessToken
       state.refreshToken = refreshToken
+
+      Cookies.set('username', state.username, { expires: 604800});
+      Cookies.set('accessToken', state.accessToken, { expires: 604800});
+      Cookies.set('refreshToken', state.refreshToken, { expires: 604800});
       console.log(state.accessToken, state.refreshToken)
     }
   },
