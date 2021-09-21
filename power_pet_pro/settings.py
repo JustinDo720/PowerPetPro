@@ -157,31 +157,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=8),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ROTATE_REFRESH_TOKENS': True,  # we will get a need refresh token as well
     'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
+    'UPDATE_LAST_LOGIN': True,
 
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': settings.SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-    'JWK_URL': None,
 
     'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
+    'USER_ID_FIELD': 'email',
     'USER_ID_CLAIM': 'user_id',
+
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 
     'JTI_CLAIM': 'jti',
-
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
 
@@ -199,17 +190,18 @@ REST_FRAMEWORK = {
 
 # Djoser Settings
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
-    'SEND_CONFIRMATION_EMAIL': False,
-    'SEND_ACTIVATION_EMAIL': False,
-    'LOGIN_FIELD': "email",
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_CONFIRMATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL': True,
+    'LOGIN_FIELD': "username",
     'SERIALIZERS': {
         'user_create': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
         'user': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     },
+    'USER_CREATE_PASSWORD_RETYPE': True
 }
 
 # Email Config For Sending Emails
@@ -227,3 +219,4 @@ SHELL_PLUS_PRE_IMPORTS = [
     'from faker import Faker'
 ]
 
+FRONTEND_BASE_URL = 'http://localhost:8080/'

@@ -125,9 +125,24 @@
           </div>
         </div>
         <div class="navbar-item" v-if="isAuth">
-          <p>
-            Welcome, {{ username }}!
-          </p>
+          <span class="mr-1">
+            <p class="subtitle is-5 "
+               :class="{'has-text-white-bis': !showMobileMenu}">
+                Welcome, {{ username }}!&nbsp;
+            </p>
+          </span>
+
+          <span>
+            <button class="button" @click="logOut()">
+              <span>
+                 Log out
+              </span>
+              <span class="icon is-medium">
+                <i class="fas fa-sign-out-alt"></i>
+              </span>
+            </button>
+          </span>
+
         </div>
         <div class="navbar-item">
           <router-link :to="{name:'Cart'}">
@@ -177,6 +192,9 @@ export default {
       this.$router.push({'name':'Search'})
       this.searchTerm = ''
     },
+    logOut(){
+      this.$store.commit('logoutUser')
+    }
   },
   created() {
     // we want to grab our categories

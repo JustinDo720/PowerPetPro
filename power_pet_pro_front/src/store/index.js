@@ -2,6 +2,13 @@ import { createStore } from "vuex";
 import axios from "axios";
 import Cookies from 'cookies-js';
 
+// We will use this function to save our tokens
+function saveTokens(username, accessToken, refreshToken) {
+  Cookies.set('username', username, { expires: 604800});
+  Cookies.set('accessToken', accessToken, { expires: 604800});
+  Cookies.set('refreshToken', refreshToken, { expires: 604800});
+}
+
 export default createStore({
   state: {
     latestProducts: "", // we are going to use this state to store our 5 products in case we need to use it elsewhere
@@ -10,6 +17,7 @@ export default createStore({
     },
     isAuthenticated: false,
     username:"",
+    user_id: null,
     accessToken: "",
     refreshToken: "",
     isLoading: false, // We are going to add a loading bar for things that are loading
@@ -33,48 +41,33 @@ export default createStore({
         localStorage.setItem("cart", JSON.stringify(state.cart));
       }
 
-      state.username = Cookies('username')
-      state.accessToken = Cookies('accessToken')
-      state.refreshToken  = Cookies('refreshToken')
+      if (Cookies.get('username') && Cookies.get('accessToken') && Cookies.get('refreshToken')){
+        const username = Cookies('username')
+        const accessToken = Cookies('accessToken')
+        const refreshToken  = Cookies('refreshToken')
 
-      console.log(state.username)
+        axios.post('/auth/jwt/verify/', {
+          token: accessToken
+        }).then(()=>{
+            state.username = username
+            state.accessToken = accessToken
+            state.refreshToken = refreshToken
 
-      // if (Cookies.get('username') && Cookies.get('accessToken') && Cookies.get('refreshToken')){
-      //   const username = Cookies('username')
-      //   const accessToken = Cookies('accessToken')
-      //   const refreshToken  = Cookies('refreshToken')
-      //
-      //   console.log('We got accessToken initially: ' + accessToken)
-      //
-      //   axios.post('/auth/jwt/verify/', {
-      //     token: accessToken
-      //   }).then(()=>{
-      //       state.username = username
-      //       state.accessToken = accessToken
-      //       state.refreshToken = refreshToken
-      //       console.log(`
-      //       From our Reinitialize Store:
-      //       Username: ${state.username}
-      //       accessToken: ${state.accessToken}
-      //       refreshToken: ${state.refreshToken}
-      //       `)
-      //   }).catch(()=>{
-      //     axios.post('/auth/jwt/refresh/',{
-      //       refresh: refreshToken
-      //     }).then((response)=>{
-      //       console.log(response.data.access)
-      //       state.username = username
-      //       state.accessToken =response.data.access
-      //       state.refreshToken = refreshToken
-      //       console.log(`
-      //       From our catch error Reinitialize Store:
-      //       Username1: ${state.username}
-      //       accessToken1: ${state.accessToken}
-      //       refreshToken1: ${state.refreshToken}
-      //       `)
-      //     })
-      //   })
-      // }
+            saveTokens(state.username, state.accessToken, state.refreshToken)
+
+        }).catch(()=>{
+          axios.post('/api/token/refresh/',{
+            refresh: refreshToken
+          }).then((response)=>{
+            console.log(response.data.access)
+            state.username = username
+            state.accessToken = response.data.access
+            state.refreshToken = response.data.refresh // this is possible because of rotating refresh in settings
+
+            saveTokens(state.username, state.accessToken, state.refreshToken)
+          })
+        })
+      }
     },
     // Let's go ahead and make a function that changes the cart items
     addToCart(state, item_object) {
@@ -107,23 +100,28 @@ export default createStore({
       state.accessToken = accessToken
       state.refreshToken = refreshToken
 
-      Cookies.set('username', state.username, { expires: 604800});
-      Cookies.set('accessToken', state.accessToken, { expires: 604800});
-      Cookies.set('refreshToken', state.refreshToken, { expires: 604800});
-      console.log(state.accessToken, state.refreshToken)
+      saveTokens(state.username, state.accessToken, state.refreshToken)
+    },
+    logoutUser(state){
+      state.username = ''
+      state.accessToken = ''
+      state.refreshToken = ''
+
+      Cookies.expire('username')
+      Cookies.expire('accessToken')
+      Cookies.expire('refreshToken')
     }
   },
   actions: {
     // actions have context to access things like states but they can't change them unless you perform action (commit)
-    registerUser(context, {username, email, password}){
-      axios.post('/auth/users/',{
-        'username': username,
-        'email': email,
-        'password': password
+    registerUser(context, {username, email, password, repassword}){
+      console.log(username, email, password, repassword)
+      axios.get('product_list/').then((response)=>{
+        console.log(response.data)
       })
     },
     loginUser(context, {username, email, password}){
-      axios.post('auth/jwt/create/',{
+      axios.post('api/token/',{
         username: username,
         email: email,
         password: password

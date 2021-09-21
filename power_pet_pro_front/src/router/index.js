@@ -6,6 +6,8 @@ import Search from "../views/Search";
 import Cart from "../views/Cart";
 import LogIn from "../views/LogIn";
 import Register from "../views/Register";
+import Profile from "../views/Profile";
+import Activate from "../views/Activate";
 
 const routes = [
   {
@@ -52,6 +54,16 @@ const routes = [
     name: "Register",
     component: Register,
   },
+  {
+    path: '/profile/',
+    name: 'Profile',
+    component: Profile,
+  },
+  {
+    path: '/activate/:uid/:token',
+    name: 'Activate',
+    component: Activate,
+  }
 ];
 
 const router = createRouter({

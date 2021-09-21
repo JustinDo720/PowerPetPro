@@ -42,6 +42,15 @@
 
                 </div>
               </div>
+               <div class="field">
+                <div class="control has-icons-left">
+                  <span class="icon is-medium is-left">
+                    <i class="fas fa-lock"></i>
+                  </span>
+                  <input class="input is-medium" type="password" placeholder="Confirm Password" v-model="register_repassword">
+                  <p class="help is-danger" v-if="password_not_matched">Passwords do not match</p>
+                </div>
+              </div>
               <button class="button is-info" type="submit">Register</button>
             </form>
           </div>
@@ -54,7 +63,7 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { toast } from "bulma-toast";
 
 export default{
   name:'Register',
@@ -63,28 +72,34 @@ export default{
       register_username: '',
       register_email: '',
       register_password: '',
+      register_repassword: '',
+      password_not_matched: false,
     }
   },
   methods:{
     register(){
-      if(this.register_username && this.register_email && this.register_password){
+      if(this.register_username && this.register_email && this.register_password && this.register_password === this.register_repassword){
         this.$store.dispatch("registerUser",{
           username: this.register_username,
           email: this.register_email,
-          password: this.register_password
+          password: this.register_password,
+          repassword: this.register_repassword
         }).then(()=>{
-          this.$store.dispatch("loginUser", {
-            username: this.register_username,
-            email: this.register_email,
-            password: this.register_password
-          }).then(()=>{
-            this.$router.push({name:'Home'})
-          })
-
+          toast({
+            message: "Please check your email to confirm!!!",
+            type: "is-warning",
+            dismissible: true,
+            pauseOnHover: true,
+            duration: 60000, // milliseconds
+            position: "bottom-right",
+          });
+          this.$router.push({name:'Home'})
         })
+      }else{
+        this.password_not_matched = true
       }
 
-    }
+    },
   },
 
 }
