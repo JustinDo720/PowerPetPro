@@ -1,21 +1,31 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer
 from .models import Product, Category, Profile
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
 from django.http import Http404
 from rest_framework import status
 from rest_framework.decorators import api_view
 from django.db.models import Q
+from rest_framework_simplejwt.views import TokenObtainPairView
+from power_pet_pro_app.serializers import MyTokenObtainPairSerializer
+from django.conf import settings
+
 # Create your views here.
 
 
 # Default authentication is isAuthenticated
 def index(request):
     return render(request, 'home.html')
+
+
+def activate_acc(request, uid, token):
+    if uid and token:
+        frontend_url = f'{settings.FRONTEND_BASE_URL}activate/{uid}/{token}'
+        return redirect(frontend_url)
 
 
 class ProductList(ListCreateAPIView):
@@ -123,3 +133,20 @@ def search(request):
         return Response(serializer.data)
     else:
         return Response({'products': []})
+
+
+# Admin use only
+class PostProduct(APIView):
+    permission_classes = (IsAdminUser,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

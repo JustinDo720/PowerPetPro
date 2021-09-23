@@ -15,6 +15,8 @@
               <th>Price</th>
               <th>Quantity</th>
               <th>Total</th>
+              <!-- We will have an empty column for our controls like delete -->
+              <th></th>
             </tr>
           </thead>
           <!--- The middle section of our table -->
@@ -23,11 +25,20 @@
                      :key="index"
                      :cart_item="cart_item"></CartBox>
           </tbody>
-
         </table>
         <p v-else>
           You currently have no items in your cart.
         </p>
+        <!-- We are going to need the total amount and proceed to checkout -->
+        <div class="column is-12">
+          <h2 class="subtitle">Summary</h2>
+          <p>
+           <strong>${{ cartTotalPrice.toFixed(2) }}</strong>, {{ cartTotalLength }} items
+          </p>
+          <button class="button is-medium mt-4 is-info is-outlined">
+            &raquo; Proceed to checkout
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -41,10 +52,32 @@ import { mapState } from 'vuex'
 export default{
   name: 'Cart',
   computed:{
-    ...mapState(['cart'])
+    ...mapState(['cart']),
+    cartTotalPrice(){
+      let totalPrice = 0
+      for (let item_index = 0; item_index < this.cart.items.length; item_index++) {
+        // We need to make sure we take quantity into account
+        if(this.cart.items[item_index].quantity >= 2){
+          totalPrice += (this.cart.items[item_index].quantity * this.cart.items[item_index].product.price)
+        }else{
+          // Since we are doing calculations we need the number form. Price is in string format
+          totalPrice += Number(this.cart.items[item_index].product.price)
+        }
+      }
+      // Once we finish to need to make sure we update our localstorage
+      localStorage.setItem("cart", JSON.stringify(this.$store.state.cart));
+      return totalPrice
+    },
+    cartTotalLength(){
+      let totalLength = 0
+      for (let item_quantity = 0; item_quantity < this.cart.items.length; item_quantity++) {
+      totalLength += this.cart.items[item_quantity].quantity;
+      }
+      return totalLength
+    }
   },
   components:{
     CartBox
-  }
+  },
 }
 </script>

@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import Category, Product, Profile
+from .models import Category, Product, Profile, CustomUser
+from djoser.serializers import UserCreateSerializer
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
 class CategorySerializer(serializers.ModelSerializer):
@@ -20,10 +22,12 @@ class ProductSerializer(serializers.ModelSerializer):
         category = Category.objects.get(id=product.category.id)
         return category.name
 
-
     def get_limited_description(self, product):
-        limited_description = product.description[:125]  # 50 characters
-        return limited_description
+        if product.description:
+            limited_description = product.description[:125]  # 50 characters
+            return limited_description
+        else:
+            return ''
 
     class Meta:
         model = Product
@@ -68,3 +72,24 @@ class ProfileSerializer(serializers.ModelSerializer):
             'zip_code',
             'username_field'
         )
+
+
+# Custom Register Serializer
+class MyUserCreationSerializer(UserCreateSerializer):
+    class Meta(UserCreateSerializer.Meta):
+        model = CustomUser
+        fields = ('username', 'email', 'password', 're_password')
+
+
+class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        refresh = self.get_token(self.user)
+        data['refresh'] = str(refresh)
+        data['access'] = str(refresh.access_token)
+
+        # Add extra responses here
+        data['username'] = self.user.username
+        data['user_id'] = self.user.id  # We are going to use this for uuid
+
+        return data

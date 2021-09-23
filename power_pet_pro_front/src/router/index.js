@@ -4,6 +4,10 @@ import Product from "../views/Product.vue";
 import Category from "../views/Category";
 import Search from "../views/Search";
 import Cart from "../views/Cart";
+import LogIn from "../views/LogIn";
+import Register from "../views/Register";
+import Profile from "../views/Profile";
+import Activate from "../views/Activate";
 
 const routes = [
   {
@@ -40,6 +44,26 @@ const routes = [
     name: "Cart",
     component: Cart,
   },
+  {
+    path: '/login/',
+    name: "Login",
+    component: LogIn,
+  },
+  {
+    path: '/register/',
+    name: "Register",
+    component: Register,
+  },
+  {
+    path: '/profile/',
+    name: 'Profile',
+    component: Profile,
+  },
+  {
+    path: '/activate/:uid/:token',
+    name: 'Activate',
+    component: Activate,
+  }
 ];
 
 const router = createRouter({

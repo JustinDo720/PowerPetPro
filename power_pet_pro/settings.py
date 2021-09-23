@@ -155,33 +155,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # SJWT
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=2),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=3),
-    'ROTATE_REFRESH_TOKENS': False,
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=8),
+    'ROTATE_REFRESH_TOKENS': True,  # we will get a need refresh token as well
     'BLACKLIST_AFTER_ROTATION': True,
-    'UPDATE_LAST_LOGIN': False,
+    'UPDATE_LAST_LOGIN': True,
 
-    'ALGORITHM': 'HS256',
-    'SIGNING_KEY': settings.SECRET_KEY,
-    'VERIFYING_KEY': None,
-    'AUDIENCE': None,
-    'ISSUER': None,
-    'JWK_URL': None,
 
     'AUTH_HEADER_TYPES': ('Bearer', 'JWT'),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
-    'USER_ID_FIELD': 'id',
+    'USER_ID_FIELD': 'email',
     'USER_ID_CLAIM': 'user_id',
+
     'USER_AUTHENTICATION_RULE': 'rest_framework_simplejwt.authentication.default_user_authentication_rule',
 
     'AUTH_TOKEN_CLASSES': ('rest_framework_simplejwt.tokens.AccessToken',),
     'TOKEN_TYPE_CLAIM': 'token_type',
 
     'JTI_CLAIM': 'jti',
-
-    'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
 
@@ -199,25 +190,33 @@ REST_FRAMEWORK = {
 
 # Djoser Settings
 DJOSER = {
-    'PASSWORD_RESET_CONFIRM_URL': '#/password/reset/confirm/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': '#/username/reset/confirm/{uid}/{token}',
-    'ACTIVATION_URL': '#/activate/{uid}/{token}',
+    'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
+    'ACTIVATION_URL': 'activate/{uid}/{token}',
+    'SEND_CONFIRMATION_EMAIL': True,
     'SEND_ACTIVATION_EMAIL': True,
-    'LOGIN_FIELD': "email",
-    'SERIALIZERS': {},
+    'LOGIN_FIELD': "username",
+    'SERIALIZERS': {
+        'user_create': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
+        'user': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
+        'user_delete': 'djoser.serializers.UserDeleteSerializer',
+    },
+    'USER_CREATE_PASSWORD_RETYPE': True
 }
 
 # Email Config For Sending Emails
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = os.getenv('POWER_PET_PRO_EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('POWER_PET_PRO_EMAIL_PASSWORD')
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv('POWER_PET_PRO_EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.getenv('POWER_PET_PRO_EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # Django Extensions
 SHELL_PLUS_PRE_IMPORTS = [
-    'from power_pet_pro_app.models import Profile, Category, Products',
-    'from django.contrib.auth.models import User',
+    'from power_pet_pro_app.models import Profile, Category, Products, CustomUser',
     'from faker import Faker'
 ]
 
+FRONTEND_BASE_URL = 'http://localhost:8080/'
+AUTH_USER_MODEL = 'power_pet_pro_app.CustomUser'

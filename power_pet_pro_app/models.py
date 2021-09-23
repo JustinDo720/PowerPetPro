@@ -1,28 +1,32 @@
 from django.db import models
 from io import BytesIO
 from django.core.files import File
-from django.contrib.auth.models import User, AbstractUser, UserManager
+from django.contrib.auth.models import AbstractUser, UserManager
 from PIL import Image
 from django.utils.text import slugify
+from django.db.models import Q
 
 # Create your models here.
 
 
-class UserAccountManager(UserManager):
-
-    # we want to override create_user method: create_user() missing 1 required positional argument: 'username'
-    def create_user(self, email=None, password=None, **extra_fields):
-        # Here we are setting email in the username field which means that it will accept the email as a username
-        return super().create_user(email, email=email, password=password, **extra_fields)
-
-    # we want to override createsuperuser method: create_user() missing 1 required positional argument: 'username'
-    def create_superuser(self, email=None, password=None, **extra_fields):
-        # Same goes for the superuser
-        return super().create_superuser(email, email=email, password=password, **extra_fields)
+# class UserAccountManager(UserManager):
+#
+#     def create_user(self, email, password=None, **extra_fields):
+#         return super().create_user(email=email, password=password, **extra_fields)
+#
+#     def create_superuser(self, email=None, password=None, **extra_fields):
+#         return super().create_superuser(email=email, password=password, **extra_fields)
+#
+#
+class CustomUser(AbstractUser):
+    username = models.TextField(max_length=250, unique=True, blank=False, null=False)
+    first_name = models.TextField(max_length=100)
+    last_name = models.TextField(max_length=100)
+    email = models.EmailField(max_length=250, unique=True, blank=False, null=False)
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     # first_name = models.CharField(max_length=100) ## These fields could be taken care of in User model
     # last_name = models.CharField(max_length=100)
     # email = models.EmailField(max_length=150, blank=True, null=True)
@@ -126,15 +130,12 @@ class Product(models.Model):
         unique_slug = slug
         number = 1
         while Product.objects.filter(slug=unique_slug).exists():
-            unique_slug = f'{slug}-{number}'    # This way we can have a unique slug for every product
+            unique_slug = f'{slug}-{number}'
             number += 1
         return unique_slug
 
     # upon saving the Product
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
-        # Making sure to run slug if slug wasn't put in (This makes an automatic slug)
         if not self.slug:
             self.slug = self._get_unique_slug()
-
+        super().save(*args, **kwargs)

@@ -93,7 +93,7 @@
 
       <!-- End Navbar aka right side -->
       <div class="navbar-end">
-        <div class="navbar-item">
+        <div class="navbar-item" v-if="!isAuth">
           <div class="dropdown" :class="{ 'is-active': showAccount }">
             <div class="dropdown-trigger">
               <button
@@ -113,11 +113,36 @@
             </div>
             <div class="dropdown-menu" id="dropdown-menu3" role="menu">
               <div class="dropdown-content">
-                <a href="#" class="dropdown-item"> Log In </a>
-                <a href="#" class="dropdown-item"> Create Account </a>
+                <router-link :to="{name:'Login'}" >
+                  <a class="dropdown-item" @click="showAccount = !showAccount"> Log In </a>
+                </router-link>
+                <router-link  :to="{name:'Register'}">
+                  <a class="dropdown-item" @click="showAccount = !showAccount"> Create Account </a>
+                </router-link>
+
               </div>
             </div>
           </div>
+        </div>
+        <div class="navbar-item" v-if="isAuth">
+          <span class="mr-1">
+            <p class="subtitle is-5 "
+               :class="{'has-text-white-bis': !showMobileMenu}">
+                Welcome, {{ username }}!&nbsp;
+            </p>
+          </span>
+
+          <span>
+            <button class="button" @click="logOut()">
+              <span>
+                 Log out
+              </span>
+              <span class="icon is-medium">
+                <i class="fas fa-sign-out-alt"></i>
+              </span>
+            </button>
+          </span>
+
         </div>
         <div class="navbar-item">
           <router-link :to="{name:'Cart'}">
@@ -136,7 +161,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import axios from "axios";
 
 export default {
@@ -144,13 +169,14 @@ export default {
   data() {
     return {
       showMobileMenu: false,
-      showAccount: false,
       store_categories: [],
       searchTerm: '',
+      showAccount: false
     };
   },
   computed: {
-    ...mapState(["cart"]),
+    ...mapState(["cart", "username"]),
+    ...mapGetters(['isAuth']),
     cartLength() {
       // return this.$store.state.cart.items.length
       let totalLength = 0;
@@ -165,6 +191,9 @@ export default {
       await this.$store.commit('addSearch', {searchTerm: this.searchTerm})
       this.$router.push({'name':'Search'})
       this.searchTerm = ''
+    },
+    logOut(){
+      this.$store.commit('logoutUser')
     }
   },
   created() {

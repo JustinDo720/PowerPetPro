@@ -1,5 +1,13 @@
 import { createStore } from "vuex";
 import axios from "axios";
+import Cookies from 'cookies-js';
+
+// We will use this function to save our tokens
+function saveTokens(username, accessToken, refreshToken) {
+  Cookies.set('username', username, { expires: 604800});
+  Cookies.set('accessToken', accessToken, { expires: 604800});
+  Cookies.set('refreshToken', refreshToken, { expires: 604800});
+}
 
 export default createStore({
   state: {
@@ -8,9 +16,13 @@ export default createStore({
       items: [],
     },
     isAuthenticated: false,
+    username:"",
+    user_id: null,
     accessToken: "",
+    refreshToken: "",
     isLoading: false, // We are going to add a loading bar for things that are loading
     searchTerm: "",
+    testMessage: {},
   },
   mutations: {
     // mutations have state as their parameters as they're the only ones that could actually change state
@@ -28,6 +40,34 @@ export default createStore({
         // we dont have cart in our localstorage so lets set it
         localStorage.setItem("cart", JSON.stringify(state.cart));
       }
+
+      if (Cookies.get('username') && Cookies.get('accessToken') && Cookies.get('refreshToken')){
+        const username = Cookies('username')
+        const accessToken = Cookies('accessToken')
+        const refreshToken  = Cookies('refreshToken')
+
+        axios.post('/auth/jwt/verify/', {
+          token: accessToken
+        }).then(()=>{
+            state.username = username
+            state.accessToken = accessToken
+            state.refreshToken = refreshToken
+
+            saveTokens(state.username, state.accessToken, state.refreshToken)
+
+        }).catch(()=>{
+          axios.post('/api/token/refresh/',{
+            refresh: refreshToken
+          }).then((response)=>{
+            console.log(response.data.access)
+            state.username = username
+            state.accessToken = response.data.access
+            state.refreshToken = response.data.refresh // this is possible because of rotating refresh in settings
+
+            saveTokens(state.username, state.accessToken, state.refreshToken)
+          })
+        })
+      }
     },
     // Let's go ahead and make a function that changes the cart items
     addToCart(state, item_object) {
@@ -38,7 +78,7 @@ export default createStore({
       // if our exists has a length > 0 that means the product exist and we need to handle that
       if(exists.length){
         // each time the product exists we are incrementing our quantity for a specific product instead of adding same
-        exists[0].quantity = parseInt(exists[0].quantity) + parseInt(item.quantity)
+        exists[0].quantity = parseInt(exists[0].quantity) + parseInt(item.quantity) // exists[0].quantity = total quant
       }else{
         // this is a new product so we want to just push this to our cart
         state.cart.items.push(item)
@@ -55,9 +95,43 @@ export default createStore({
     addSearch(state, searchTerm){
       state.searchTerm = searchTerm.searchTerm;
     },
+    loginUser(state, {username, accessToken, refreshToken}){
+      state.username = username
+      state.accessToken = accessToken
+      state.refreshToken = refreshToken
+
+      saveTokens(state.username, state.accessToken, state.refreshToken)
+    },
+    logoutUser(state){
+      state.username = ''
+      state.accessToken = ''
+      state.refreshToken = ''
+
+      Cookies.expire('username')
+      Cookies.expire('accessToken')
+      Cookies.expire('refreshToken')
+    }
   },
   actions: {
     // actions have context to access things like states but they can't change them unless you perform action (commit)
+    loginUser(context, {username, email, password}){
+      axios.post('api/token/',{
+        username: username,
+        email: email,
+        password: password
+      }).then((response)=>{
+        context.commit('loginUser',{
+          username: username,
+          accessToken: response.data.access,
+          refreshToken: response.data.refresh
+        })
+      })
+    }
   },
   modules: {},
+  getters: {
+    isAuth(state){
+      return state.accessToken !== ''
+    }
+  },
 });

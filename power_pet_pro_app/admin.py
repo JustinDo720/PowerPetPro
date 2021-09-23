@@ -1,7 +1,8 @@
 from django.contrib import admin
-from .models import Profile, Category, Product
+from .models import Profile, Category, Product, CustomUser
 
 models = [
+    CustomUser,
     Profile,
     Category,
     Product
