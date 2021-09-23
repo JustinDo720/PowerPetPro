@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from .models import Category, Product, Profile
+from .models import Category, Product, Profile, CustomUser
 from djoser.serializers import UserCreateSerializer
-from django.contrib.auth.models import User
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 
@@ -78,7 +77,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 # Custom Register Serializer
 class MyUserCreationSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
-        model = User
+        model = CustomUser
         fields = ('username', 'email', 'password', 're_password')
 
 

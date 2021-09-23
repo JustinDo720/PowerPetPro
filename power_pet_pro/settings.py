@@ -214,9 +214,9 @@ EMAIL_USE_TLS = True
 
 # Django Extensions
 SHELL_PLUS_PRE_IMPORTS = [
-    'from power_pet_pro_app.models import Profile, Category, Products',
-    'from django.contrib.auth.models import User',
+    'from power_pet_pro_app.models import Profile, Category, Products, CustomUser',
     'from faker import Faker'
 ]
 
 FRONTEND_BASE_URL = 'http://localhost:8080/'
+AUTH_USER_MODEL = 'power_pet_pro_app.CustomUser'

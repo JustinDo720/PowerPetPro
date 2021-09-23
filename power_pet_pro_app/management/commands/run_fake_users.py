@@ -1,8 +1,7 @@
 from faker import Faker
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
 from django.db.utils import IntegrityError
-from power_pet_pro_app.models import Profile
+from power_pet_pro_app.models import Profile, CustomUser
 import random
 
 
@@ -27,6 +26,7 @@ USERNAMES = [
 
 DEFAULT_PASSWORD = 'testing123'
 
+
 class Command(BaseCommand):
     help = 'Build random users with names.'
 
@@ -43,8 +43,8 @@ class Command(BaseCommand):
                 # We are going to set this user as superuser
                 if name.lower() == 'justi':
                     # Creating Admin User Instance
-                    admin_user = User.objects.create_user(username=name, password=DEFAULT_PASSWORD,
-                                                          is_superuser=True, is_staff=True)
+                    admin_user = CustomUser.objects.create_user(username=name, password=DEFAULT_PASSWORD,
+                                                                is_superuser=True, is_staff=True)
                     admin_user.first_name = 'Justin'
                     admin_user.last_name = 'Do'
                     admin_user.email = 'justindo720@gmail.com'
@@ -63,7 +63,7 @@ class Command(BaseCommand):
                     print(admin_user)
                 else:
                     # Creating Default User Instance
-                    default_user = User.objects.create_user(username=name, password=DEFAULT_PASSWORD)
+                    default_user = CustomUser.objects.create_user(username=name, password=DEFAULT_PASSWORD)
                     default_user.first_name = fake.first_name()
                     default_user.last_name = fake.last_name()
                     default_user.email = fake.unique.email()
