@@ -48,14 +48,17 @@
                     <i class="fas fa-lock"></i>
                   </span>
                   <input class="input is-medium" type="password" placeholder="Confirm Password" v-model="register_repassword">
-                  <p class="help is-danger" v-if="password_not_matched">Passwords do not match</p>
                 </div>
+              </div>
+              <div v-if="error_message">
+                <p class="help is-danger">
+                  {{ error_message }}
+                </p>
               </div>
               <button class="button is-info" type="submit">Register</button>
             </form>
           </div>
         </div>
-
       </div>
 
     </div>
@@ -64,6 +67,7 @@
 
 <script>
 import { toast } from "bulma-toast";
+import axios from 'axios';
 
 export default{
   name:'Register',
@@ -74,16 +78,17 @@ export default{
       register_password: '',
       register_repassword: '',
       password_not_matched: false,
+      error_message: '',
     }
   },
   methods:{
     register(){
       if(this.register_username && this.register_email && this.register_password && this.register_password === this.register_repassword){
-        this.$store.dispatch("registerUser",{
+        axios.post("auth/users/",{
           username: this.register_username,
           email: this.register_email,
           password: this.register_password,
-          repassword: this.register_repassword
+          re_password: this.register_repassword
         }).then(()=>{
           toast({
             message: "Please check your email to confirm!!!",
@@ -94,6 +99,10 @@ export default{
             position: "bottom-right",
           });
           this.$router.push({name:'Home'})
+        }).catch(err=>{
+          for(let error_message in err.response.data){
+            this.error_message = err.response.data[error_message][0]
+          }
         })
       }else{
         this.password_not_matched = true

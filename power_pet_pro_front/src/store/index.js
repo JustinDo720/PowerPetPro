@@ -114,12 +114,6 @@ export default createStore({
   },
   actions: {
     // actions have context to access things like states but they can't change them unless you perform action (commit)
-    registerUser(context, {username, email, password, repassword}){
-      console.log(username, email, password, repassword)
-      axios.get('product_list/').then((response)=>{
-        console.log(response.data)
-      })
-    },
     loginUser(context, {username, email, password}){
       axios.post('api/token/',{
         username: username,
