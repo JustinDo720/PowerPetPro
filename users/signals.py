@@ -1,6 +1,7 @@
 from django.dispatch import receiver
 from django.db.models.signals import post_save
-from power_pet_pro_app.models import Profile, CustomUser
+from power_pet_pro_app.models import Profile
+from users.models import CustomUser
 
 
 @receiver(post_save, sender=CustomUser)

@@ -2,29 +2,13 @@ from django.db import models
 from io import BytesIO
 from django.core.files import File
 from django.contrib.auth.models import AbstractUser, UserManager
+from users.models import CustomUser
 from PIL import Image
 from django.utils.text import slugify
 from django.db.models import Q
 
+
 # Create your models here.
-
-
-# class UserAccountManager(UserManager):
-#
-#     def create_user(self, email, password=None, **extra_fields):
-#         return super().create_user(email=email, password=password, **extra_fields)
-#
-#     def create_superuser(self, email=None, password=None, **extra_fields):
-#         return super().create_superuser(email=email, password=password, **extra_fields)
-#
-#
-class CustomUser(AbstractUser):
-    username = models.TextField(max_length=250, unique=True, blank=False, null=False)
-    first_name = models.TextField(max_length=100)
-    last_name = models.TextField(max_length=100)
-    email = models.EmailField(max_length=250, unique=True, blank=False, null=False)
-
-
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     # first_name = models.CharField(max_length=100) ## These fields could be taken care of in User model

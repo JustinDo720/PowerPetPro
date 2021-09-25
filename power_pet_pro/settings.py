@@ -193,9 +193,9 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_CONFIRMATION_EMAIL': True,
-    'SEND_ACTIVATION_EMAIL': True,
-    'LOGIN_FIELD': "username",
+    'SEND_CONFIRMATION_EMAIL': False,
+    'SEND_ACTIVATION_EMAIL': False,
+    'LOGIN_FIELD': 'username',
     'SERIALIZERS': {
         'user_create': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
         'user': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
@@ -214,9 +214,10 @@ EMAIL_USE_TLS = True
 
 # Django Extensions
 SHELL_PLUS_PRE_IMPORTS = [
-    'from power_pet_pro_app.models import Profile, Category, Products, CustomUser',
+    'from power_pet_pro_app.models import Profile, Category, Products',
+    'from django.contrib.auth.models import User',
     'from faker import Faker'
 ]
 
 FRONTEND_BASE_URL = 'http://localhost:8080/'
-AUTH_USER_MODEL = 'power_pet_pro_app.CustomUser'
+AUTH_USER_MODEL = 'users.CustomUser'
