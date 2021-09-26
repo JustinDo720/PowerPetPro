@@ -193,15 +193,17 @@ DJOSER = {
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',
     'USERNAME_RESET_CONFIRM_URL': 'username/reset/confirm/{uid}/{token}',
     'ACTIVATION_URL': 'activate/{uid}/{token}',
-    'SEND_CONFIRMATION_EMAIL': False,
-    'SEND_ACTIVATION_EMAIL': False,
+    'SEND_CONFIRMATION_EMAIL': True,
+    'SEND_ACTIVATION_EMAIL': True,
+    'PASSWORD_RESET_SHOW_EMAIL_NOT_FOUND': True,
+    'USER_CREATE_PASSWORD_RETYPE': True,
     'LOGIN_FIELD': 'username',
     'SERIALIZERS': {
         'user_create': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
         'user': 'power_pet_pro_app.serializers.MyUserCreationSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     },
-    'USER_CREATE_PASSWORD_RETYPE': True
+
 }
 
 # Email Config For Sending Emails

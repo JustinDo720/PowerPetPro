@@ -8,7 +8,7 @@ class UserAccountManager(UserManager):
     # so here get_by_natural_key takes in either username or email but make sure to use "username" as key when posting
     def get_by_natural_key(self, username):
         return self.get(
-            # Q(**{self.model.USERNAME_FIELD: username}) |
+            Q(**{self.model.USERNAME_FIELD: username}) |
             Q(**{self.model.EMAIL_FIELD: username})
         )
 

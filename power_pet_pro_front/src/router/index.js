@@ -8,6 +8,8 @@ import LogIn from "../views/LogIn";
 import Register from "../views/Register";
 import Profile from "../views/Profile";
 import Activate from "../views/Activate";
+import ResetPassword from "../views/ResetPassword";
+import ResetPasswordConfirmation from "../views/ResetPasswordConfirmation";
 
 const routes = [
   {
@@ -63,6 +65,16 @@ const routes = [
     path: '/activate/:uid/:token',
     name: 'Activate',
     component: Activate,
+  },
+  {
+    path: '/reset_password/',
+    name: 'ResetPassword',
+    component: ResetPassword, // This will grab the email and send an email with the reset link
+  },
+  {
+    path: '/password/reset/confirm/:uid/:token',
+    name: 'ResetPasswordConfirmation',
+    component: ResetPasswordConfirmation // This will actually reset the password
   }
 ];
 

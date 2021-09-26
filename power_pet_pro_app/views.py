@@ -28,6 +28,12 @@ def activate_acc(request, uid, token):
         return redirect(frontend_url)
 
 
+def reset_password(request, uid, token):
+    if uid and token:
+        frontend_url = f'{settings.FRONTEND_BASE_URL}password/reset/confirm/{uid}/{token}'
+        return redirect(frontend_url)
+
+
 class ProductList(ListCreateAPIView):
     """
     List all of the products in our database

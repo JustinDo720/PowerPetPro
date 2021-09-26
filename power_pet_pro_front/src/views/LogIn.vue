@@ -21,16 +21,7 @@
                   <span class="icon is-medium is-left">
                         <i class="far fa-user-circle"></i>
                   </span>
-                  <input class="input is-medium" type="text" placeholder="Username" v-model="login_username">
-                </div>
-              </div>
-              <div class="field">
-                <div class="control has-icons-left">
-                  <span class="icon is-medium is-left">
-                        <i class="far fa-user-circle"></i>
-                  </span>
-
-                  <input class="input is-medium" type="email" placeholder="e.g. alex@example.com" v-model="login_email">
+                  <input class="input is-medium" type="text" placeholder="Username or Email" v-model="login_field">
                 </div>
               </div>
 
@@ -42,6 +33,31 @@
                   <input class="input is-medium" type="password" placeholder="********" v-model="login_password">
                 </div>
               </div>
+
+              <div>
+                <p>
+                  New to the website?
+                  <router-link :to="{name:'Register'}" class="has-text-info">
+                    Create an account here!
+                  </router-link>
+                </p>
+                <p>
+                  <router-link :to="{name:'ResetPassword'}" class="has-text-info">
+                    Forgot Password?
+                  </router-link>
+                </p>
+
+              </div>
+
+              <div v-if="error_message">
+                 <p class="is-danger help">
+                  {{ error_message }}
+                </p>
+                <p class="has-text-info help">
+                  {{ warning_message }}
+                </p>
+              </div><br>
+
 
               <button class="button is-success">Sign in</button>
             </form>
@@ -55,25 +71,42 @@
 </template>
 
 <script>
+import axios from 'axios'
 
 export default{
   name:'Login',
   data(){
     return{
-       login_username: '',
-       login_email:'',
+       login_field: '',
        login_password:'',
+       error_message: '',
+       warning_message: ''
     }
   },
   methods:{
     login(){
-      this.$store.dispatch('loginUser', {
-        username: this.login_username,
-        email: this.login_email,
+      if(this.login_field && this.login_password){
+        axios.post('api/token/',{
+        username: this.login_field, // We really only need this because our UserAccountManager takes username || email
         password: this.login_password
-      }).then(()=>{
-        this.$router.push({name:'Home'})
-      })
+      }).then((response)=>{
+            this.$store.commit('loginUser',{
+            username: response.data.username,
+            user_id: response.data.user_id,
+            accessToken: response.data.access,
+            refreshToken: response.data.refresh
+          })
+          this.$router.push({name:'Home'})
+        }).catch((err)=>{
+          if(err){
+            this.error_message = err.response.data.detail
+            this.warning_message = 'Have you activated your account? Please check your email for the activation link.'
+          }
+        })
+      }else{
+        this.error_message = 'Please enter in your username or email and your password'
+      }
+
     }
   }
 
