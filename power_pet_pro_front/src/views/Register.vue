@@ -50,11 +50,19 @@
                   <input class="input is-medium" type="password" placeholder="Confirm Password" v-model="register_repassword">
                 </div>
               </div>
+              <div>
+                 <p>
+                  Already have an account?
+                  <router-link :to="{name:'Register'}" class="has-text-info">
+                    Login here!
+                  </router-link>
+                </p>
+              </div>
               <div v-if="error_message">
                 <p class="help is-danger">
                   {{ error_message }}
                 </p>
-              </div>
+              </div><br>
               <button class="button is-info" type="submit">Register</button>
             </form>
           </div>
@@ -77,7 +85,6 @@ export default{
       register_email: '',
       register_password: '',
       register_repassword: '',
-      password_not_matched: false,
       error_message: '',
     }
   },
@@ -105,7 +112,7 @@ export default{
           }
         })
       }else{
-        this.password_not_matched = true
+        this.error_message = 'The passwords provided do not match.'
       }
 
     },

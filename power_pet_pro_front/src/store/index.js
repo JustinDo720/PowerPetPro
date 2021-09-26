@@ -95,10 +95,11 @@ export default createStore({
     addSearch(state, searchTerm){
       state.searchTerm = searchTerm.searchTerm;
     },
-    loginUser(state, {username, accessToken, refreshToken}){
+    loginUser(state, {username, accessToken, refreshToken, user_id}){
       state.username = username
       state.accessToken = accessToken
       state.refreshToken = refreshToken
+      state.user_id = user_id
 
       saveTokens(state.username, state.accessToken, state.refreshToken)
     },
@@ -112,22 +113,7 @@ export default createStore({
       Cookies.expire('refreshToken')
     }
   },
-  actions: {
-    // actions have context to access things like states but they can't change them unless you perform action (commit)
-    loginUser(context, {username, email, password}){
-      axios.post('api/token/',{
-        username: username,
-        email: email,
-        password: password
-      }).then((response)=>{
-        context.commit('loginUser',{
-          username: username,
-          accessToken: response.data.access,
-          refreshToken: response.data.refresh
-        })
-      })
-    }
-  },
+  actions: {},
   modules: {},
   getters: {
     isAuth(state){
