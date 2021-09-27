@@ -17,6 +17,7 @@ urlpatterns = [
     path('post_product/', views.PostProduct.as_view(), name='post_product'),
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh'),
-    path('activate/<str:uid>/<str:token>', views.activate_acc, name='activate_acc'),
-    path('password/reset/confirm/<str:uid>/<str:token>', views.reset_password, name='reset_password'),
+    path('activate/<str:uid>/<str:token>/', views.activate_acc, name='activate_acc'),
+    path('password/reset/confirm/<str:uid>/<str:token>/', views.reset_password, name='reset_password'),
+    path('profile_list/user_profile/<int:user_id>/', views.UserProfile.as_view(), name='user_profile'),
 ]

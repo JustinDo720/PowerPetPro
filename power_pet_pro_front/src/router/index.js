@@ -10,6 +10,7 @@ import Profile from "../views/Profile";
 import Activate from "../views/Activate";
 import ResetPassword from "../views/ResetPassword";
 import ResetPasswordConfirmation from "../views/ResetPasswordConfirmation";
+import store from "../store"
 
 const routes = [
   {
@@ -45,6 +46,9 @@ const routes = [
     path: '/cart/',
     name: "Cart",
     component: Cart,
+    meta: {
+      requiresLogin: true
+    }
   },
   {
     path: '/login/',
@@ -83,4 +87,17 @@ const router = createRouter({
   routes,
 });
 
+store.dispatch('initializeStore').then(()=> {
+  router.beforeEach((to, from, next) => {
+    if (to.matched.some(response => response.meta.requiresLogin)) {
+      if (!store.getters.isAuth) {
+        next({name: 'Login'})
+      } else {
+        next()
+      }
+    } else {
+      next()
+    }
+  })
+})
 export default router;

@@ -131,7 +131,7 @@
           <span class="mr-1">
             <p class="subtitle is-5 "
                :class="{'has-text-white-bis': !showMobileMenu}">
-                Welcome, {{ username }}!&nbsp;
+              Welcome, <router-link :to="{name:'Profile'}">{{ username }}!&nbsp;</router-link>
             </p>
           </span>
 

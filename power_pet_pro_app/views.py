@@ -156,3 +156,24 @@ class PostProduct(APIView):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+class UserProfile(APIView):
+    """
+        Returns details about the user's profile page
+            - Lets user modify things like address city and stuff
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, user_id):
+        user_profile = Profile.objects.get(id=user_id)
+        serializer = ProfileSerializer(user_profile, many=False)
+        return Response(serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = ProfileSerializer(data=request.data)
+        if serializer.is_valid:
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
