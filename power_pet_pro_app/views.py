@@ -1,19 +1,21 @@
 from django.shortcuts import render, redirect
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
-from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer
-from .models import Product, Category, Profile
+from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer
+from .models import Product, Category
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
-from django.http import Http404
-from rest_framework import status
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from rest_framework_simplejwt.views import TokenObtainPairView
 from power_pet_pro_app.serializers import MyTokenObtainPairSerializer
 from django.conf import settings
+from users.models import Profile
 
+# Error Handling
+from django.http import Http404, HttpResponse
+from rest_framework import status
 # Create your views here.
 
 
@@ -165,15 +167,23 @@ class UserProfile(APIView):
     """
     permission_classes = (IsAuthenticated,)
 
+    def get_object(self, user_id):
+        return Profile.objects.get(id=user_id)
+
+
     def get(self, request, user_id):
-        user_profile = Profile.objects.get(id=user_id)
+        user_profile = self.get_object(user_id)
         serializer = ProfileSerializer(user_profile, many=False)
         return Response(serializer.data)
 
-    def post(self, request, *args, **kwargs):
-        serializer = ProfileSerializer(data=request.data)
-        if serializer.is_valid:
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    def put(self, request, user_id, *args, **kwargs):
+        user_profile = self.get_object(user_id)
+        profile_serializer = ProfileSerializer(user_profile, data=request.data)
+        if profile_serializer.is_valid():
+            print(profile_serializer.validated_data.get('phone_number'))
+            print(profile_serializer.validated_data.get('first_name'))
+            print(profile_serializer.validated_data.get('last_name'))
+            profile_serializer.save()
+            return Response(profile_serializer.data, status=status.HTTP_201_CREATED)
+        return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

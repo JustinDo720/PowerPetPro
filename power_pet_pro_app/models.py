@@ -9,19 +9,6 @@ from django.db.models import Q
 
 
 # Create your models here.
-class Profile(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    # first_name = models.CharField(max_length=100) ## These fields could be taken care of in User model
-    # last_name = models.CharField(max_length=100)
-    # email = models.EmailField(max_length=150, blank=True, null=True)
-    phone_number = models.IntegerField(blank=True, null=True)
-    address = models.TextField(max_length=100, blank=True, null=True)
-    city = models.TextField(max_length=100, blank=True, null=True)
-    date_joined = models.DateField(auto_now_add=True)
-    country = models.TextField(max_length=75, blank=True, null=True)
-    state = models.TextField(max_length=75, blank=True, null=True)
-    zip_code = models.IntegerField(blank=True, null=True)
-
 
 class Category(models.Model):
     name = models.CharField(max_length=255)

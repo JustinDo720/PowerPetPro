@@ -119,6 +119,9 @@
                 <router-link  :to="{name:'Register'}">
                   <a class="dropdown-item" @click="showAccount = !showAccount"> Create Account </a>
                 </router-link>
+                 <router-link  :to="{name:'Reactivate'}">
+                  <a class="dropdown-item" @click="showAccount = !showAccount"> Resend Activation Email </a>
+                </router-link>
                 <router-link  :to="{name:'ResetPassword'}">
                   <a class="dropdown-item" @click="showAccount = !showAccount"> Reset Password </a>
                 </router-link>

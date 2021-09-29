@@ -10,6 +10,7 @@ import Profile from "../views/Profile";
 import Activate from "../views/Activate";
 import ResetPassword from "../views/ResetPassword";
 import ResetPasswordConfirmation from "../views/ResetPasswordConfirmation";
+import Reactivate from "../views/Reactivate";
 import store from "../store"
 
 const routes = [
@@ -79,6 +80,11 @@ const routes = [
     path: '/password/reset/confirm/:uid/:token',
     name: 'ResetPasswordConfirmation',
     component: ResetPasswordConfirmation // This will actually reset the password
+  },
+  {
+    path: '/reactivate/',
+    name: 'Reactivate',
+    component: Reactivate
   }
 ];
 

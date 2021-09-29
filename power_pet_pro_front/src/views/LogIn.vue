@@ -34,21 +34,6 @@
                 </div>
               </div>
 
-              <div>
-                <p>
-                  New to the website?
-                  <router-link :to="{name:'Register'}" class="has-text-info">
-                    Create an account here!
-                  </router-link>
-                </p>
-                <p>
-                  <router-link :to="{name:'ResetPassword'}" class="has-text-info">
-                    Forgot Password?
-                  </router-link>
-                </p>
-
-              </div>
-
               <div v-if="error_message">
                  <p class="is-danger help">
                   {{ error_message }}
@@ -60,6 +45,26 @@
 
 
               <button class="button is-success">Sign in</button>
+              <div>
+                <p>
+                  New to the website?
+                  <router-link :to="{name:'Register'}" class="has-text-info">
+                    Create an account here!
+                  </router-link>
+                </p>
+                <p>
+                  Need a new activation link?
+                  <router-link :to="{name:'Reactivate'}" class="has-text-info">
+                    Resend activation code here!
+                  </router-link>
+                </p>
+                <p>
+                  <router-link :to="{name:'ResetPassword'}" class="has-text-info">
+                    Forgot Password?
+                  </router-link>
+                </p>
+
+              </div>
             </form>
           </div>
         </div>

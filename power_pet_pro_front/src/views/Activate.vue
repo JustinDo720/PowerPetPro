@@ -1,5 +1,5 @@
 <template>
-  <section class="hero is-primary is-fullheight">
+  <section class="hero has-background-grey-lighter is-fullheight">
     <div class="hero-body">
       <div class="container has-text-centered">
         <figure class="image is-2by1">
@@ -11,7 +11,7 @@
           </p>
           <p class="subtitle has-text-light">
             Thank you for activating your account. Please continue logging in
-            <router-link :to="{name: 'Login'}"><u>here</u></router-link> or head to Account then Log In
+            <router-link :to="{name: 'Login'}" class="has-text-primary"><u>here</u></router-link> or head to Account then Log In
           </p>
         </div>
 

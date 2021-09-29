@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import Category, Product, Profile
-from users.models import CustomUser
+from .models import Category, Product
+from users.models import CustomUser, Profile
 from djoser.serializers import UserCreateSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
@@ -54,8 +54,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     # REMOVED: trailing fields for easy index display on front end
     username = serializers.SerializerMethodField('get_username')
     email = serializers.SerializerMethodField('get_email')
-    first_name = serializers.SerializerMethodField('get_first_name')
-    last_name = serializers.SerializerMethodField('get_last_name')
 
     def get_username(self, profile):
         # Profile getting the instance we can use to retrieve the username
@@ -66,16 +64,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         # Profile getting the instance we can use to retrieve the email
         email = profile.user.email
         return email
-
-    def get_first_name(self, profile):
-        # Profile getting the instance we can use to retrieve the first_name
-        first_name = profile.user.first_name
-        return first_name
-
-    def get_last_name(self, profile):
-        # Profile getting the instance we can use to retrieve the username
-        last_name = profile.user.last_name
-        return last_name
 
 
     class Meta:
@@ -94,6 +82,12 @@ class ProfileSerializer(serializers.ModelSerializer):
             'state',
             'zip_code',
         )
+
+
+class CustomUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = '__all__'
 
 
 # Custom Register Serializer

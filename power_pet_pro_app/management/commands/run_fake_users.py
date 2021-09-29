@@ -1,7 +1,7 @@
 from faker import Faker
 from django.core.management.base import BaseCommand
 from django.db.utils import IntegrityError
-from power_pet_pro_app.models import Profile
+from users.models import Profile
 from users.models import CustomUser
 import random
 
