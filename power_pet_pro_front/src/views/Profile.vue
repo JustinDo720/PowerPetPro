@@ -50,8 +50,44 @@
             <div class="card-content control">
               <div class="content is-large">
                 <strong>{{ cleanIndex(index)  }}</strong>:
-                <input class="input is-medium" type="text" v-model="user_profile[index]"
-                       :disabled="index === 'date_joined' || index === 'email' || index === 'username'">
+                <div class="control has-icons-left"  v-if="index === 'country' || index === 'state' ">
+                  <div class="select is-large">
+                    <select v-model="user_profile['country']" v-if="index === 'country'">
+                      <option v-for="(country,index) in countries" :key="index">
+                        {{ country }}
+                      </option>
+                    </select>
+                    <select v-model="user_profile['state']" v-else @input="fetched_state">
+                      <option v-for="(state,index) in country_states.states" :key="index">
+                        {{ state }}
+                      </option>
+                    </select>
+                    <span class="icon is-medium is-left">
+                      <i class="fas fa-globe"></i>
+                    </span>
+                  </div>&nbsp;
+                  <button class="button is-danger is-outlined" v-if="index === 'country'"
+                          @click="user_profile['country'] = ''">
+                      <span>Clear Country</span>
+                  </button>
+                   <button class="button is-danger is-outlined" v-else
+                            @click="user_profile['state'] = ''">
+                      <span>Clear State</span>
+                  </button>
+                      <div>
+                  <p class="is-info help">
+                    * Did you know that you could click on the dropdown menu and start typing to search for your Country or State *
+                  </p>
+                </div>
+                </div>
+
+
+                <div v-if="index !== 'country' && index !== 'state' ">
+                  <input class="input is-medium" type="text" v-model="user_profile[index]"
+                     :disabled="index === 'date_joined' || index === 'email' || index === 'username'"
+                     >
+                </div>
+
               </div>
             </div>
           </div>
@@ -107,6 +143,8 @@
 import axios from 'axios'
 import Cookies from 'cookies-js'
 import { toast } from 'bulma-toast'
+import countries from "../assets/Profile/countries";
+import countries_and_states from '../assets/Profile/countries_and_states'
 
 export default{
   name: "Profile",
@@ -114,13 +152,12 @@ export default{
     return {
       user_profile: null, // This is where we are going to store all of our user Profile details
       original_profile: null, // We are going to use this to check if they user changed anything
+      countries: [],
+      states: null,
       edit_mode: false,
       showConfirm: false,
-      unable_to_edit: true,
       error_message: '',
-      changed_info: ''
-
-
+      changed_info: '',
     }
   },
   methods: {
@@ -189,9 +226,26 @@ export default{
     },
     accessToken(){
       return  Cookies('accessToken')
+    },
+    country_states(){
+      let country_selected = {}
+      if(this.user_profile['country']){
+        let state_obj = this.states.filter(country => country.country === this.user_profile['country'])
+        country_selected = state_obj[0] // the thing is we are getting an array back so we need to grab the first result
+      }else{
+        country_selected = {states: ['Please choose a country first!!']} // We need this to make sure that country_states return something not null
+      }
+      console.log(country_selected)
+      return country_selected
     }
   },
   created(){
+    // We are going to set our model countries to the our country objects
+    this.states = countries_and_states.countries
+    this.states.forEach(country => {
+      this.countries.push(country.country)
+    })
+    console.log(this.countries)
     // we are going to use our cookies because mounted() runs up before our store
     axios.get(`profile_list/user_profile/${this.user_id}/`,{
        headers: { Authorization: `Bearer ${this.accessToken}` }
