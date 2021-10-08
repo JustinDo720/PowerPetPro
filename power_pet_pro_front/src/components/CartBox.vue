@@ -30,12 +30,19 @@
   </tr>
 </template>
 <script>
-import { mapState } from 'vuex'
+import { mapState} from 'vuex'
+import Cookies from 'cookies-js'
 
 export default{
   name: 'CartBox',
   props:{
     cart_item: Object
+  },
+  data(){
+    return{
+      accessToken: '',
+      user_id: '',
+    }
   },
   computed:{
     ...mapState(['cart']),
@@ -71,6 +78,13 @@ export default{
       // splice(index_to_remove, delete_count)
       this.cart.items.splice(cart_item_index, 1)
       this.updateCart()
+    }
+  },
+  created(){
+    if(Cookies('user_id') && Cookies('accessToken')){
+      this.accessToken = Cookies('accessToken')
+      this.user_id = Cookies('user_id')
+
     }
   }
 }

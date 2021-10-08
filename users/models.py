@@ -23,6 +23,7 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    # We are using to='<app_label>.<Model Name>' to remove  (most likely due to a circular import) error
     first_name = models.TextField(max_length=100, blank=True, null=True)
     last_name = models.TextField(max_length=100, blank=True, null=True)
     phone_number = models.IntegerField(blank=True, null=True)

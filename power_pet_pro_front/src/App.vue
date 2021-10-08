@@ -30,6 +30,9 @@ export default {
   computed: {
     ...mapState(["isLoading"]),
   },
+  beforeCreate() {
+    console.log('App')
+  },
   mounted() {
     var quickviews = bulmaQuickview.attach(); // quickviews now contains an array of all Quickview instances
   },

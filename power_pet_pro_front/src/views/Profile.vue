@@ -251,6 +251,7 @@ export default{
        headers: { Authorization: `Bearer ${this.accessToken}` }
     }).then(response=>{
       this.user_profile = response.data
+      console.log(this.user_profile)
       let original_data = {}
       for(let key in response.data){
         original_data[key] = response.data[key]

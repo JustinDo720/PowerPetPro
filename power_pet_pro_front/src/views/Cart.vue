@@ -47,7 +47,7 @@
 <script>
 import CartBox from "../components/CartBox";
 
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default{
   name: 'Cart',

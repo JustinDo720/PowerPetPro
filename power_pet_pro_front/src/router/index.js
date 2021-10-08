@@ -47,9 +47,6 @@ const routes = [
     path: '/cart/',
     name: "Cart",
     component: Cart,
-    meta: {
-      requiresLogin: true
-    }
   },
   {
     path: '/login/',
@@ -93,6 +90,7 @@ const router = createRouter({
   routes,
 });
 
+console.log('Router')
 store.dispatch('initializeStore').then(()=> {
   router.beforeEach((to, from, next) => {
     if (to.matched.some(response => response.meta.requiresLogin)) {

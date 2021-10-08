@@ -13,4 +13,5 @@ Cookies.defaults = {
     path: '/',
     secure: true,
 };
+
 createApp(App).use(store).use(router).mount("#app");

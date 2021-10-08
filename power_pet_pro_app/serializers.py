@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product
+from .models import Category, Product, CartItem
 from users.models import CustomUser, Profile
 from djoser.serializers import UserCreateSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -88,6 +88,22 @@ class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = '__all__'
+
+
+class CartItemSerializer(serializers.ModelSerializer):
+    product_name = serializers.SerializerMethodField('get_product_name')
+
+    def get_product_name(self, cart):
+        return cart.product.name
+
+    class Meta:
+        model = CartItem
+        fields = (
+            'profile',
+            'product',
+            'quantity',
+            'product_name',
+        )
 
 
 # Custom Register Serializer

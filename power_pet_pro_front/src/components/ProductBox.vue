@@ -54,7 +54,12 @@ export default {
         product: storeItem,
         quantity: 1, // 1 is our default because in our Home page we only offer one item
       };
-      this.$store.commit("addToCart", { item_object: item });
+     const current_cart_ids = JSON.parse(localStorage.getItem('cart')).items.map(item => item.product.id)
+      console.log(current_cart_ids)
+      this.$store.commit('addToCart',{
+        item_object: item,
+        current_cart: current_cart_ids
+      })
     },
   },
 };

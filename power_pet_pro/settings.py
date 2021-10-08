@@ -216,7 +216,7 @@ EMAIL_USE_TLS = True
 
 # Django Extensions
 SHELL_PLUS_PRE_IMPORTS = [
-    'from power_pet_pro_app.models import Category, Products',
+    'from power_pet_pro_app.models import Category, Product, CartItem',
     'from django.contrib.auth.models import User',
     'from users.models import Profile',
     'from faker import Faker'

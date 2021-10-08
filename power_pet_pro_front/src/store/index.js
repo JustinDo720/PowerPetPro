@@ -33,9 +33,8 @@ export default createStore({
       state.latestProducts = latestProductsProxy.latestProductsProxy;
     },
     // Let's go ahead and make a function that changes the cart items
-    addToCart(state, item_object) {
-      let item = item_object.item_object // this will allow us to just access products or quantity must easier
-
+    addToCart(state, {item_object, current_cart}) {
+      let item = item_object// this will allow us to just access products or quantity must easier
       // We want to check if the product exist using the ids.
       const exists = state.cart.items.filter(cart_item => cart_item.product.id === item.product.id)
       // if our exists has a length > 0 that means the product exist and we need to handle that
@@ -48,6 +47,17 @@ export default createStore({
       }
 
       // regardless of exists, we need to update our localstorage cart with state card for initializeStore
+      if(state.accessToken){
+        let headers = {Authorization: `Bearer ${state.accessToken}`}
+        current_cart.push(item.product.id)
+        axios.post(`profile_list/user_profile/${state.user_id}/cart/`,{
+          cart: current_cart,
+        }, {headers}).then(r=>{
+          console.log(r)
+        }).catch(err=>{
+          console.log(err.response.data)
+        })
+      }
       localStorage.setItem("cart", JSON.stringify(state.cart));
 
     },
@@ -79,9 +89,9 @@ export default createStore({
     },
     initializeStore(state, {username, user_id, accessToken, refreshToken}){
         if (localStorage.getItem("cart")) {
-        // If cart exist then we will set our state to the cart
-        // We use JSON.parse to grab an object wrapped in strings because of Local Storage
-        state.cart = JSON.parse(localStorage.getItem("cart"));
+          // If cart exist then we will set our state to the cart
+          // We use JSON.parse to grab an object wrapped in strings because of Local Storage
+          state.cart = JSON.parse(localStorage.getItem("cart"));
         } else {
           // NOTE: Localstorage usually takes strings thats why we need stringify to wrap our obj in string format
           // we dont have cart in our localstorage so lets set it

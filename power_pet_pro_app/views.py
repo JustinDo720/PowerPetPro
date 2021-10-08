@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
-from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer
-from .models import Product, Category
+from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, CartItemSerializer
+from .models import Product, Category, CartItem
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
@@ -170,7 +170,6 @@ class UserProfile(APIView):
     def get_object(self, user_id):
         return Profile.objects.get(id=user_id)
 
-
     def get(self, request, user_id):
         user_profile = self.get_object(user_id)
         serializer = ProfileSerializer(user_profile, many=False)
@@ -180,10 +179,41 @@ class UserProfile(APIView):
         user_profile = self.get_object(user_id)
         profile_serializer = ProfileSerializer(user_profile, data=request.data)
         if profile_serializer.is_valid():
-            print(profile_serializer.validated_data.get('phone_number'))
-            print(profile_serializer.validated_data.get('first_name'))
-            print(profile_serializer.validated_data.get('last_name'))
             profile_serializer.save()
             return Response(profile_serializer.data, status=status.HTTP_201_CREATED)
         return Response(profile_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class UserCart(APIView):
+    """
+    Provides details about the users cart.
+        - List all the items
+        - Returns a total amount for usage
+        - Allows posting cart items to the correct user
+    """
+
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, user_id):
+        # lets check if the obj exist
+        try:
+            return CartItem.objects.filter(profile=user_id)
+        except CartItem.DoesNotExist:
+            raise Http404
+
+    # time to override the get function: make sure to pass in the user_id
+    def get(self, request, user_id, format=None):
+        # we need to get the profile so we will be using user_id for filtering
+        cart = self.get_object(user_id)  # so we are using that get_obj function passing in args
+        serializer = CartItemSerializer(cart, many=True)
+        return Response(serializer.data)
+
+    # lets handle posting cart items to user cart
+    def post(self, request, user_id, format=None):
+        # since we are just posting a cart object we wont need the user_id here
+        serializer = CartItemSerializer(data=request.data)
+        # heres where we actually handle the post request
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
