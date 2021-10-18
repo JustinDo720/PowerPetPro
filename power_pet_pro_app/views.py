@@ -254,7 +254,7 @@ def updateUserCart(request, user_id, product_id):
             return Response(post_serializer.data)
         return Resposne(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'PUT':
-        main_serializer = CartItemSerializer(prodpostuct, many=False, data=request.data)
+        main_serializer = CartItemSerializer(product, many=False, data=request.data)
         if main_serializer.is_valid():
             main_serializer.save()
             return Response(main_serializer.data)

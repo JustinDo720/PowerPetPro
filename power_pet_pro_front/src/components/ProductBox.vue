@@ -15,12 +15,7 @@
         </a>
         <p class="subtitle is-3">${{ product.price }}</p>
         <div class="columns is-multiline">
-          <footer
-            class="
-              card-footer
-              column
-              has-text-centered"
-          >
+          <footer class="card-footer column has-text-centered">
             <button class="button is-primary" @click="addToCart(product)">
               <span class="icon is-small">
                 <i class="fas fa-plus"></i>
@@ -54,12 +49,9 @@ export default {
         product: storeItem,
         quantity: 1, // 1 is our default because in our Home page we only offer one item
       };
-     const current_cart_ids = JSON.parse(localStorage.getItem('cart')).items.map(item => item.product.id)
-      console.log(current_cart_ids)
-      this.$store.commit('addToCart',{
+      this.$store.commit("addToCart", {
         item_object: item,
-        current_cart: current_cart_ids
-      })
+      });
     },
   },
 };

@@ -91,10 +91,20 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
 
 class CartItemSerializer(serializers.ModelSerializer):
-    product_name = serializers.SerializerMethodField('get_product_name')
+    name = serializers.SerializerMethodField('get_product_name')
+    price = serializers.SerializerMethodField('get_product_price')
+    # Make sure the name of the SerializerMethodField is not the same as the function for it
+    get_absolute_url = serializers.SerializerMethodField('get_abs_url')
 
     def get_product_name(self, cart):
         return cart.product.name
+
+    def get_product_price(self, cart):
+        return cart.product.price
+
+    # This cannot be get_absolute_url which brings up a config error
+    def get_abs_url(self, cart):
+        return cart.product.get_absolute_url()
 
     class Meta:
         model = CartItem
@@ -102,7 +112,9 @@ class CartItemSerializer(serializers.ModelSerializer):
             'profile',
             'product',
             'quantity',
-            'product_name',
+            'name',
+            'price',
+            'get_absolute_url'
         )
 
 

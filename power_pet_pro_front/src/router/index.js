@@ -11,7 +11,7 @@ import Activate from "../views/Activate";
 import ResetPassword from "../views/ResetPassword";
 import ResetPasswordConfirmation from "../views/ResetPasswordConfirmation";
 import Reactivate from "../views/Reactivate";
-import store from "../store"
+import store from "../store";
 
 const routes = [
   {
@@ -41,48 +41,48 @@ const routes = [
   {
     path: "/product_list/search",
     name: "Search",
-    component: Search
+    component: Search,
   },
   {
-    path: '/cart/',
+    path: "/cart/",
     name: "Cart",
     component: Cart,
   },
   {
-    path: '/login/',
+    path: "/login/",
     name: "Login",
     component: LogIn,
   },
   {
-    path: '/register/',
+    path: "/register/",
     name: "Register",
     component: Register,
   },
   {
-    path: '/profile/',
-    name: 'Profile',
+    path: "/profile/",
+    name: "Profile",
     component: Profile,
   },
   {
-    path: '/activate/:uid/:token',
-    name: 'Activate',
+    path: "/activate/:uid/:token",
+    name: "Activate",
     component: Activate,
   },
   {
-    path: '/reset_password/',
-    name: 'ResetPassword',
+    path: "/reset_password/",
+    name: "ResetPassword",
     component: ResetPassword, // This will grab the email and send an email with the reset link
   },
   {
-    path: '/password/reset/confirm/:uid/:token',
-    name: 'ResetPasswordConfirmation',
-    component: ResetPasswordConfirmation // This will actually reset the password
+    path: "/password/reset/confirm/:uid/:token",
+    name: "ResetPasswordConfirmation",
+    component: ResetPasswordConfirmation, // This will actually reset the password
   },
   {
-    path: '/reactivate/',
-    name: 'Reactivate',
-    component: Reactivate
-  }
+    path: "/reactivate/",
+    name: "Reactivate",
+    component: Reactivate,
+  },
 ];
 
 const router = createRouter({
@@ -90,18 +90,17 @@ const router = createRouter({
   routes,
 });
 
-console.log('Router')
-store.dispatch('initializeStore').then(()=> {
+store.dispatch("initializeStore").then(() => {
   router.beforeEach((to, from, next) => {
-    if (to.matched.some(response => response.meta.requiresLogin)) {
+    if (to.matched.some((response) => response.meta.requiresLogin)) {
       if (!store.getters.isAuth) {
-        next({name: 'Login'})
+        next({ name: "Login" });
       } else {
-        next()
+        next();
       }
     } else {
-      next()
+      next();
     }
-  })
-})
+  });
+});
 export default router;

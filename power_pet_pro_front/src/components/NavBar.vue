@@ -82,9 +82,13 @@
 
       <div class="navbar-item column is-three-fifths">
         <div class="control has-icons-left has-icons-right">
-          <input class="input is-rounded" type="text"
-                 placeholder="Search" v-model="searchTerm"
-                 @keydown.enter="addSearch"/>
+          <input
+            class="input is-rounded"
+            type="text"
+            placeholder="Search"
+            v-model="searchTerm"
+            @keydown.enter="addSearch"
+          />
           <span class="icon is-small is-left">
             <i class="fas fa-search"></i>
           </span>
@@ -113,53 +117,61 @@
             </div>
             <div class="dropdown-menu" id="dropdown-menu3" role="menu">
               <div class="dropdown-content">
-                <router-link :to="{name:'Login'}" >
-                  <a class="dropdown-item" @click="showAccount = !showAccount"> Log In </a>
+                <router-link :to="{ name: 'Login' }">
+                  <a class="dropdown-item" @click="showAccount = !showAccount">
+                    Log In
+                  </a>
                 </router-link>
-                <router-link  :to="{name:'Register'}">
-                  <a class="dropdown-item" @click="showAccount = !showAccount"> Create Account </a>
+                <router-link :to="{ name: 'Register' }">
+                  <a class="dropdown-item" @click="showAccount = !showAccount">
+                    Create Account
+                  </a>
                 </router-link>
-                 <router-link  :to="{name:'Reactivate'}">
-                  <a class="dropdown-item" @click="showAccount = !showAccount"> Resend Activation Email </a>
+                <router-link :to="{ name: 'Reactivate' }">
+                  <a class="dropdown-item" @click="showAccount = !showAccount">
+                    Resend Activation Email
+                  </a>
                 </router-link>
-                <router-link  :to="{name:'ResetPassword'}">
-                  <a class="dropdown-item" @click="showAccount = !showAccount"> Reset Password </a>
+                <router-link :to="{ name: 'ResetPassword' }">
+                  <a class="dropdown-item" @click="showAccount = !showAccount">
+                    Reset Password
+                  </a>
                 </router-link>
-
               </div>
             </div>
           </div>
         </div>
         <div class="navbar-item" v-if="isAuth">
           <span class="mr-1">
-            <p class="subtitle is-5 "
-               :class="{'has-text-white-bis': !showMobileMenu}">
-              Welcome, <router-link :to="{name:'Profile'}">{{ username }}!&nbsp;</router-link>
+            <p
+              class="subtitle is-5"
+              :class="{ 'has-text-white-bis': !showMobileMenu }"
+            >
+              Welcome,
+              <router-link :to="{ name: 'Profile' }"
+                >{{ username }}!&nbsp;</router-link
+              >
             </p>
           </span>
 
           <span>
             <button class="button" @click="logOut()">
-              <span>
-                 Log out
-              </span>
+              <span> Log out </span>
               <span class="icon is-medium">
                 <i class="fas fa-sign-out-alt"></i>
               </span>
             </button>
           </span>
-
         </div>
         <div class="navbar-item">
-          <router-link :to="{name:'Cart'}">
-              <button class="button is-medium">
+          <router-link :to="{ name: 'Cart' }">
+            <button class="button is-medium">
               <span class="icon is-small">
                 <i class="fas fa-shopping-bag"></i>
               </span>
               <span>({{ cartLength }})</span>
             </button>
           </router-link>
-
         </div>
       </div>
     </div>
@@ -176,13 +188,13 @@ export default {
     return {
       showMobileMenu: false,
       store_categories: [],
-      searchTerm: '',
-      showAccount: false
+      searchTerm: "",
+      showAccount: false,
     };
   },
   computed: {
     ...mapState(["cart", "username"]),
-    ...mapGetters(['isAuth']),
+    ...mapGetters(["isAuth"]),
     cartLength() {
       // return this.$store.state.cart.items.length
       let totalLength = 0;
@@ -192,15 +204,15 @@ export default {
       return totalLength;
     },
   },
-  methods:{
-    async addSearch(){
-      await this.$store.commit('addSearch', {searchTerm: this.searchTerm})
-      this.$router.push({'name':'Search'})
-      this.searchTerm = ''
+  methods: {
+    async addSearch() {
+      await this.$store.commit("addSearch", { searchTerm: this.searchTerm });
+      this.$router.push({ name: "Search" });
+      this.searchTerm = "";
     },
-    logOut(){
-      this.$store.commit('logoutUser')
-    }
+    logOut() {
+      this.$store.commit("logoutUser");
+    },
   },
   created() {
     // we want to grab our categories

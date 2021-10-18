@@ -72,12 +72,14 @@ export default {
         quantity: this.quantity,
       };
       // now we also need to pass in the current_cart
-      const current_cart_ids = JSON.parse(localStorage.getItem('cart')).items.map(item => item.product.id)
-      console.log(current_cart_ids)
-      this.$store.commit('addToCart',{
+      const current_cart_ids = JSON.parse(
+        localStorage.getItem("cart")
+      ).items.map((item) => item.product.id);
+      console.log(current_cart_ids);
+      this.$store.commit("addToCart", {
         item_object: item,
-        current_cart: current_cart_ids
-      })
+        current_cart: current_cart_ids,
+      });
 
       // once we add our item then lets toast
       toast({
