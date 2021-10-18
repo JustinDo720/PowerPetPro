@@ -15,12 +15,7 @@
         </a>
         <p class="subtitle is-3">${{ product.price }}</p>
         <div class="columns is-multiline">
-          <footer
-            class="
-              card-footer
-              column
-              has-text-centered"
-          >
+          <footer class="card-footer column has-text-centered">
             <button class="button is-primary" @click="addToCart(product)">
               <span class="icon is-small">
                 <i class="fas fa-plus"></i>
@@ -54,7 +49,9 @@ export default {
         product: storeItem,
         quantity: 1, // 1 is our default because in our Home page we only offer one item
       };
-      this.$store.commit("addToCart", { item_object: item });
+      this.$store.commit("addToCart", {
+        item_object: item,
+      });
     },
   },
 };

@@ -16,8 +16,20 @@ class UserAccountManager(UserManager):
 # Create your models here.
 class CustomUser(AbstractUser):
     username = models.TextField(max_length=250, unique=True, blank=False, null=False)
-    first_name = models.TextField(max_length=100)
-    last_name = models.TextField(max_length=100)
     email = models.EmailField(max_length=250, unique=True, blank=False, null=False)
 
     objects = UserAccountManager()
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    # We are using to='<app_label>.<Model Name>' to remove  (most likely due to a circular import) error
+    first_name = models.TextField(max_length=100, blank=True, null=True)
+    last_name = models.TextField(max_length=100, blank=True, null=True)
+    phone_number = models.IntegerField(blank=True, null=True)
+    address = models.TextField(max_length=100, blank=True, null=True)
+    city = models.TextField(max_length=100, blank=True, null=True)
+    date_joined = models.DateField(auto_now_add=True)
+    country = models.TextField(max_length=75, blank=True, null=True)
+    state = models.TextField(max_length=75, blank=True, null=True)
+    zip_code = models.IntegerField(blank=True, null=True)

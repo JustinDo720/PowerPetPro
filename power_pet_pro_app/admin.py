@@ -1,9 +1,11 @@
 from django.contrib import admin
-from .models import Profile, Category, Product
+from .models import Category, Product, CartItem
+from users.models import Profile
 from users.models import CustomUser
 
 models = [
     CustomUser,
+    CartItem,
     Profile,
     Category,
     Product

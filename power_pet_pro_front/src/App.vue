@@ -30,9 +30,6 @@ export default {
   computed: {
     ...mapState(["isLoading"]),
   },
-  beforeCreate() {
-    this.$store.commit("initializeStore");
-  },
   mounted() {
     var quickviews = bulmaQuickview.attach(); // quickviews now contains an array of all Quickview instances
   },
@@ -43,6 +40,8 @@ export default {
 @import "../node_modules/bulma";
 @import "~bulma";
 @import "~bulma-quickview";
+@import "~bulma-switch";
+@import "~bulma-divider";
 
 .lds-dual-ring {
   display: inline-block;
