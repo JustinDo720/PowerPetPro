@@ -78,7 +78,7 @@ export default createStore({
         // the main reason why we need this format is because of our serializer returning this specific format
         // rather than have all product details under the key product, we have the necessary product info here
         let cart_item_format = {
-          profile: state.user_id,
+          profile: state.user_id, // If there is no user then profile will have a null value
           product: item.product.id,
           quantity: item.quantity,
           name: item.product.name,
@@ -100,6 +100,9 @@ export default createStore({
       state.searchTerm = searchTerm.searchTerm;
     },
     loginUser(state, { username, accessToken, refreshToken, user_id }) {
+      // before we do anything, we need to make sure the cart is empty after login so
+      state.cart.items = []
+
       state.username = username;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
@@ -121,10 +124,11 @@ export default createStore({
       Cookies.expire("user_id");
 
       // we also need to take care of cart
-      state.cart.items = "";
+      state.cart.items = [];
       localStorage.removeItem("cart");
     },
     initializeStore(state, { username, user_id, accessToken, refreshToken }) {
+      console.log('Am i Here?')
       if (localStorage.getItem("cart")) {
         // If cart exist then we will set our state to the cart
         // We use JSON.parse to grab an object wrapped in strings because of Local Storage
@@ -135,13 +139,13 @@ export default createStore({
             for (let key in response.data) {
               state.cart.items.push(response.data[key]);
             }
+            // After you set cart items in state we also need to set that in Cart so
+            localStorage.setItem("cart", JSON.stringify(state.cart));
           });
-        // After you set cart items in state we also need to set that in Cart so
-        localStorage.setItem("cart", JSON.stringify(state.cart));
+
       } else {
         // NOTE: Localstorage usually takes strings thats why we need stringify to wrap our obj in string format
         // we dont have cart in our localstorage so lets set it
-        console.log("Why is is that when we refresh cart this comes back?");
         localStorage.setItem("cart", JSON.stringify(state.cart));
       }
 
@@ -156,6 +160,16 @@ export default createStore({
         state.refreshToken
       );
     },
+    initializeAnonymousStore(state){
+       console.log('Am i There?')
+       if (localStorage.getItem("cart")) {
+         console.log(JSON.parse(localStorage.getItem('cart')))
+         // we set the state.cart = the localstorage which takes care of anonymous carts (no login required)
+         state.cart = JSON.parse(localStorage.getItem('cart'))
+      } else {
+        localStorage.setItem("cart", JSON.stringify(state.cart));
+      }
+    }
   },
   actions: {
     initializeStore(context) {
@@ -198,10 +212,14 @@ export default createStore({
                 });
               });
           });
+      } else {
+        // We are in anonymous user territory so we are going to set cart item to localstorage without user info
+        context.commit('initializeAnonymousStore')
       }
     },
     // we are going to need an action for loginUser because we will be committing two mutations
     loginUser(context, { username, accessToken, refreshToken, user_id }) {
+
       // once we commit loginUser which will save the tokens and update our state
       context.commit("loginUser", {
         username: username,
