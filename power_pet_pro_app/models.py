@@ -124,3 +124,15 @@ class CartItem(models.Model):
 
     def __str__(self):
         return self.product.name
+
+
+class MessageBox(models.Model):
+    msg = models.TextField(max_length=300, unique=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Message Boxes'
+        ordering = ('-date_added',)
+
+    def __str__(self):
+        return self.msg

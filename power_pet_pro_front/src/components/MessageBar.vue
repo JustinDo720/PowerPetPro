@@ -1,18 +1,30 @@
 <template>
   <div class="container is-fluid messageBackground">
     <div>
-      <p class="whiteText">
-        This container is <strong>centered</strong> on desktop and larger
-        viewports.
+      <p v-for="(message, index) in messageboxes" :key="index" class="whiteText">
+        {{ message.msg }}
       </p>
     </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import axios from "axios";
+
 export default {
   name: "MessageBar",
+  computed:{
+    ...mapState(['messageboxes'])
+  },
+  created(){
+      // now we need to get all the messages to put them into state.messageboxes
+    axios.get('admin_panel/message_box/').then(response=>{
+      this.$store.commit('fetch_message_box', {messages:response.data.results})
+    })
+  }
 };
+
 </script>
 
 <style scoped>

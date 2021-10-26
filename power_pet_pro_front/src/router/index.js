@@ -11,6 +11,8 @@ import Activate from "../views/Activate";
 import ResetPassword from "../views/ResetPassword";
 import ResetPasswordConfirmation from "../views/ResetPasswordConfirmation";
 import Reactivate from "../views/Reactivate";
+import MessageBox from "../views/MessageBox";
+import AdminProduct from "../views/AdminProduct";
 import store from "../store";
 
 const routes = [
@@ -83,6 +85,16 @@ const routes = [
     name: "Reactivate",
     component: Reactivate,
   },
+  {
+    path: "/admin/messagebox/",
+    name: "MessageBox",
+    component: MessageBox
+  },
+  {
+    path: "/admin/adminproduct/",
+    name: "AdminProduct",
+    component: AdminProduct
+  }
 ];
 
 const router = createRouter({

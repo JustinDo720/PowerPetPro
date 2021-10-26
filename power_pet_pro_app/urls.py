@@ -14,7 +14,7 @@ urlpatterns = [
     path('category_list/category_detail/<slug:category_slug>/', views.CategoryDetail.as_view(), name='category_detail'),
     path('product_list/latest_products/', views.LatestProducts.as_view(), name='latest_products'),
     path('product_list/search/', views.search, name='search'),
-    path('post_product/', views.PostProduct.as_view(), name='post_product'),
+    path('admin_panel/post_product/', views.PostProduct.as_view(), name='post_product'),
     path('api/token/', views.MyTokenObtainPairView.as_view(), name='token'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='refresh'),
     path('activate/<str:uid>/<str:token>/', views.activate_acc, name='activate_acc'),
@@ -22,4 +22,7 @@ urlpatterns = [
     path('profile_list/user_profile/<int:user_id>/', views.UserProfile.as_view(), name='user_profile'),
     path('profile_list/user_profile/<int:user_id>/cart/', views.UserCart.as_view(), name='user_cart'),
     path('profile_list/user_profile/<int:user_id>/cart/<int:product_id>/', views.updateUserCart, name='update_user_cart'),
+    path('admin_panel/message_box/', views.MessageBoxView.as_view(), name='message_box'),
+    path('admin_panel/message_box/update/<int:message_id>/', views.updateMessageBoxView, name='update_msg_box_view'),
+    path('admin_panel/message_box/post/', views.postMessageBoxView, name='post_msg_box_view'),
 ]

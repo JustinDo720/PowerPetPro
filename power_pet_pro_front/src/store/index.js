@@ -3,11 +3,13 @@ import axios from "axios";
 import Cookies from "cookies-js";
 
 // We will use this function to save our tokens
-function saveTokens(username, user_id, accessToken, refreshToken) {
+function saveTokens(username, user_id, accessToken, refreshToken, is_staff) {
+  console.log('saveTokens: ' + is_staff)
   Cookies.set("username", username, { expires: 604800 });
   Cookies.set("user_id", user_id, { expires: 604800 });
   Cookies.set("accessToken", accessToken, { expires: 604800 });
   Cookies.set("refreshToken", refreshToken, { expires: 604800 });
+  Cookies.set("is_staff", is_staff, { expires: 604800 });
 }
 
 export default createStore({
@@ -23,6 +25,9 @@ export default createStore({
     refreshToken: "",
     isLoading: false, // We are going to add a loading bar for things that are loading
     searchTerm: "",
+    is_staff: false,
+    messageboxes: [],
+    store_categories: [],
   },
   mutations: {
     // mutations have state as their parameters as they're the only ones that could actually change state
@@ -99,7 +104,7 @@ export default createStore({
     addSearch(state, searchTerm) {
       state.searchTerm = searchTerm.searchTerm;
     },
-    loginUser(state, { username, accessToken, refreshToken, user_id }) {
+    loginUser(state, { username, accessToken, refreshToken, user_id, is_staff }) {
       // before we do anything, we need to make sure the cart is empty after login so
       state.cart.items = []
 
@@ -107,6 +112,7 @@ export default createStore({
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
       state.user_id = user_id;
+      state.is_staff = is_staff
 
       // We don't need to save these tokens because we are already running an initializeStore right after this
       // saveTokens(state.username, state.user_id, state.accessToken, state.refreshToken)
@@ -117,17 +123,19 @@ export default createStore({
       state.accessToken = "";
       state.refreshToken = "";
       state.user_id = "";
+      state.is_staff = "";
 
       Cookies.expire("username");
       Cookies.expire("accessToken");
       Cookies.expire("refreshToken");
       Cookies.expire("user_id");
+      Cookies.expire("is_staff");
 
       // we also need to take care of cart
       state.cart.items = [];
       localStorage.removeItem("cart");
     },
-    initializeStore(state, { username, user_id, accessToken, refreshToken }) {
+    initializeStore(state, { username, user_id, accessToken, refreshToken, is_staff }) {
       console.log('Am i Here?')
       if (localStorage.getItem("cart")) {
         // If cart exist then we will set our state to the cart
@@ -153,11 +161,13 @@ export default createStore({
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
       state.user_id = user_id;
+      state.is_staff = is_staff
       saveTokens(
         state.username,
         state.user_id,
         state.accessToken,
-        state.refreshToken
+        state.refreshToken,
+        state.is_staff,
       );
     },
     initializeAnonymousStore(state){
@@ -169,6 +179,12 @@ export default createStore({
       } else {
         localStorage.setItem("cart", JSON.stringify(state.cart));
       }
+    },
+    update_categories(state, {categories}){
+      state.store_categories = categories
+    },
+    fetch_message_box(state, {messages}){
+      state.messageboxes = messages
     }
   },
   actions: {
@@ -177,12 +193,14 @@ export default createStore({
         Cookies("username") &&
         Cookies("user_id") &&
         Cookies("accessToken") &&
-        Cookies("refreshToken")
+        Cookies("refreshToken") &&
+        Cookies('is_staff')
       ) {
         const username = Cookies("username");
         const user_id = Cookies("user_id");
         const accessToken = Cookies("accessToken");
         const refreshToken = Cookies("refreshToken");
+        const is_staff = Cookies("is_staff");
 
         axios
           .post("http://localhost:8000/auth/jwt/verify/", {
@@ -194,6 +212,7 @@ export default createStore({
               user_id: user_id,
               accessToken: accessToken,
               refreshToken: refreshToken,
+              is_staff: is_staff
             });
           })
           .catch((err) => {
@@ -218,7 +237,7 @@ export default createStore({
       }
     },
     // we are going to need an action for loginUser because we will be committing two mutations
-    loginUser(context, { username, accessToken, refreshToken, user_id }) {
+    loginUser(context, { username, accessToken, refreshToken, user_id, is_staff}) {
 
       // once we commit loginUser which will save the tokens and update our state
       context.commit("loginUser", {
@@ -226,6 +245,7 @@ export default createStore({
         accessToken: accessToken,
         refreshToken: refreshToken,
         user_id: user_id,
+        is_staff: is_staff,
       });
       // we need to commit a initialize store so we don't have to force refresh a page
       // this will allow us to run our get request
@@ -234,6 +254,7 @@ export default createStore({
         user_id: user_id,
         accessToken: accessToken,
         refreshToken: refreshToken,
+        is_staff: is_staff
       });
     },
   },

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product, CartItem
+from .models import Category, Product, CartItem, MessageBox
 from users.models import CustomUser, Profile
 from djoser.serializers import UserCreateSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -135,5 +135,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add extra responses here
         data['username'] = self.user.username
         data['user_id'] = self.user.id  # We are going to use this for uuid
+        data['is_staff'] = self.user.is_staff
 
         return data
+
+
+class MessageBoxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MessageBox
+        fields = (
+            'msg',
+        )

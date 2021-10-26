@@ -2,12 +2,12 @@ from django.shortcuts import render, redirect
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
-    CartItemSerializer
-from .models import Product, Category, CartItem
+    CartItemSerializer, MessageBoxSerializer
+from .models import Product, Category, CartItem, MessageBox
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.db.models import Q
 from rest_framework_simplejwt.views import TokenObtainPairView
 from power_pet_pro_app.serializers import MyTokenObtainPairSerializer
@@ -252,13 +252,55 @@ def updateUserCart(request, user_id, product_id):
         if post_serializer.is_valid():
             post_serializer.save()
             return Response(post_serializer.data)
-        return Resposne(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'PUT':
         main_serializer = CartItemSerializer(product, many=False, data=request.data)
         if main_serializer.is_valid():
             main_serializer.save()
             return Response(main_serializer.data)
-        return Resposne(main_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(main_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         product.delete()
+        return Response({"Success": "You have deleted an item from your cart."}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MessageBoxView(ListAPIView):
+    """
+        MessageBox will take care of retrieving all the messages in the box
+            -- We will get all the messages then we are going to put them into a list
+            -- We will NOT allow post requests here as post requests requires admin user ONLY
+    """
+
+    queryset = MessageBox.objects.all()
+    serializer_class = MessageBoxSerializer
+    pagination_class = PageNumberPagination
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def postMessageBoxView(request):
+    # We are going to let admin users post their messages
+    post_serializer = MessageBoxSerializer(data=request.data)
+    if post_serializer.is_valid():
+        post_serializer.save()
+        return Response(post_serializer.data, status=status.HTTP_201_CREATED)
+    return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE', 'PUT'])
+def updateMessageBoxView(request, message_id):
+    # We are going to to use this view to take care up updating and deleting our messages
+    try:
+        message = MessageBox.objects.get(id=message_id)
+    except MessageBox.DoesNotExist:
+        raise Http404
+
+    if request.method == 'PUT':
+        main_serializer = MessageBoxSerializer(message, many=False, data=request.data)
+        if main_serializer.is_valid():
+            main_serializer.save()
+            return Response(main_serializer.data)
+        return Response(main_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        message.delete()
         return Response({"Success": "You have deleted an item from your cart."}, status=status.HTTP_400_BAD_REQUEST)
