@@ -36,6 +36,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'id',
             'category',
             'category_name',
+            'image',
             'name',
             'description',
             'limited_description',

@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
+from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
     CartItemSerializer, MessageBoxSerializer
 from .models import Product, Category, CartItem, MessageBox
@@ -151,8 +152,10 @@ def search(request):
 # Admin use only
 class PostProduct(APIView):
     permission_classes = (IsAdminUser,)
+    parser_classes = (MultiPartParser,)
 
     def post(self, request, *args, **kwargs):
+        # Here we don't need file=request.FILES
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
