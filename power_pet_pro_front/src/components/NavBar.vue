@@ -64,10 +64,30 @@
                   <router-link
                     data-dismiss="quickview"
                     :to="{
+                      name: 'ViewAllMessages',
+                    }"
+                  >
+                   View All Messages
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
                       name: 'MessageBox',
                     }"
                   >
-                    Change Message of the Day
+                    Add/Edit Message of the Day
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'ViewAllProducts',
+                    }"
+                  >
+                   View All Products
                   </router-link>
                 </li>
                 <li>
@@ -78,6 +98,16 @@
                     }"
                   >
                     Add Product
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'AdminCategory',
+                    }"
+                  >
+                    Add Category
                   </router-link>
                 </li>
               </ul>

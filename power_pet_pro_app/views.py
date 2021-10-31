@@ -7,6 +7,7 @@ from .serializers import ProductSerializer, CategorySerializer, ProfileSerialize
 from .models import Product, Category, CartItem, MessageBox
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
+from power_pet_pro_app.pagination import ProductResultsSetPagination, MessageBarViewPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 from django.db.models import Q
@@ -41,13 +42,14 @@ def reset_password(request, uid, token):
         return redirect(frontend_url)
 
 
-class ProductList(ListCreateAPIView):
+class ProductList(ListAPIView):
     """
     List all of the products in our database
     """
     queryset = Product.objects.all()
+    permission_classes = (IsAdminUser,)
     serializer_class = ProductSerializer
-    pagination_class = PageNumberPagination
+    pagination_class = ProductResultsSetPagination
 
 
 class CategoryList(APIView):
@@ -162,6 +164,27 @@ class PostProduct(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['DELETE', 'PUT'])
+@permission_classes([IsAdminUser])
+def updateProduct(request, product_id):
+    # We are going to to use this view to take care up updating and deleting our products
+    try:
+        product = Product.objects.get(id=product_id)
+    except Product.DoesNotExist:
+        raise Http404
+
+    if request.method == 'PUT':
+        main_serializer = ProductSerializer(product, many=False, data=request.data)
+        if main_serializer.is_valid():
+            main_serializer.save()
+            return Response(main_serializer.data)
+        return Response(main_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    elif request.method == 'DELETE':
+        product.delete()
+        return Response({"success": "You have deleted an item from product list. Please refresh your page."},
+                        status=status.HTTP_200_OK)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):
@@ -279,6 +302,18 @@ class MessageBoxView(ListAPIView):
     pagination_class = PageNumberPagination
 
 
+class MessageBarView(ListAPIView):
+    """
+        MessageBox will take care of retrieving all the messages in the box
+            -- We will be using different pagination for our message bar
+            -- We want one message at a time for them to scroll over
+    """
+
+    queryset = MessageBox.objects.all()
+    serializer_class = MessageBoxSerializer
+    pagination_class = MessageBarViewPagination
+
+
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def postMessageBoxView(request):
@@ -291,6 +326,7 @@ def postMessageBoxView(request):
 
 
 @api_view(['DELETE', 'PUT'])
+@permission_classes([IsAdminUser])
 def updateMessageBoxView(request, message_id):
     # We are going to to use this view to take care up updating and deleting our messages
     try:
@@ -306,4 +342,18 @@ def updateMessageBoxView(request, message_id):
         return Response(main_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         message.delete()
-        return Response({"Success": "You have deleted an item from your cart."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"success": "You have deleted an item from your messages. Please refresh your page."}, status=status.HTTP_200_OK)
+
+
+# Admin use only
+class PostCategory(APIView):
+    permission_classes = (IsAdminUser,)
+
+    def post(self, request, *args, **kwargs):
+        serializer = CategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

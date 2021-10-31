@@ -27,6 +27,8 @@ export default createStore({
     searchTerm: "",
     is_staff: false,
     messageboxes: [],
+    next_url: '',  // We are going to store the next and previous url here in the state so we could just use mapState
+    previous_url: '',
     store_categories: [],
   },
   mutations: {
@@ -183,8 +185,10 @@ export default createStore({
     update_categories(state, {categories}){
       state.store_categories = categories
     },
-    fetch_message_box(state, {messages}){
+    fetch_message_box(state, {messages, next, previous}){
       state.messageboxes = messages
+      state.next_url = next
+      state.previous_url = previous
     }
   },
   actions: {

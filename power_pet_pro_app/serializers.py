@@ -145,5 +145,6 @@ class MessageBoxSerializer(serializers.ModelSerializer):
     class Meta:
         model = MessageBox
         fields = (
+            'id',
             'msg',
         )

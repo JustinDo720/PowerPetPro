@@ -1,15 +1,13 @@
 <template>
-  <section class="hero is-fullheight ">
+<section class="hero is-fullheight">
     <div class="hero-body">
       <div class="container has-text-centered">
-        <p class="title is-1">Adding A Message to the Message Box</p>
+        <p class="title is-1">Messages</p>
         <hr />
-        <p class="subtitle">Please Enter the follow information below to add a Message</p>
+        <p class="subtitle">Viewing all Messages</p>
 
         <div class="columns is-centered">
-
-          <!-- Here we are going to the box to display the messages -->
-           <div class="column is-5">
+          <div class="column is-5">
              <div class="box">
                  <div class="box" v-for="(message, index) in messageboxes" :key="index">
                    <span>
@@ -31,56 +29,31 @@
                       </span>
                     </button>
                    </span>
-
                 </div>
+               <nav class="pagination" role="navigation" aria-label="pagination">
+                  <button class="pagination-previous is-disabled"
+                          title="This is the first page"
+                          @click="change_messagebox(previous_url)">
+                    Previous
+                  </button>
+                  <button class="pagination-next" @click="change_messagebox(next_url)">
+                    Next page
+                  </button>
+
+                </nav>
              </div>
           </div>
-
-          <!-- Here we are going to the box to add messages -->
-          <div class="column is-5">
-            <form class="box" @submit.prevent="submit_message()">
-              <figure class="image is-128x128 is-inline-block">
-                <img
-                  class="is-square"
-                  alt="ppp-logo"
-                  src="../assets/ppp_logo.jpg"
-                />
-              </figure>
-
-               <div class="field">
-                <div class="control has-icons-left">
-                  <span class="icon is-medium is-left">
-                    <i class="fas fa-envelope"></i>
-                  </span>
-                  <input
-                    class="input is-medium"
-                    type="text"
-                    placeholder="Message "
-                    v-model="message"
-                  />
-                </div>
-              </div>
-
-              <div class="field" v-if="error_message">
-                <p class="help is-danger">
-                  {{ error_message }}
-                </p>
-              </div>
-              <button class="button is-success">Submit Message</button>
-            </form>
-          </div>
-
         </div>
       </div>
     </div>
   </section>
 
-  <div class="modal is-centered" :class="{'is-active':activate_modal, 'is-clipped':activate_modal}">
+  <div class="modal is-centered" :class="{'is-active':activate_edit_modal, 'is-clipped':activate_edit_modal}">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">Edit Message</p>
-        <button class="delete" aria-label="close" @click="activate_modal=false"></button>
+        <button class="delete" aria-label="close" @click="activate_edit_modal=false"></button>
       </header>
       <section class="modal-card-body">
         <div class="box">
@@ -90,12 +63,12 @@
       </section>
       <footer class="modal-card-foot is-centered">
         <button class="button is-success" @click="edit_message()">Save changes</button>
-        <button class="button" @click="activate_modal=false">Cancel</button>
+        <button class="button" @click="activate_edit_modal=false">Cancel</button>
       </footer>
     </div>
   </div>
 
-   <div class="modal is-centered" :class="{'is-active':activate_delete_modal, 'is-clipped':activate_delete_modal}">
+  <div class="modal is-centered" :class="{'is-active':activate_delete_modal, 'is-clipped':activate_delete_modal}">
     <div class="modal-background"></div>
     <div class="modal-card">
       <header class="modal-card-head">
@@ -113,62 +86,60 @@
       </footer>
     </div>
   </div>
-
 </template>
+
 <script>
-import axios from 'axios'
 import { mapState } from 'vuex'
-import {toast} from "bulma-toast";
+import axios from 'axios'
+import { toast } from 'bulma-toast'
 
 export default{
-  name: "MessageBox",
+  name: 'ViewAllMessages',
+  computed:{
+    ...mapState(['messageboxes', 'next_url', 'previous_url', 'accessToken'])
+  },
   data(){
     return{
-      message: '',
-      error_message: '',
-      activate_modal: false,
+      activate_edit_modal: false,
       chosen_message: '',
       chosen_message_id: null,
       activate_delete_modal: false,
     }
   },
   methods:{
-    submit_message(){
-      if(this.message){
-        // if these exists then we are going to submit the product
-        axios.post('admin_panel/message_box/post/',{
-          msg: this.message
-        }, {headers: {Authorization: `Bearer ${this.accessToken}`}}).then(()=>{
-          this.messageboxes.push({msg: this.message})
-          this.message = ''
-        }).catch(err=>{
-          console.log(err.response.data.msg)
-          this.error_message = err.response.data.msg[0]
+    change_messagebox(url){
+      // uses next_url or previous_url  to fetch different messages
+      if(url !== null){
+        axios.get(url).then(response=>{
+          this.$store.commit('fetch_message_box',{
+            messages: response.data.results,
+            next: response.data.next,
+            previous: response.data.previous
+          })
         })
       }
     },
-    edit_message_activation(msg_obj){
-      this.activate_modal = true
-      this.chosen_message = msg_obj.msg
-      this.chosen_message_id = msg_obj.id
-    },
-    edit_message(){
-      // Once we activate this function we want to update our message with the chosen_message
-      axios.put(`admin_panel/message_box/update/${this.chosen_message_id}/`,{
-        msg: this.chosen_message // NOTE: this.chosen_message will be the most updated message from modal textarea
-      }).then((response)=>{
-        this.activate_modal = false
-        let msg_changed = this.messageboxes.filter(msg=> msg.id === this.chosen_message_id)
-        msg_changed.msg = response.data.msg
-        console.log(msg_changed)
-      })
+    edit_message_activation(message_object){
+      this.activate_edit_modal = !this.activate_edit_modal
+      this.chosen_message_id = message_object.id
+      this.chosen_message = message_object.msg
     },
     delete_message_activation(message_object){
       this.activate_delete_modal = !this.activate_delete_modal
       this.chosen_message_id = message_object.id
       this.chosen_message = message_object.msg
     },
-        delete_message(){
+    edit_message(){
+       axios.put(`admin_panel/message_box/update/${this.chosen_message_id}/`,{
+        msg: this.chosen_message // NOTE: this.chosen_message will be the most updated message from modal textarea
+      }, {headers: {Authorization: `Bearer ${this.accessToken}`}}).then((response)=>{
+        this.activate_edit_modal = false
+        let msg_changed = this.messageboxes.filter(msg=> msg.id === this.chosen_message_id)
+        msg_changed.msg = response.data.msg
+        console.log(msg_changed)
+      })
+    },
+    delete_message(){
       axios.delete(`admin_panel/message_box/update/${this.chosen_message_id}/`,
       {headers: {Authorization: `Bearer ${this.accessToken}`}}).then(response=>{
         toast({
@@ -181,13 +152,7 @@ export default{
         })
         this.activate_delete_modal = !this.activate_delete_modal
       })
-    },
-  },
-  computed:{
-    ...mapState(['messageboxes', 'accessToken'])
-  },
-  created(){
-    console.log(this.messageboxes)
+    }
   }
 }
 </script>

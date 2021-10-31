@@ -13,6 +13,9 @@ import ResetPasswordConfirmation from "../views/ResetPasswordConfirmation";
 import Reactivate from "../views/Reactivate";
 import MessageBox from "../views/MessageBox";
 import AdminProduct from "../views/AdminProduct";
+import AdminCategory from '../views/AdminCategory';
+import ViewAllMessages from "../views/ViewAllMessages";
+import ViewAllProducts from "../views/ViewAllProducts";
 import store from "../store";
 
 const routes = [
@@ -94,6 +97,21 @@ const routes = [
     path: "/admin/adminproduct/",
     name: "AdminProduct",
     component: AdminProduct
+  },
+  {
+    path: "/admin/admincategory/",
+    name: "AdminCategory",
+    component: AdminCategory
+  },
+  {
+    path: "/admin/view_all_messages/",
+    name: "ViewAllMessages",
+    component: ViewAllMessages
+  },
+  {
+    path: "/admin/view_all_products/",
+    name: "ViewAllProducts",
+    component: ViewAllProducts
   }
 ];
 

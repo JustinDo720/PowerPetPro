@@ -11,7 +11,7 @@ from django.db.models import Q
 # Create your models here.
 
 class Category(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     slug = models.SlugField(unique=True, blank=True)    # auto generated slug using slugify
 
     class Meta:
