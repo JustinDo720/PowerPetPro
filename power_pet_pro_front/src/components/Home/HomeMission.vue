@@ -7,10 +7,7 @@
             <h2 class="title is-2 has-text-centered">Our Mission</h2>
             <hr />
             <div class="content">
-              Lorem ipsum leo risus, porta ac consectetur ac, vestibulum at
-              eros. Donec id elit non mi porta gravida at eget metus. Cum sociis
-              natoque penatibus et magnis dis parturient montes, nascetur
-              ridiculus mus. Cras mattis consectetur purus sit amet fermentum.
+             {{ mission_statement }}
             </div>
           </div>
           <footer class="card-footer">
@@ -25,11 +22,20 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "HomeMission",
   data() {
-    return {};
+    return {
+      mission_statement: ''
+    };
   },
+  created(){
+    axios.get('admin_panel/our_mission/').then(response=>{
+      this.mission_statement = response.data.main_statement
+    })
+  }
 };
 </script>
 

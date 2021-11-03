@@ -28,4 +28,9 @@ urlpatterns = [
     path('admin_panel/message_box/update/<int:message_id>/', views.updateMessageBoxView, name='update_msg_box_view'),
     path('admin_panel/message_box/post/', views.postMessageBoxView, name='post_msg_box_view'),
     path('admin_panel/post_category/', views.PostCategory.as_view(), name='post_category'),
+    path('admin_panel/our_mission/', views.MissionStatementView.as_view(), name='mission_statement'),
+    path('admin_panel/our_mission/add_mission_statement/', views.AddMissionStatement, name='add_mission_statement'),
+    path('admin_panel/our_mission/all_topics/', views.MissionStatementTopicView.as_view(), name='mission_statement_topic'),
+    path('admin_panel/our_mission/add_topic/', views.AddMissionStatementTopic, name='add_mission_statement_topic'),
+    path('admin_panel/our_mission/update_topic/<int:mission_statement_id>/', views.UpdateMissionStatementTopic, name='update_mission_statement_topic'),
 ]

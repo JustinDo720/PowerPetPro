@@ -3,8 +3,8 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
-    CartItemSerializer, MessageBoxSerializer
-from .models import Product, Category, CartItem, MessageBox
+    CartItemSerializer, MessageBoxSerializer, MissionStatementSerializer, MissionDetailsSerializer, MissionStatementTopicsSerializer
+from .models import Product, Category, CartItem, MessageBox, MissionStatement, MissionStatementTopics
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from power_pet_pro_app.pagination import ProductResultsSetPagination, MessageBarViewPagination
@@ -356,4 +356,103 @@ class PostCategory(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class MissionStatementView(APIView):
+    """
+        Get Mission Statement from Database
+    """
+
+    def get(self, request):
+        try:
+            # This is going to give us a queryset so we need the first value in the queryset which is why we use 0
+            mission_statement = MissionStatement.objects.all()[0]
+        except MissionStatement.DoesNotExist:
+            raise Http404
+
+        serializer = MissionStatementSerializer(mission_statement, many=False)
+        return Response(serializer.data)
+
+
+@api_view(['POST', 'PUT', 'DELETE'])
+@permission_classes([IsAdminUser])
+def AddMissionStatement(request):
+    # Here we are going to handle some tasks like posting changing and deleting
+    try:
+        # This is going to give us a queryset so we need the first value in the queryset which is why we use 0
+        mission_statement = MissionStatement.objects.all()[0]
+    except MissionStatement.DoesNotExist:
+        if request.method == 'POST':
+            pass
+        else:
+            return Http404
+    except IndexError as e:
+        mission_statement = MissionStatement.objects.all()
+
+    if request.method == 'POST':
+        # We are trying to limit the amount of Mission Statements to only one in the database
+        if MissionStatement.objects.count() == 0:
+            posting_serializer = MissionStatementSerializer(data=request.data)
+            if posting_serializer.is_valid():
+                posting_serializer.save()
+                return Response(posting_serializer.data, status=status.HTTP_201_CREATED)
+            return Response(posting_serializer.errors)
+        else:   # That means that we already have one count in our database so
+            return Response({'message': "Please modify your current Mission Statement using PUT method."})
+    elif request.method == 'PUT':
+        putting_serializer = MissionStatementSerializer(mission_statement, data=request.data)
+        if putting_serializer.is_valid():
+            putting_serializer.save()
+            return Response(putting_serializer.data, status=status.HTTP_200_OK)
+        return Response(putting_serializer.errors)
+    elif request.method == 'DELETE':
+        mission_statement.delete()
+        return Response({"message": "You have deleted an item from your messages. Please refresh your page."})
+
+
+class MissionStatementTopicView(APIView):
+    """
+        Get Mission Statement from Database
+    """
+
+    def get(self, request):
+        try:
+            # We are going to grab all the Mission Statement Topics
+            mission_statement_topic = MissionStatementTopics.objects.all()
+        except MissionStatementTopics.DoesNotExist:
+            raise Http404
+        serializer = MissionStatementTopicsSerializer(mission_statement_topic, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def AddMissionStatementTopic(request):
+    # We are going to post Mission Statements Only
+    serializer = MissionStatementTopicsSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([IsAdminUser])
+def UpdateMissionStatementTopic(request, mission_statement_id):
+    # We are going to post Mission Statements Only
+    try:
+        mission_statement_topic = MissionStatementTopics.objects.get(id=mission_statement_id)
+    except MissionStatementTopics.DoesNotExist:
+        raise Http404
+
+    if request.method == 'PUT':
+        serializer = MissionStatementTopicsSerializer(mission_statement_topic, data=request.data, many=False)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        mission_statement_topic.delete()
+        return Response({'message': f'{mission_statement_topic.topic} topic has been removed.'})
+
 

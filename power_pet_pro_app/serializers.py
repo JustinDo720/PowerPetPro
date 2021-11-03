@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product, CartItem, MessageBox
+from .models import Category, Product, CartItem, MessageBox, MissionStatement, MissionDetails, MissionStatementTopics
 from users.models import CustomUser, Profile
 from djoser.serializers import UserCreateSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -147,4 +147,29 @@ class MessageBoxSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'msg',
+        )
+
+
+class MissionStatementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MissionStatement
+        fields = (
+            'main_statement',
+        )
+
+
+class MissionStatementTopicsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MissionStatementTopics
+        fields = (
+            'topic',
+        )
+
+
+class MissionDetailsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MissionDetails
+        fields = (
+            'mission_topic',
+            'mission_topic_details',
         )

@@ -136,3 +136,43 @@ class MessageBox(models.Model):
 
     def __str__(self):
         return self.msg
+
+
+class MissionStatement(models.Model):
+    main_statement = models.TextField(max_length=500, unique=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Mission Statements'
+        ordering = ('-date_added',)
+
+    def __str__(self):
+        return self.main_statement
+
+
+# We are going to use this to split up our mission statement into more detailed explanations on specific topics
+class MissionStatementTopics(models.Model):
+    topic = models.CharField(max_length=300, unique=True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Mission Statement Topics'
+        ordering = ('-date_added',)
+
+    def __str__(self):
+        return self.topic
+
+
+# Our mission details will just include all the information for a specific mission statement topic
+class MissionDetails(models.Model):
+    # We are building this logic similar to a Topic/Entry model
+    mission_topic = models.ForeignKey(MissionStatementTopics, on_delete=models.CASCADE)
+    mission_topic_details = models.TextField(max_length=300)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = 'Mission Statement Topic Details'
+        ordering = ('-date_added',)
+
+    def __str__(self):
+        return f'{self.mission_topic}: {self.mission_topic_details[:30]}'
