@@ -6,14 +6,24 @@
           <div class="card-content">
             <h2 class="title is-2 has-text-centered">Our Mission</h2>
             <hr />
-            <div class="content">
+            <div class="content" v-if="!blank_statement">
              {{ mission_statement }}
+            </div>
+            <div class="content" v-else>
+             {{ blank_statement }}
             </div>
           </div>
           <footer class="card-footer">
-            <a href="#" class="card-footer-item">Save</a>
-            <a href="#" class="card-footer-item">Edit</a>
-            <a href="#" class="card-footer-item">Delete</a>
+            <div  v-if="!blank_topic">
+              <a class="card-footer-item" v-for="(topic, index) in topics" :key="index">
+                {{ topic.topic }}
+              </a>
+            </div>
+            <div v-else>
+              <p class="card-footer-item has-text-centered">
+                {{ blank_topic }}
+              </p>
+            </div>
           </footer>
         </div>
       </div>
@@ -28,12 +38,22 @@ export default {
   name: "HomeMission",
   data() {
     return {
-      mission_statement: ''
+      mission_statement: '',
+      blank_statement: '',  // Error Message for no Mission Statement
+      topics: [],
+      blank_topic: '',  // Error Message for no Topic
     };
   },
   created(){
     axios.get('admin_panel/our_mission/').then(response=>{
       this.mission_statement = response.data.main_statement
+    }).catch(()=>{
+      this.blank_statement = 'Currently, there are no mission statement. Please login to your admin account to add one.'
+    })
+    axios.get('admin_panel/our_mission/all_topics/').then(response=>{
+      this.topics = response.data
+    }).catch(()=>{
+      this.blank_topic = 'Currently, there are no topics. Please login to your admin account to add one.'
     })
   }
 };

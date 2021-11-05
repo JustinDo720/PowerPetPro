@@ -3,8 +3,9 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
-    CartItemSerializer, MessageBoxSerializer, MissionStatementSerializer, MissionDetailsSerializer, MissionStatementTopicsSerializer
-from .models import Product, Category, CartItem, MessageBox, MissionStatement, MissionStatementTopics
+    CartItemSerializer, MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, \
+    MissionDetailsSerializer
+from .models import Product, Category, CartItem, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from power_pet_pro_app.pagination import ProductResultsSetPagination, MessageBarViewPagination
@@ -438,10 +439,10 @@ def AddMissionStatementTopic(request):
 
 @api_view(['PUT', 'DELETE'])
 @permission_classes([IsAdminUser])
-def UpdateMissionStatementTopic(request, mission_statement_id):
+def UpdateMissionStatementTopic(request, mission_topic):
     # We are going to post Mission Statements Only
     try:
-        mission_statement_topic = MissionStatementTopics.objects.get(id=mission_statement_id)
+        mission_statement_topic = MissionStatementTopics.objects.get(slug=mission_topic)
     except MissionStatementTopics.DoesNotExist:
         raise Http404
 
@@ -454,5 +455,20 @@ def UpdateMissionStatementTopic(request, mission_statement_id):
     else:
         mission_statement_topic.delete()
         return Response({'message': f'{mission_statement_topic.topic} topic has been removed.'})
+
+
+@api_view(['GET'])
+@permission_classes([IsAdminUser])
+def ViewMissionDetails(request, mission_topic):
+    try:
+        # We need to get the topic for using the slug
+        mission_statement_topic = MissionStatementTopics.objects.get(slug=mission_topic)
+        # Once we get the topic we need the topic id. Make sure to filter because this query is possibly more than one
+        mission_statement_details = MissionDetails.objects.filter(mission_topic=mission_statement_topic.id)
+    except MissionStatementTopics.DoesNotExist:
+        raise Http404
+
+    serializer = MissionDetailsSerializer(mission_statement_details, many=True)
+    return Response(serializer.data, status.HTTP_200_OK)
 
 

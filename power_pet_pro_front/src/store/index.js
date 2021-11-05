@@ -173,9 +173,7 @@ export default createStore({
       );
     },
     initializeAnonymousStore(state){
-       console.log('Am i There?')
        if (localStorage.getItem("cart")) {
-         console.log(JSON.parse(localStorage.getItem('cart')))
          // we set the state.cart = the localstorage which takes care of anonymous carts (no login required)
          state.cart = JSON.parse(localStorage.getItem('cart'))
       } else {

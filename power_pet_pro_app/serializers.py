@@ -159,6 +159,7 @@ class MissionStatementSerializer(serializers.ModelSerializer):
 
 
 class MissionStatementTopicsSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = MissionStatementTopics
         fields = (

@@ -32,5 +32,6 @@ urlpatterns = [
     path('admin_panel/our_mission/add_mission_statement/', views.AddMissionStatement, name='add_mission_statement'),
     path('admin_panel/our_mission/all_topics/', views.MissionStatementTopicView.as_view(), name='mission_statement_topic'),
     path('admin_panel/our_mission/add_topic/', views.AddMissionStatementTopic, name='add_mission_statement_topic'),
-    path('admin_panel/our_mission/update_topic/<int:mission_statement_id>/', views.UpdateMissionStatementTopic, name='update_mission_statement_topic'),
+    path('admin_panel/our_mission/update_topic/<slug:mission_topic>/', views.UpdateMissionStatementTopic, name='update_mission_statement_topic'),
+    path('admin_panel/our_mission/view_topic/<slug:mission_topic>/', views.ViewMissionDetails, name='view_mission_details'),
 ]

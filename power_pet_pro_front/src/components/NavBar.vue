@@ -270,7 +270,6 @@ export default {
     },
   },
   created() {
-    console.log(this.is_staff)
     // we want to grab our categories
     axios.get("/category_list/").then((response) => {
       this.$store.commit('update_categories', {categories:response.data})

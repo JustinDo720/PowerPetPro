@@ -139,7 +139,7 @@ class MessageBox(models.Model):
 
 
 class MissionStatement(models.Model):
-    main_statement = models.TextField(max_length=500, unique=True)
+    main_statement = models.TextField(max_length=800, unique=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -154,20 +154,34 @@ class MissionStatement(models.Model):
 class MissionStatementTopics(models.Model):
     topic = models.CharField(max_length=300, unique=True)
     date_added = models.DateTimeField(auto_now_add=True)
+    slug = models.SlugField(unique=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'Mission Statement Topics'
-        ordering = ('-date_added',)
 
     def __str__(self):
         return self.topic
+
+    def _get_unique_slug(self):
+        slug = slugify(self.topic)
+        unique_slug = slug
+        number = 1
+        while MissionStatementTopics.objects.filter(slug=unique_slug).exists():
+            unique_slug = f'{slug}-{number}'
+            number += 1
+        return unique_slug
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = self._get_unique_slug()
+        super().save(*args, **kwargs)
 
 
 # Our mission details will just include all the information for a specific mission statement topic
 class MissionDetails(models.Model):
     # We are building this logic similar to a Topic/Entry model
     mission_topic = models.ForeignKey(MissionStatementTopics, on_delete=models.CASCADE)
-    mission_topic_details = models.TextField(max_length=300)
+    mission_topic_details = models.TextField(max_length=800)
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
