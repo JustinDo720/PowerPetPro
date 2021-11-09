@@ -370,6 +370,8 @@ class MissionStatementView(APIView):
             mission_statement = MissionStatement.objects.all()[0]
         except MissionStatement.DoesNotExist:
             raise Http404
+        except IndexError as e:
+            return Response({"message": "There is currently no Mission Statement"})
 
         serializer = MissionStatementSerializer(mission_statement, many=False)
         return Response(serializer.data)

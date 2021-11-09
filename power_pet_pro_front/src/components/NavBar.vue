@@ -110,6 +110,16 @@
                     Add Category
                   </router-link>
                 </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'MissionStatementBox',
+                    }"
+                  >
+                    Add Mission Statement
+                  </router-link>
+                </li>
               </ul>
             </aside>
 

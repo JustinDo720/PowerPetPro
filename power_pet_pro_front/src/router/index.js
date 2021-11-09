@@ -16,6 +16,7 @@ import AdminProduct from "../views/AdminProduct";
 import AdminCategory from '../views/AdminCategory';
 import ViewAllMessages from "../views/ViewAllMessages";
 import ViewAllProducts from "../views/ViewAllProducts";
+import MissionStatementBox from "../views/MissionStatementBox";
 import store from "../store";
 
 const routes = [
@@ -112,7 +113,12 @@ const routes = [
     path: "/admin/view_all_products/",
     name: "ViewAllProducts",
     component: ViewAllProducts
-  }
+  },
+  {
+    path: "/admin/missionstatementbox/",
+    name: "MissionStatementBox",
+    component: MissionStatementBox
+  },
 ];
 
 const router = createRouter({
