@@ -4,7 +4,6 @@ import Cookies from "cookies-js";
 
 // We will use this function to save our tokens
 function saveTokens(username, user_id, accessToken, refreshToken, is_staff) {
-  console.log('saveTokens: ' + is_staff)
   Cookies.set("username", username, { expires: 604800 });
   Cookies.set("user_id", user_id, { expires: 604800 });
   Cookies.set("accessToken", accessToken, { expires: 604800 });
@@ -138,7 +137,6 @@ export default createStore({
       localStorage.removeItem("cart");
     },
     initializeStore(state, { username, user_id, accessToken, refreshToken, is_staff }) {
-      console.log('Am i Here?')
       if (localStorage.getItem("cart")) {
         // If cart exist then we will set our state to the cart
         // We use JSON.parse to grab an object wrapped in strings because of Local Storage

@@ -17,6 +17,7 @@ import AdminCategory from '../views/AdminCategory';
 import ViewAllMessages from "../views/ViewAllMessages";
 import ViewAllProducts from "../views/ViewAllProducts";
 import MissionStatementBox from "../views/MissionStatementBox";
+import MissionStatementTopicBox from "../views/MissionStatementTopicBox";
 import store from "../store";
 
 const routes = [
@@ -95,12 +96,12 @@ const routes = [
     component: MessageBox
   },
   {
-    path: "/admin/adminproduct/",
+    path: "/admin/admin_product/",
     name: "AdminProduct",
     component: AdminProduct
   },
   {
-    path: "/admin/admincategory/",
+    path: "/admin/admin_category/",
     name: "AdminCategory",
     component: AdminCategory
   },
@@ -115,9 +116,14 @@ const routes = [
     component: ViewAllProducts
   },
   {
-    path: "/admin/missionstatementbox/",
+    path: "/admin/mission_statement_box/",
     name: "MissionStatementBox",
     component: MissionStatementBox
+  },
+  {
+    path: "/admin/mission_statement_topic_box/",
+    name: "MissionStatementTopicBox",
+    component: MissionStatementTopicBox
   },
 ];
 

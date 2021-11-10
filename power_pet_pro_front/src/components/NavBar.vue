@@ -120,6 +120,16 @@
                     Add Mission Statement
                   </router-link>
                 </li>
+                 <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'MissionStatementTopicBox',
+                    }"
+                  >
+                    Add Mission Statement Topic
+                  </router-link>
+                </li>
               </ul>
             </aside>
 

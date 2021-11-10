@@ -172,6 +172,7 @@ class MissionStatementTopics(models.Model):
         return unique_slug
 
     def save(self, *args, **kwargs):
+        # If we don't have a slug then we will make one
         if not self.slug:
             self.slug = self._get_unique_slug()
         super().save(*args, **kwargs)

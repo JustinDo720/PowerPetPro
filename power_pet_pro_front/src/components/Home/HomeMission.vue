@@ -14,16 +14,12 @@
             </div>
           </div>
           <footer class="card-footer">
-            <div  v-if="!blank_topic">
-              <a class="card-footer-item" v-for="(topic, index) in topics" :key="index">
-                {{ topic.topic }}
-              </a>
-            </div>
-            <div v-else>
-              <p class="card-footer-item has-text-centered">
-                {{ blank_topic }}
-              </p>
-            </div>
+            <a class="card-footer-item" v-for="(topic, index) in topics" :key="index">
+              {{ topic.topic }}
+            </a>
+            <p class="card-footer-item has-text-centered" v-if="blank_topic">
+              {{ blank_topic }}
+            </p>
           </footer>
         </div>
       </div>

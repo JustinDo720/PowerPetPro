@@ -163,6 +163,7 @@ class MissionStatementTopicsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MissionStatementTopics
         fields = (
+            'slug',
             'topic',
         )
 
