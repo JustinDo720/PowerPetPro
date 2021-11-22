@@ -14,9 +14,11 @@
             </div>
           </div>
           <footer class="card-footer">
-            <a class="card-footer-item" v-for="(topic, index) in topics" :key="index">
-              {{ topic.topic }}
-            </a>
+            <router-link :to="{name:'Topic', params:{topic_slug: topic.slug }}"
+                         v-for="(topic, index) in topics" :key="index"
+                         class="card-footer-item">
+                {{ topic.topic }}
+            </router-link>
             <p class="card-footer-item has-text-centered" v-if="blank_topic">
               {{ blank_topic }}
             </p>

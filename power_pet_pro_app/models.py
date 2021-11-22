@@ -182,7 +182,7 @@ class MissionStatementTopics(models.Model):
 class MissionDetails(models.Model):
     # We are building this logic similar to a Topic/Entry model
     mission_topic = models.ForeignKey(MissionStatementTopics, on_delete=models.CASCADE)
-    mission_topic_details = models.TextField(max_length=800)
+    mission_topic_details = models.TextField(max_length=800, unique=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:

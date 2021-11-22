@@ -460,7 +460,6 @@ def UpdateMissionStatementTopic(request, mission_topic):
 
 
 @api_view(['GET'])
-@permission_classes([IsAdminUser])
 def ViewMissionDetails(request, mission_topic):
     try:
         # We need to get the topic for using the slug
@@ -470,7 +469,45 @@ def ViewMissionDetails(request, mission_topic):
     except MissionStatementTopics.DoesNotExist:
         raise Http404
 
+    if mission_statement_details.count() >= 1:
+        serializer = MissionDetailsSerializer(mission_statement_details, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+    else:   # This means we have no queries in our set which also means we wont be getting any data so lets return one
+        return Response({
+            'message': 'There are currently no queries in your topic',
+            'topic': mission_statement_topic.topic
+        })
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def AddMissionDetails(request):
+    serializer = MissionDetailsSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status.HTTP_200_OK)
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([IsAdminUser])
+def UpdateMissionDetails(request, mission_topic):
+    # We are going to post Mission Statements Only
+    try:
+        # We need to get the topic for using the slug
+        mission_statement_topic = MissionStatementTopics.objects.get(slug=mission_topic)
+        # Once we get the topic we need the topic id. Make sure to filter because this query is possibly more than one
+        mission_statement_details = MissionDetails.objects.filter(mission_topic=mission_statement_topic.id)
+    except MissionStatementTopics.DoesNotExist:
+        raise Http404
+
     serializer = MissionDetailsSerializer(mission_statement_details, many=True)
-    return Response(serializer.data, status.HTTP_200_OK)
 
-
+    # We need to allow our admin to do PUT and DELETE request on mission_statement_details
+    if request.method == 'PUT':
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_200_OK)
+    elif request.method == 'DELETE':
+        mission_statement_details.delete()
+        return Response({'message': 'Your mission details has been removed.'}, status.HTTP_200_OK)

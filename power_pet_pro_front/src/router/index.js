@@ -18,6 +18,8 @@ import ViewAllMessages from "../views/ViewAllMessages";
 import ViewAllProducts from "../views/ViewAllProducts";
 import MissionStatementBox from "../views/MissionStatementBox";
 import MissionStatementTopicBox from "../views/MissionStatementTopicBox";
+import Topic from "../views/Topic";
+import MissionDetailsBox from "../views/MissionDetailsBox";
 import store from "../store";
 
 const routes = [
@@ -124,6 +126,16 @@ const routes = [
     path: "/admin/mission_statement_topic_box/",
     name: "MissionStatementTopicBox",
     component: MissionStatementTopicBox
+  },
+  {
+    path: "/mission_statement/topic/:topic_slug/",
+    name: "Topic",
+    component: Topic
+  },
+  {
+    path: "/mission_statement/topic/add_details/",
+    name: "MissionDetailsBox",
+    component: MissionDetailsBox
   },
 ];
 

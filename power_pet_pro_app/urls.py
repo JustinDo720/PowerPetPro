@@ -34,4 +34,8 @@ urlpatterns = [
     path('admin_panel/our_mission/add_topic/', views.AddMissionStatementTopic, name='add_mission_statement_topic'),
     path('admin_panel/our_mission/update_topic/<slug:mission_topic>/', views.UpdateMissionStatementTopic, name='update_mission_statement_topic'),
     path('admin_panel/our_mission/view_topic/<slug:mission_topic>/', views.ViewMissionDetails, name='view_mission_details'),
+    path('admin_panel/our_mission/update_details/<slug:mission_topic>/', views.UpdateMissionDetails,
+         name='update_mission_details'),
+    path('admin_panel/our_mission/add_details/', views.AddMissionDetails,
+         name='add_mission_details'),
 ]
