@@ -42,6 +42,7 @@ export default {
 @import "~bulma-quickview";
 @import "~bulma-switch";
 @import "~bulma-divider";
+@import "~bulma-carousel";
 
 .lds-dual-ring {
   display: inline-block;

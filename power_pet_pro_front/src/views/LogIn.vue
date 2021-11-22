@@ -104,17 +104,21 @@ export default {
   methods: {
     login() {
       if (this.login_field && this.login_password) {
+
         axios
           .post("api/token/", {
             username: this.login_field, // We really only need this because our UserAccountManager takes username || email
             password: this.login_password,
           })
           .then((response) => {
+            console.log('staff status' + response.data.is_staff)
+
             this.$store.dispatch("loginUser", {
               username: response.data.username,
               user_id: response.data.user_id,
               accessToken: response.data.access,
               refreshToken: response.data.refresh,
+              is_staff: response.data.is_staff,
             });
             this.$router.push({ name: "Home" });
           })

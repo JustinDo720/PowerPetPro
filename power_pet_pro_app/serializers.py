@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Category, Product, CartItem
+from .models import Category, Product, CartItem, MessageBox, MissionStatement, MissionDetails, MissionStatementTopics
 from users.models import CustomUser, Profile
 from djoser.serializers import UserCreateSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -36,6 +36,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'id',
             'category',
             'category_name',
+            'image',
             'name',
             'description',
             'limited_description',
@@ -135,5 +136,50 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         # Add extra responses here
         data['username'] = self.user.username
         data['user_id'] = self.user.id  # We are going to use this for uuid
+        data['is_staff'] = self.user.is_staff
 
         return data
+
+
+class MessageBoxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MessageBox
+        fields = (
+            'id',
+            'msg',
+        )
+
+
+class MissionStatementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MissionStatement
+        fields = (
+            'main_statement',
+        )
+
+
+class MissionStatementTopicsSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MissionStatementTopics
+        fields = (
+            'id',
+            'slug',
+            'topic',
+        )
+
+
+class MissionDetailsSerializer(serializers.ModelSerializer):
+    mission_topic_name = serializers.SerializerMethodField('get_mission_topic_name')
+
+    def get_mission_topic_name(self, detail):
+        return detail.mission_topic.topic
+
+    class Meta:
+        model = MissionDetails
+        fields = (
+            'mission_topic', # Here we are going to get the id number that corresponds to our topic
+            'mission_topic_name', # We want to get the name of our topic
+            'mission_topic_details',
+            'date_added',
+        )

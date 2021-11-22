@@ -11,6 +11,15 @@ import Activate from "../views/Activate";
 import ResetPassword from "../views/ResetPassword";
 import ResetPasswordConfirmation from "../views/ResetPasswordConfirmation";
 import Reactivate from "../views/Reactivate";
+import MessageBox from "../views/MessageBox";
+import AdminProduct from "../views/AdminProduct";
+import AdminCategory from '../views/AdminCategory';
+import ViewAllMessages from "../views/ViewAllMessages";
+import ViewAllProducts from "../views/ViewAllProducts";
+import MissionStatementBox from "../views/MissionStatementBox";
+import MissionStatementTopicBox from "../views/MissionStatementTopicBox";
+import Topic from "../views/Topic";
+import MissionDetailsBox from "../views/MissionDetailsBox";
 import store from "../store";
 
 const routes = [
@@ -82,6 +91,51 @@ const routes = [
     path: "/reactivate/",
     name: "Reactivate",
     component: Reactivate,
+  },
+  {
+    path: "/admin/messagebox/",
+    name: "MessageBox",
+    component: MessageBox
+  },
+  {
+    path: "/admin/admin_product/",
+    name: "AdminProduct",
+    component: AdminProduct
+  },
+  {
+    path: "/admin/admin_category/",
+    name: "AdminCategory",
+    component: AdminCategory
+  },
+  {
+    path: "/admin/view_all_messages/",
+    name: "ViewAllMessages",
+    component: ViewAllMessages
+  },
+  {
+    path: "/admin/view_all_products/",
+    name: "ViewAllProducts",
+    component: ViewAllProducts
+  },
+  {
+    path: "/admin/mission_statement_box/",
+    name: "MissionStatementBox",
+    component: MissionStatementBox
+  },
+  {
+    path: "/admin/mission_statement_topic_box/",
+    name: "MissionStatementTopicBox",
+    component: MissionStatementTopicBox
+  },
+  {
+    path: "/mission_statement/topic/:topic_slug/",
+    name: "Topic",
+    component: Topic
+  },
+  {
+    path: "/mission_statement/topic/add_details/",
+    name: "MissionDetailsBox",
+    component: MissionDetailsBox
   },
 ];
 

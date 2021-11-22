@@ -57,6 +57,92 @@
         </header>
         <div class="quickview-body">
           <div class="quickview-block">
+            <aside class="menu ml-2 mt-2" v-if="is_staff">
+              <p class="menu-label">Admin</p>
+              <ul class="menu-list">
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'ViewAllMessages',
+                    }"
+                  >
+                   View All Messages
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'MessageBox',
+                    }"
+                  >
+                    Add/Edit Message of the Day
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'ViewAllProducts',
+                    }"
+                  >
+                   View All Products
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'AdminProduct',
+                    }"
+                  >
+                    Add Product
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'AdminCategory',
+                    }"
+                  >
+                    Add Category
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'MissionStatementBox',
+                    }"
+                  >
+                    Add Mission Statement
+                  </router-link>
+                </li>
+                 <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'MissionStatementTopicBox',
+                    }"
+                  >
+                    Add Mission Statement Topic
+                  </router-link>
+                </li>
+                <li>
+                  <router-link
+                    data-dismiss="quickview"
+                    :to="{
+                      name: 'MissionDetailsBox',
+                    }"
+                  >
+                    Add Mission Details
+                  </router-link>
+                </li>
+              </ul>
+            </aside>
+
             <aside class="menu ml-2 mt-2">
               <p class="menu-label">General</p>
               <ul class="menu-list">
@@ -187,13 +273,12 @@ export default {
   data() {
     return {
       showMobileMenu: false,
-      store_categories: [],
       searchTerm: "",
       showAccount: false,
     };
   },
   computed: {
-    ...mapState(["cart", "username"]),
+    ...mapState(["cart", "username", "is_staff", "store_categories"]),
     ...mapGetters(["isAuth"]),
     cartLength() {
       // return this.$store.state.cart.items.length
@@ -217,7 +302,7 @@ export default {
   created() {
     // we want to grab our categories
     axios.get("/category_list/").then((response) => {
-      this.store_categories = response.data; // we are setting our store_categories array to data array
+      this.$store.commit('update_categories', {categories:response.data})
     });
   },
 };

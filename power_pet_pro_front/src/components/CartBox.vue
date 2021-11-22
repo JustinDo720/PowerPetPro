@@ -74,20 +74,23 @@ export default {
       // by updating the cart our initalizeStorage will make sure the cart is up to date
       // since increasing the quantity already changes the state all we need to do is update our storage for refresh
       console.log(this.cart_item.product);
-      let headers = { Authorization: `Bearer ${this.accessToken}` };
-      axios
-        .put(
-          `profile_list/user_profile/${this.user_id}/cart/${this.cart_item.product}/`,
-          {
-            profile: this.user_id,
-            product: this.cart_item.product,
-            quantity: this.cart_item.quantity,
-          },
-          { headers }
-        )
-        .then(() => {
-          localStorage.setItem("cart", JSON.stringify(this.cart));
-        });
+      if(this.user_id && this.accessToken){
+       // if the user is authenticated then we will have access to the accessToken, userid etc
+        let headers = { Authorization: `Bearer ${this.accessToken}` };
+        axios
+          .put(
+            `profile_list/user_profile/${this.user_id}/cart/${this.cart_item.product}/`,
+            {
+              profile: this.user_id,
+              product: this.cart_item.product,
+              quantity: this.cart_item.quantity,
+            },
+            { headers }
+          )
+      }
+
+      localStorage.setItem("cart", JSON.stringify(this.cart));
+
     },
     removeItem(cart_item) {
       // we need to find the item's index, use splice to get rid of the item from cart and then update our cart
