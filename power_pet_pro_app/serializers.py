@@ -96,6 +96,7 @@ class CartItemSerializer(serializers.ModelSerializer):
     price = serializers.SerializerMethodField('get_product_price')
     # Make sure the name of the SerializerMethodField is not the same as the function for it
     get_absolute_url = serializers.SerializerMethodField('get_abs_url')
+    photo = serializers.SerializerMethodField('get_photo')
 
     def get_product_name(self, cart):
         return cart.product.name
@@ -107,6 +108,10 @@ class CartItemSerializer(serializers.ModelSerializer):
     def get_abs_url(self, cart):
         return cart.product.get_absolute_url()
 
+    def get_photo(self, cart):
+        print(cart.product.get_image())
+        return cart.product.get_image()
+
     class Meta:
         model = CartItem
         fields = (
@@ -115,7 +120,9 @@ class CartItemSerializer(serializers.ModelSerializer):
             'quantity',
             'name',
             'price',
-            'get_absolute_url'
+            'get_absolute_url',
+            'photo',
+
         )
 
 

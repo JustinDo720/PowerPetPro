@@ -67,6 +67,10 @@ export default {
         this.quantity = 1;
       }
 
+      if(this.product.get_image()){
+        console.log('yaeh we got photo')
+        this.product['photo'] = this.product.get_image()
+      }
       const item = {
         product: this.product,
         quantity: this.quantity,

@@ -288,7 +288,7 @@ def updateUserCart(request, user_id, product_id):
         return Response(main_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         product.delete()
-        return Response({"Success": "You have deleted an item from your cart."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"success": "You have deleted an item from your cart."}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class MessageBoxView(ListAPIView):
