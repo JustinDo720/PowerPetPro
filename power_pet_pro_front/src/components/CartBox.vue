@@ -104,7 +104,7 @@ export default {
       if(this.user_id && this.accessToken){
         axios.delete(`profile_list/user_profile/${this.user_id}/cart/${this.cart_item.product}/`).then((response)=>{
           toast({
-            message: 'Hi',
+            message: response.data.success,
             type: "is-danger",
             dismissible: true,
             pauseOnHover: true,

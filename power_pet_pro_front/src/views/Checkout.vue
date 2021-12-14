@@ -27,6 +27,20 @@
                 </div>
               </div>
               <div class="columns">
+                <div class="column control">
+                  <label>
+                    Email*
+                  </label>
+                  <input class="input" type="email" placeholder="Email" v-model="email">
+                </div>
+                 <div class="column control">
+                  <label>
+                    Phone Number*
+                  </label>
+                  <input class="input" type="text" placeholder="Phone Number" v-model="phone_number">
+                </div>
+              </div>
+              <div class="columns">
                 <div class="column control is-5">
                   <label>
                     Address*
@@ -118,6 +132,7 @@
 import { mapState } from 'vuex';
 import Cookies from 'cookies-js';
 import countries_and_states from "../assets/Profile/countries_and_states";
+import axios from 'axios';
 
 export default{
   name: "Checkout",
@@ -129,6 +144,8 @@ export default{
       chosen_country:'',
       first_name: '',
       last_name: '',
+      email: '',
+      phone_number: '',
       address: '',
       city: '',
       zip_code: '',
@@ -164,6 +181,12 @@ export default{
       if(this.address === ''){
         this.errors.push('* The address field is missing!')
       }
+      if(this.email === ''){
+        this.errors.push('* The email field is missing!')
+      }
+      if(this.phone_number === ''){
+        this.errors.push('* The phone number field is missing!')
+      }
       if(this.city === ''){
         this.errors.push('* The city field is missing!')
       }
@@ -191,8 +214,21 @@ export default{
       this.countries.push(country.country);
     });
     // Now let's take care of our signed in users. Their information will now appear in shipping details
-    if(Cookies('accessToken')){
-      console.log('yeah')
+    if(Cookies('accessToken') && Cookies('user_id')){
+      axios.get(`profile_list/user_profile/${Cookies('user_id')}/`, {
+        headers: {Authorization: `Bearer ${Cookies('accessToken')}`}
+      }).then(response=>{
+        console.log(response.data)
+        this.first_name = response.data.first_name
+        this.last_name = response.data.last_name
+        this.address = response.data.address
+        this.zip_code = response.data.zip_code
+        this.city = response.data.city
+        this.chosen_country = response.data.country
+        this.chosen_state = response.data.state
+        this.email = response.data.email
+        this.phone_number = response.data.phone_number
+      })
     }
   }
 

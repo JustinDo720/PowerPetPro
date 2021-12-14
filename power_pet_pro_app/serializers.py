@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from .models import Category, Product, CartItem, MessageBox, MissionStatement, MissionDetails, MissionStatementTopics
+from .models import Category, Product, MessageBox, MissionStatement, MissionDetails, MissionStatementTopics
 from users.models import CustomUser, Profile
+from order.models import CartItem
 from djoser.serializers import UserCreateSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
