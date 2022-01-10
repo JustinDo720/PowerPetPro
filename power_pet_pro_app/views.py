@@ -3,8 +3,8 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
-    CartItemSerializer, MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, \
-    MissionDetailsSerializer
+    MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, MissionDetailsSerializer
+from order.serializers import CartItemSerializer
 from .models import Product, Category, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
 from order.models import CartItem
 from rest_framework.views import APIView
@@ -17,7 +17,6 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from power_pet_pro_app.serializers import MyTokenObtainPairSerializer
 from django.conf import settings
 from users.models import Profile
-import stripe
 
 # Error Handling
 from django.http import Http404, HttpResponse

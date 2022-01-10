@@ -21,6 +21,7 @@ import MissionStatementTopicBox from "../views/MissionStatementTopicBox";
 import Topic from "../views/Topic";
 import MissionDetailsBox from "../views/MissionDetailsBox";
 import Checkout from "../views/Checkout";
+import Success from "../views/Success";
 import store from "../store";
 
 const routes = [
@@ -142,6 +143,11 @@ const routes = [
     path: '/cart/checkout/',
     name: "Checkout",
     component: Checkout
+  },
+  {
+    path: '/cart/success/',
+    name: "Success",
+    component: Success
   }
 ];
 
