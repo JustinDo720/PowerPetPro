@@ -3,9 +3,10 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
-    CartItemSerializer, MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, \
-    MissionDetailsSerializer
-from .models import Product, Category, CartItem, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
+    MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, MissionDetailsSerializer
+from order.serializers import CartItemSerializer
+from .models import Product, Category, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
+from order.models import CartItem
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from power_pet_pro_app.pagination import ProductResultsSetPagination, MessageBarViewPagination
@@ -288,7 +289,7 @@ def updateUserCart(request, user_id, product_id):
         return Response(main_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     elif request.method == 'DELETE':
         product.delete()
-        return Response({"Success": "You have deleted an item from your cart."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"success": "You have deleted an item from your cart."}, status=status.HTTP_200_OK)
 
 
 class MessageBoxView(ListAPIView):
@@ -511,3 +512,10 @@ def UpdateMissionDetails(request, mission_topic):
     elif request.method == 'DELETE':
         mission_statement_details.delete()
         return Response({'message': 'Your mission details has been removed.'}, status.HTTP_200_OK)
+
+
+# @api_view(['POST'])
+# @permission_classes([permission_classes.IsAuthenticated])
+# def anonymous_checkout(request):
+#     serializer = CartItemSerializer()
+

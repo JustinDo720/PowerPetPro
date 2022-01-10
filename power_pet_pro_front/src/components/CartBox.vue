@@ -35,6 +35,7 @@
 import { mapState } from "vuex";
 import Cookies from "cookies-js";
 import axios from "axios";
+import {toast} from "bulma-toast";
 
 export default {
   name: "CartBox",
@@ -99,7 +100,23 @@ export default {
       );
       // splice(index_to_remove, delete_count)
       this.cart.items.splice(cart_item_index, 1);
-      this.updateCart();
+      // To remove items from the user we need to make sure we delete them so
+      if(this.user_id && this.accessToken){
+        axios.delete(`profile_list/user_profile/${this.user_id}/cart/${this.cart_item.product}/`).then((response)=>{
+          toast({
+            message: response.data.success,
+            type: "is-danger",
+            dismissible: true,
+            pauseOnHover: true,
+            duration: 2000, // milliseconds
+            position: "bottom-right",
+          });
+        })
+
+      }else{
+        // If the user is not authenticated then we are going to remove from cart
+        this.updateCart()
+      }
     },
   },
   created() {

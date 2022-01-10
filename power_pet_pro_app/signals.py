@@ -1,6 +1,6 @@
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
-from .models import CartItem
+from order.models import CartItem
 
 
 @receiver(pre_save, sender=CartItem)

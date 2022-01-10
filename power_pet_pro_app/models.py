@@ -112,20 +112,6 @@ class Product(models.Model):
         super().save(*args, **kwargs)
 
 
-class CartItem(models.Model):
-    profile = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        # This is going to order our products from the most recent date that the product was added
-        ordering = ('-date_added',)
-
-    def __str__(self):
-        return self.product.name
-
-
 class MessageBox(models.Model):
     msg = models.TextField(max_length=300, unique=True)
     date_added = models.DateTimeField(auto_now_add=True)

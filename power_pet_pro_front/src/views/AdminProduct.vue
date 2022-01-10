@@ -61,19 +61,19 @@
                     </select>
                   </div>
               </div>
-              <div class="field">
-                <div class="control">
-                  <textarea class="textarea" placeholder="Description" v-model="product_description"></textarea>
-                </div>
-              </div>
-              <div class="field">
+               <div class="field">
                   <input
                     class="input is-medium"
                     type="text"
                     placeholder="Product Name"
                     v-model="product_name"
                   />
-              </div>
+               </div>
+               <div class="field">
+                  <div class="control">
+                    <textarea class="textarea" placeholder="Description" v-model="product_description"></textarea>
+                  </div>
+               </div>
 
                <div class="field">
                 <div class="control has-icons-left">

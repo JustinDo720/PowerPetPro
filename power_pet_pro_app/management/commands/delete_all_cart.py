@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from power_pet_pro_app.models import CartItem
+from order.models import CartItem
 
 
 class Command(BaseCommand):

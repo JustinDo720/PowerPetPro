@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'users',
     'django_extensions',
     'corsheaders',
-
+    'order',
 
     # Default Django Apps
     'django.contrib.admin',
@@ -229,7 +229,8 @@ EMAIL_USE_TLS = True
 
 # Django Extensions
 SHELL_PLUS_PRE_IMPORTS = [
-    'from power_pet_pro_app.models import Category, Product, CartItem',
+    'from power_pet_pro_app.models import Category, Product',
+    'from order.models import CartItem'
     'from django.contrib.auth.models import User',
     'from users.models import Profile',
     'from faker import Faker'
@@ -237,3 +238,5 @@ SHELL_PLUS_PRE_IMPORTS = [
 
 FRONTEND_BASE_URL = 'http://localhost:8080/'
 AUTH_USER_MODEL = 'users.CustomUser'
+
+STRIPE_SECRET_KEY = os.getenv('POWER_PET_PRO_STRIPE_SECRET_KEY')
