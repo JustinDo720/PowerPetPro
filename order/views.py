@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.conf import settings
 
 from rest_framework import status, authentication, permissions
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
@@ -13,7 +13,6 @@ from .serializers import OrderSerializer
 
 
 @api_view(['POST'])
-@authentication_classes([authentication.TokenAuthentication])
 @permission_classes([permissions.IsAuthenticated])
 def checkout(request):
     serializer = OrderSerializer(data=request.data)

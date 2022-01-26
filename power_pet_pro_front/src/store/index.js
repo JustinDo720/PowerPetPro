@@ -185,6 +185,10 @@ export default createStore({
       state.messageboxes = messages
       state.next_url = next
       state.previous_url = previous
+    },
+    clearCart(state){
+      // Just resetting the items array in our cart state
+      state.cart = { items: [] }
     }
   },
   actions: {
@@ -256,6 +260,9 @@ export default createStore({
         refreshToken: refreshToken,
         is_staff: is_staff
       });
+    },
+    clearCart(context){
+
     },
   },
   modules: {},

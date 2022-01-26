@@ -59,6 +59,7 @@ class OrderSerializer(serializers.ModelSerializer):
             'stripe_token',
             'created_at',
             'username',
+            'items'
 
         )
 

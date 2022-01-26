@@ -138,6 +138,8 @@ export default{
   name: "Checkout",
   data(){
     return{
+      stripe: {},
+      card: {},
       states: [],
       countries: [],
       chosen_state: '',
@@ -168,6 +170,13 @@ export default{
       }
       return country_selected;
     },
+    cartTotalLength(){
+      // reduce just runs a function in the array so something like lambda
+       return this.cart.items.reduce((acc, curVal) => {
+            return acc += curVal.quantity
+        }, 0)
+    }
+
   },
   methods:{
     submit_shipping_details(){
@@ -200,11 +209,54 @@ export default{
         this.errors.push('* The state field is missing!')
       }
 
-      if(this.first_name && this.last_name && this.address && this.city && this.zip_code &&
-        this.chosen_country && this.chosen_state){
-        this.errors = [] // We are going to reset errors
-        console.log('proceed')
+      if(!this.errors.length){
+        this.$store.commit('setIsLoading', true)
+        this.stripe.createToken(this.card).then(result=>{
+          if(result.error){
+            this.$store.commit('setIsLoading', false)
+            this.errors.push('Something went wrong with Stripe. Please try again')
+            console.log(result.error.message)
+          } else {
+            console.log(result)
+            this.stripeTokenHandler(result.token)
+          }
+        })
       }
+    },
+    async stripeTokenHandler(token){
+      const items = []
+      // We just need to loop over the item in our cart and push it in our const items variable
+      for(let i=0; i < this.cart.items.length; i++){
+        const curr_item = this.cart.items[i]
+        const obj = {
+          product: curr_item.product.id, // we are getting the id of the product for our db to read it
+          quantity: curr_item.quantity,
+          price: curr_item.product.price * curr_item.quantity // total price
+        }
+
+        items.push(obj)
+      }
+
+      const data = {
+        'first_name': this.first_name,
+        'last_name': this.last_name,
+        'email': this.email,
+        'address': this.address,
+        'zipcode': this.zip_code,
+        'phone': this.phone,
+        'items': items,
+        'stripe_token': token.id
+      }
+
+      await axios.post('checkout/', data).then(response=>{
+        this.$store.commit('clearCart')
+        this.$router.push({name:'Success'})
+      }).catch(err=>{
+        this.errors.push('Something went wrong. Please try again.')
+      })
+
+      // We need to set loading off because we initially set it true in submit_shipping_details
+      this.$store.commit('setIsLoading', false)
     }
   },
   created(){
@@ -229,6 +281,21 @@ export default{
         this.email = response.data.email
         this.phone_number = response.data.phone_number
       })
+    }
+  },
+  mounted(){
+    document.title = 'Checkout | Power Pet Pro'
+
+    if(this.cartTotalLength > 0){
+      // we create an instance of stripe and we use window because of index.html with our stripe cdn
+      this.stripe =  window.Stripe(process.env.VUE_APP_STRIPE_TOKEN)
+      const elements = this.stripe.elements();
+      console.log(elements)
+      this.card = elements.create('card', { hidePostalCode: true})
+      console.log(this.card)
+      this.card.mount('#card-element')
+    } else {
+      console.log('There are no items in your cart')
     }
   }
 
