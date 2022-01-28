@@ -7,15 +7,15 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-from .models import Order, CartItem
-from .serializers import OrderSerializer
+from .models import Order, OrderItem
+from .serializers import OrderItemSerializer
 # Create your views here.
 
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def checkout(request):
-    serializer = OrderSerializer(data=request.data)
+    serializer = OrderItemSerializer(data=request.data)
 
     if serializer.is_valid():
         stripe.api_key = settings.STRIPE_SECRET_KEY

@@ -88,6 +88,11 @@
                   </div>
                 </div>
               </div>
+              <div class="columns">
+                <div class="column control">
+                   <div ref="card" class="mb-5 form-control"></div>
+                </div>
+              </div>
               <p class="help is-danger" v-for="(error, index) in errors" :key="index">
                 {{ error }}
               </p>
@@ -142,20 +147,20 @@ export default{
       card: {},
       states: [],
       countries: [],
-      chosen_state: '',
-      chosen_country:'',
-      first_name: '',
-      last_name: '',
-      email: '',
-      phone_number: '',
-      address: '',
-      city: '',
-      zip_code: '',
+      chosen_state: 'New York',
+      chosen_country:'United States',
+      first_name: 'Justin',
+      last_name: 'Do',
+      email: 'justindo720@gmail.com',
+      phone_number: '929282158575',
+      address: '1175 Arnow Ave',
+      city: 'Bronx',
+      zip_code: '10469',
       errors: [],
     }
   },
   computed:{
-    ...mapState(["cart"]),
+    ...mapState(["cart", "accessToken"]),
     country_states() {
       let country_selected = {};
       if (this.chosen_country) {
@@ -170,13 +175,6 @@ export default{
       }
       return country_selected;
     },
-    cartTotalLength(){
-      // reduce just runs a function in the array so something like lambda
-       return this.cart.items.reduce((acc, curVal) => {
-            return acc += curVal.quantity
-        }, 0)
-    }
-
   },
   methods:{
     submit_shipping_details(){
@@ -221,6 +219,8 @@ export default{
             this.stripeTokenHandler(result.token)
           }
         })
+      }else{
+        console.log(this.errors)
       }
     },
     async stripeTokenHandler(token){
@@ -229,14 +229,13 @@ export default{
       for(let i=0; i < this.cart.items.length; i++){
         const curr_item = this.cart.items[i]
         const obj = {
-          product: curr_item.product.id, // we are getting the id of the product for our db to read it
+          product: curr_item.product, // we are getting the id of the product for our db to read it
           quantity: curr_item.quantity,
-          price: curr_item.product.price * curr_item.quantity // total price
+          price: curr_item.price * curr_item.quantity // total price
         }
-
         items.push(obj)
       }
-
+      console.log(items)
       const data = {
         'first_name': this.first_name,
         'last_name': this.last_name,
@@ -248,11 +247,16 @@ export default{
         'stripe_token': token.id
       }
 
-      await axios.post('checkout/', data).then(response=>{
-        this.$store.commit('clearCart')
-        this.$router.push({name:'Success'})
+      await axios.post('checkout/', data, {headers: {
+        Authorization: `Bearer ${this.accessToken}`
+        }}).then(response=>{
+          console.log('wtf?')
+          this.$store.commit('clearCart')
+          this.$router.push({name:'Success'})
       }).catch(err=>{
         this.errors.push('Something went wrong. Please try again.')
+        console.log(err.response.data.message)
+        console.log('Token: ' + this.accessToken)
       })
 
       // We need to set loading off because we initially set it true in submit_shipping_details
@@ -270,7 +274,6 @@ export default{
       axios.get(`profile_list/user_profile/${Cookies('user_id')}/`, {
         headers: {Authorization: `Bearer ${Cookies('accessToken')}`}
       }).then(response=>{
-        console.log(response.data)
         this.first_name = response.data.first_name
         this.last_name = response.data.last_name
         this.address = response.data.address
@@ -285,19 +288,57 @@ export default{
   },
   mounted(){
     document.title = 'Checkout | Power Pet Pro'
-
-    if(this.cartTotalLength > 0){
-      // we create an instance of stripe and we use window because of index.html with our stripe cdn
-      this.stripe =  window.Stripe(process.env.VUE_APP_STRIPE_TOKEN)
-      const elements = this.stripe.elements();
-      console.log(elements)
-      this.card = elements.create('card', { hidePostalCode: true})
-      console.log(this.card)
-      this.card.mount('#card-element')
-    } else {
-      console.log('There are no items in your cart')
+    // we create an instance of stripe and we use window because of index.html with our stripe cdn
+    this.stripe =  window.Stripe(process.env.VUE_APP_STRIPE_TOKEN)
+    // We need to create an instance of elements
+    const elements = this.stripe.elements();
+    // Just styling for stripe which we will add when we create an element of card
+    const style = {
+      base: {
+        color: '#32325d',
+        lineHeight: '24px',
+        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+        fontSmoothing: 'antialiased',
+        fontSize: '16px',
+        '::placeholder': {
+          color: '#aab7c4'
+        }
+      },
+      invalid: {
+        color: '#fa755a',
+        iconColor: '#fa755a'
+      }
     }
-  }
+    // Creating an element of card with some options like style and hidePostalCode
+    this.card = elements.create('card', { hidePostalCode: true, style: style})
+    // Once we finish creating an instance of stripe of elements and binding them to this.card we mount it
+    this.card.mount(this.$refs.card) // this.$refs.card just mounts it to the div that has ref='card'
+  },
 
 }
 </script>
+
+<style scoped>
+/* Although we dont use the class StripeElement stripe actually puts class='StripeElement' wherever card is mounted */
+.StripeElement {
+  background-color: white;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px 0 #e6ebf1;
+  -webkit-transition: box-shadow 150ms ease;
+  transition: box-shadow 150ms ease;
+}
+
+.StripeElement--focus {
+  box-shadow: 0 1px 3px 0 #cfd7df;
+}
+
+.StripeElement--invalid {
+  border-color: #fa755a;
+}
+
+.StripeElement--webkit-autofill {
+  background-color: #fefde5 !important;
+}
+</style>

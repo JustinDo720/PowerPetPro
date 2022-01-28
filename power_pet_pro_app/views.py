@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
     MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, MissionDetailsSerializer
-from order.serializers import CartItemSerializer
 from .models import Product, Category, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
 from order.models import CartItem
+from order.serializers import CartItemSerializer
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from power_pet_pro_app.pagination import ProductResultsSetPagination, MessageBarViewPagination
@@ -278,6 +278,7 @@ def updateUserCart(request, user_id, product_id):
         # For post we dont need our main serializer because we are not changing a specific product we are just adding
         post_serializer = CartItemSerializer(data=request.data)
         if post_serializer.is_valid():
+            print(post_serializer.validated_data)
             post_serializer.save()
             return Response(post_serializer.data)
         return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)

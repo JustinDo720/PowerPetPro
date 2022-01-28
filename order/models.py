@@ -27,9 +27,10 @@ class Order(models.Model):
         return self.user.username
 
 
-class CartItem(models.Model):
-    profile = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+# OrderItem will take care of adding items to our order model
+class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
+    profile = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     quantity = models.IntegerField(default=1)
@@ -40,4 +41,20 @@ class CartItem(models.Model):
         ordering = ('-date_added',)
 
     def __str__(self):
-        return f'{self.product.name} - {self.profile.username}'
+        return f'Order Item: {self.product.name} - {self.profile.username}'
+
+
+# CartItem will take care of adding items to our cart and saving user cart data
+class CartItem(models.Model):
+    profile = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+    quantity = models.IntegerField(default=1)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # This is going to order our products from the most recent date that the product was added
+        ordering = ('-date_added',)
+
+    def __str__(self):
+        return f'Cart Item: {self.product.name} - {self.profile.username}'

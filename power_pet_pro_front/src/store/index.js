@@ -56,6 +56,7 @@ export default createStore({
             {
               profile: state.user_id,
               product: item.product.id,
+              price: item.product.price,
               quantity: exists[0].quantity, // if we are doing a put request we just need to change the quantity
             },
             { headers }
@@ -71,6 +72,7 @@ export default createStore({
               {
                 profile: state.user_id,
                 product: item.product.id,
+                price: item.product.price,
                 quantity: item.quantity,
               },
               { headers }
@@ -262,7 +264,7 @@ export default createStore({
       });
     },
     clearCart(context){
-
+      context.commit('clearCart')
     },
   },
   modules: {},
