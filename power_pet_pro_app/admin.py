@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Category, Product, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
-from order.models import CartItem, Order
+from order.models import CartItem, Order, OrderItem
 from users.models import Profile
 from users.models import CustomUser
 
@@ -8,6 +8,7 @@ models = [
     CustomUser,
     Order,
     CartItem,
+    OrderItem,
     Profile,
     Category,
     Product,

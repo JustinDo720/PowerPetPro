@@ -4,9 +4,9 @@ from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
     MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, MissionDetailsSerializer
-from order.serializers import CartItemSerializer
 from .models import Product, Category, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
 from order.models import CartItem
+from order.serializers import CartItemSerializer
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from power_pet_pro_app.pagination import ProductResultsSetPagination, MessageBarViewPagination

@@ -56,6 +56,7 @@ export default createStore({
             {
               profile: state.user_id,
               product: item.product.id,
+              price: item.product.price,
               quantity: exists[0].quantity, // if we are doing a put request we just need to change the quantity
             },
             { headers }
@@ -71,6 +72,7 @@ export default createStore({
               {
                 profile: state.user_id,
                 product: item.product.id,
+                price: item.product.price,
                 quantity: item.quantity,
               },
               { headers }
@@ -185,6 +187,10 @@ export default createStore({
       state.messageboxes = messages
       state.next_url = next
       state.previous_url = previous
+    },
+    clearCart(state){
+      // Just resetting the items array in our cart state
+      state.cart = { items: [] }
     }
   },
   actions: {
@@ -256,6 +262,9 @@ export default createStore({
         refreshToken: refreshToken,
         is_staff: is_staff
       });
+    },
+    clearCart(context){
+      context.commit('clearCart')
     },
   },
   modules: {},

@@ -91,41 +91,6 @@ class CustomUserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class CartItemSerializer(serializers.ModelSerializer):
-#     name = serializers.SerializerMethodField('get_product_name')
-#     price = serializers.SerializerMethodField('get_product_price')
-#     # Make sure the name of the SerializerMethodField is not the same as the function for it
-#     get_absolute_url = serializers.SerializerMethodField('get_abs_url')
-#     photo = serializers.SerializerMethodField('get_photo')
-#
-#     def get_product_name(self, cart):
-#         return cart.product.name
-#
-#     def get_product_price(self, cart):
-#         return cart.product.price
-#
-#     # This cannot be get_absolute_url which brings up a config error
-#     def get_abs_url(self, cart):
-#         return cart.product.get_absolute_url()
-#
-#     def get_photo(self, cart):
-#         print(cart.product.get_image())
-#         return cart.product.get_image()
-#
-#     class Meta:
-#         model = CartItem
-#         fields = (
-#             'profile',
-#             'product',
-#             'quantity',
-#             'name',
-#             'price',
-#             'get_absolute_url',
-#             'photo',
-#
-#         )
-
-
 # Custom Register Serializer
 class MyUserCreationSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):

@@ -74,7 +74,7 @@ export default {
     updateCart() {
       // by updating the cart our initalizeStorage will make sure the cart is up to date
       // since increasing the quantity already changes the state all we need to do is update our storage for refresh
-      console.log(this.cart_item.product);
+      console.log(this.cart_item);
       if(this.user_id && this.accessToken){
        // if the user is authenticated then we will have access to the accessToken, userid etc
         let headers = { Authorization: `Bearer ${this.accessToken}` };
@@ -85,6 +85,7 @@ export default {
               profile: this.user_id,
               product: this.cart_item.product,
               quantity: this.cart_item.quantity,
+              price: this.cart_item.price
             },
             { headers }
           )
