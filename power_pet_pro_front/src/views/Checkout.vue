@@ -122,7 +122,7 @@
                 <p class="subtitle is-6 has-text-black">
                   <strong class="has-text-black">Quantity: </strong>{{ cart_item.quantity }}
                   <br>
-                  <strong class="has-text-black">Total Price: $</strong>{{ cart_item.price }}
+                  <strong class="has-text-black">Total Price: $</strong>{{ cart_item.price * cart_item.quantity }}
                 </p>
               </div>
             </article>
@@ -215,7 +215,7 @@ export default{
             this.errors.push('Something went wrong with Stripe. Please try again')
             console.log(result.error.message)
           } else {
-            console.log(result)
+            console.log(result.token.id)
             this.stripeTokenHandler(result.token)
           }
         })
@@ -235,14 +235,16 @@ export default{
         }
         items.push(obj)
       }
-      console.log(items)
       const data = {
         'first_name': this.first_name,
         'last_name': this.last_name,
         'email': this.email,
         'address': this.address,
         'zipcode': this.zip_code,
-        'phone': this.phone,
+        'phone': this.phone_number,
+        'city': this.city,
+        'country': this.chosen_country,
+        'state': this.chosen_state,
         'items': items,
         'stripe_token': token.id
       }
@@ -250,13 +252,10 @@ export default{
       await axios.post('checkout/', data, {headers: {
         Authorization: `Bearer ${this.accessToken}`
         }}).then(response=>{
-          console.log('wtf?')
           this.$store.commit('clearCart')
           this.$router.push({name:'Success'})
       }).catch(err=>{
         this.errors.push('Something went wrong. Please try again.')
-        console.log(err.response.data.message)
-        console.log('Token: ' + this.accessToken)
       })
 
       // We need to set loading off because we initially set it true in submit_shipping_details

@@ -29,8 +29,9 @@ class Order(models.Model):
 
 # OrderItem will take care of adding items to our order model
 class OrderItem(models.Model):
-    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
-    profile = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    # Order and Profile could be null for anonymous users
+    order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE, null=True, blank=True)
+    profile = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, blank=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     quantity = models.IntegerField(default=1)
@@ -41,7 +42,11 @@ class OrderItem(models.Model):
         ordering = ('-date_added',)
 
     def __str__(self):
-        return f'Order Item: {self.product.name} - {self.profile.username}'
+        if self.profile:
+            msg = f'Order Item: {self.product.name} - {self.profile.username}'
+        else:
+            msg = f'Order Item: {self.product.name} - Guest'
+        return msg
 
 
 # CartItem will take care of adding items to our cart and saving user cart data

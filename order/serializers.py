@@ -23,11 +23,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
         fields = (
             'profile',
             'product',
-            'order'
-            'name',
+            'order',
+            'quantity',
             'price',
             'get_absolute_url',
             'photo',
+            'name'
         )
 
 
@@ -60,12 +61,13 @@ class OrderSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         # So when we pop with a key, the key doesn't have to be at the end (it could be anywhere)
-        items_data = validaded_data.pop('items')
+        items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
 
+        profile = validated_data['user']
         # Now once we create our order  we need to make order items aka cart items
         for item_data in items_data:
-            OrderItem.objects.create(order=order, **item_data)
+            OrderItem.objects.create(order=order, profile=profile, **item_data)
 
         return order
 

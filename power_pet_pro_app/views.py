@@ -278,7 +278,6 @@ def updateUserCart(request, user_id, product_id):
         # For post we dont need our main serializer because we are not changing a specific product we are just adding
         post_serializer = CartItemSerializer(data=request.data)
         if post_serializer.is_valid():
-            print(post_serializer.validated_data)
             post_serializer.save()
             return Response(post_serializer.data)
         return Response(post_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
