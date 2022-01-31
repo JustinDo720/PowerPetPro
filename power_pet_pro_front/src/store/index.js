@@ -26,8 +26,8 @@ export default createStore({
     searchTerm: "",
     is_staff: false,
     messageboxes: [],
-    next_url: '',  // We are going to store the next and previous url here in the state so we could just use mapState
-    previous_url: '',
+    next_url: "", // We are going to store the next and previous url here in the state so we could just use mapState
+    previous_url: "",
     store_categories: [],
   },
   mutations: {
@@ -107,15 +107,18 @@ export default createStore({
     addSearch(state, searchTerm) {
       state.searchTerm = searchTerm.searchTerm;
     },
-    loginUser(state, { username, accessToken, refreshToken, user_id, is_staff }) {
+    loginUser(
+      state,
+      { username, accessToken, refreshToken, user_id, is_staff }
+    ) {
       // before we do anything, we need to make sure the cart is empty after login so
-      state.cart.items = []
+      state.cart.items = [];
 
       state.username = username;
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
       state.user_id = user_id;
-      state.is_staff = is_staff
+      state.is_staff = is_staff;
 
       // We don't need to save these tokens because we are already running an initializeStore right after this
       // saveTokens(state.username, state.user_id, state.accessToken, state.refreshToken)
@@ -138,7 +141,10 @@ export default createStore({
       state.cart.items = [];
       localStorage.removeItem("cart");
     },
-    initializeStore(state, { username, user_id, accessToken, refreshToken, is_staff }) {
+    initializeStore(
+      state,
+      { username, user_id, accessToken, refreshToken, is_staff }
+    ) {
       if (localStorage.getItem("cart")) {
         // If cart exist then we will set our state to the cart
         // We use JSON.parse to grab an object wrapped in strings because of Local Storage
@@ -152,7 +158,6 @@ export default createStore({
             // After you set cart items in state we also need to set that in Cart so
             localStorage.setItem("cart", JSON.stringify(state.cart));
           });
-
       } else {
         // NOTE: Localstorage usually takes strings thats why we need stringify to wrap our obj in string format
         // we dont have cart in our localstorage so lets set it
@@ -163,35 +168,35 @@ export default createStore({
       state.accessToken = accessToken;
       state.refreshToken = refreshToken;
       state.user_id = user_id;
-      state.is_staff = is_staff
+      state.is_staff = is_staff;
       saveTokens(
         state.username,
         state.user_id,
         state.accessToken,
         state.refreshToken,
-        state.is_staff,
+        state.is_staff
       );
     },
-    initializeAnonymousStore(state){
-       if (localStorage.getItem("cart")) {
-         // we set the state.cart = the localstorage which takes care of anonymous carts (no login required)
-         state.cart = JSON.parse(localStorage.getItem('cart'))
+    initializeAnonymousStore(state) {
+      if (localStorage.getItem("cart")) {
+        // we set the state.cart = the localstorage which takes care of anonymous carts (no login required)
+        state.cart = JSON.parse(localStorage.getItem("cart"));
       } else {
         localStorage.setItem("cart", JSON.stringify(state.cart));
       }
     },
-    update_categories(state, {categories}){
-      state.store_categories = categories
+    update_categories(state, { categories }) {
+      state.store_categories = categories;
     },
-    fetch_message_box(state, {messages, next, previous}){
-      state.messageboxes = messages
-      state.next_url = next
-      state.previous_url = previous
+    fetch_message_box(state, { messages, next, previous }) {
+      state.messageboxes = messages;
+      state.next_url = next;
+      state.previous_url = previous;
     },
-    clearCart(state){
+    clearCart(state) {
       // Just resetting the items array in our cart state
-      state.cart = { items: [] }
-    }
+      state.cart = { items: [] };
+    },
   },
   actions: {
     initializeStore(context) {
@@ -200,7 +205,7 @@ export default createStore({
         Cookies("user_id") &&
         Cookies("accessToken") &&
         Cookies("refreshToken") &&
-        Cookies('is_staff')
+        Cookies("is_staff")
       ) {
         const username = Cookies("username");
         const user_id = Cookies("user_id");
@@ -218,7 +223,7 @@ export default createStore({
               user_id: user_id,
               accessToken: accessToken,
               refreshToken: refreshToken,
-              is_staff: is_staff
+              is_staff: is_staff,
             });
           })
           .catch((err) => {
@@ -239,12 +244,14 @@ export default createStore({
           });
       } else {
         // We are in anonymous user territory so we are going to set cart item to localstorage without user info
-        context.commit('initializeAnonymousStore')
+        context.commit("initializeAnonymousStore");
       }
     },
     // we are going to need an action for loginUser because we will be committing two mutations
-    loginUser(context, { username, accessToken, refreshToken, user_id, is_staff}) {
-
+    loginUser(
+      context,
+      { username, accessToken, refreshToken, user_id, is_staff }
+    ) {
       // once we commit loginUser which will save the tokens and update our state
       context.commit("loginUser", {
         username: username,
@@ -260,11 +267,11 @@ export default createStore({
         user_id: user_id,
         accessToken: accessToken,
         refreshToken: refreshToken,
-        is_staff: is_staff
+        is_staff: is_staff,
       });
     },
-    clearCart(context){
-      context.commit('clearCart')
+    clearCart(context) {
+      context.commit("clearCart");
     },
   },
   modules: {},

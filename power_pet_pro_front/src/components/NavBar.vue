@@ -67,7 +67,7 @@
                       name: 'ViewAllMessages',
                     }"
                   >
-                   View All Messages
+                    View All Messages
                   </router-link>
                 </li>
                 <li>
@@ -87,7 +87,7 @@
                       name: 'ViewAllProducts',
                     }"
                   >
-                   View All Products
+                    View All Products
                   </router-link>
                 </li>
                 <li>
@@ -120,7 +120,7 @@
                     Add Mission Statement
                   </router-link>
                 </li>
-                 <li>
+                <li>
                   <router-link
                     data-dismiss="quickview"
                     :to="{
@@ -302,7 +302,7 @@ export default {
   created() {
     // we want to grab our categories
     axios.get("/category_list/").then((response) => {
-      this.$store.commit('update_categories', {categories:response.data})
+      this.$store.commit("update_categories", { categories: response.data });
     });
   },
 };

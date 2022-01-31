@@ -13,7 +13,7 @@ import ResetPasswordConfirmation from "../views/ResetPasswordConfirmation";
 import Reactivate from "../views/Reactivate";
 import MessageBox from "../views/MessageBox";
 import AdminProduct from "../views/AdminProduct";
-import AdminCategory from '../views/AdminCategory';
+import AdminCategory from "../views/AdminCategory";
 import ViewAllMessages from "../views/ViewAllMessages";
 import ViewAllProducts from "../views/ViewAllProducts";
 import MissionStatementBox from "../views/MissionStatementBox";
@@ -97,58 +97,58 @@ const routes = [
   {
     path: "/admin/messagebox/",
     name: "MessageBox",
-    component: MessageBox
+    component: MessageBox,
   },
   {
     path: "/admin/admin_product/",
     name: "AdminProduct",
-    component: AdminProduct
+    component: AdminProduct,
   },
   {
     path: "/admin/admin_category/",
     name: "AdminCategory",
-    component: AdminCategory
+    component: AdminCategory,
   },
   {
     path: "/admin/view_all_messages/",
     name: "ViewAllMessages",
-    component: ViewAllMessages
+    component: ViewAllMessages,
   },
   {
     path: "/admin/view_all_products/",
     name: "ViewAllProducts",
-    component: ViewAllProducts
+    component: ViewAllProducts,
   },
   {
     path: "/admin/mission_statement_box/",
     name: "MissionStatementBox",
-    component: MissionStatementBox
+    component: MissionStatementBox,
   },
   {
     path: "/admin/mission_statement_topic_box/",
     name: "MissionStatementTopicBox",
-    component: MissionStatementTopicBox
+    component: MissionStatementTopicBox,
   },
   {
     path: "/mission_statement/topic/:topic_slug/",
     name: "Topic",
-    component: Topic
+    component: Topic,
   },
   {
     path: "/mission_statement/topic/add_details/",
     name: "MissionDetailsBox",
-    component: MissionDetailsBox
+    component: MissionDetailsBox,
   },
   {
-    path: '/cart/checkout/',
+    path: "/cart/checkout/",
     name: "Checkout",
-    component: Checkout
+    component: Checkout,
   },
   {
-    path: '/cart/success/',
+    path: "/cart/success/",
     name: "Success",
-    component: Success
-  }
+    component: Success,
+  },
 ];
 
 const router = createRouter({

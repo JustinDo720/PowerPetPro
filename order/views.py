@@ -13,7 +13,6 @@ from .serializers import OrderItemSerializer, OrderSerializer
 
 
 @api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
 def checkout(request):
     serializer = OrderSerializer(data=request.data)
 
@@ -29,10 +28,13 @@ def checkout(request):
                 source=serializer.validated_data['stripe_token']
             )
 
-            serializer.save(user=request.user, paid_amount=paid_amount)
+            if request.user.is_anonymous:
+                print('EXpected')
+                serializer.save(paid_amount=paid_amount)
+            else:
+                serializer.save(user=request.user, paid_amount=paid_amount)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception as e:
-            print(e)
+        except Exception:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

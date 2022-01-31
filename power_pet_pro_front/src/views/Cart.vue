@@ -38,7 +38,7 @@
             >, {{ cartTotalLength }} items
           </p>
           <button class="button is-medium mt-4 is-info is-outlined">
-            <router-link :to="{name:'Checkout'}">
+            <router-link :to="{ name: 'Checkout' }">
               &raquo; Proceed to checkout
             </router-link>
           </button>
