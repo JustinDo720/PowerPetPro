@@ -68,15 +68,19 @@ class OrderSerializer(serializers.ModelSerializer):
         # So when we pop with a key, the key doesn't have to be at the end (it could be anywhere)
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
+
         try:
-            profile = validated_data['user']
-        except Exception as e:
-            print(e)
+            profile = validated_data['user']    # Here is where we used the data['user'] from our front-end checkout
+        except Exception:
             profile = None
 
-        # Now once we create our order  we need to make order items aka cart items
+        # Now once we create our order we need to make order items aka cart items
         for item_data in items_data:
             OrderItem.objects.create(order=order, profile=profile, **item_data)
+
+        # Once we created our order and orderItems we need to make sure to delete those CartItems to "reset" the cart
+        CartItem.objects.filter(profile=profile).delete()   # This will delete all the CartItems relating to the profile
+
         return order
 
 

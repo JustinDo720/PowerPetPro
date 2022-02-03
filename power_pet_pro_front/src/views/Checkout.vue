@@ -275,6 +275,10 @@ export default {
         items: items,
         stripe_token: token.id,
       };
+      // We are using this to make our backend know that the requested user is actually authenticated and not anonymous
+      if(Cookies('user_id') && this.accessToken){
+        data['user'] = Cookies('user_id')
+      }
       console.log(data);
       await axios
         .post("checkout/", data)

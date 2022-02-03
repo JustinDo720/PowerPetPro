@@ -28,13 +28,11 @@ def checkout(request):
                 source=serializer.validated_data['stripe_token']
             )
 
-            if request.user.is_anonymous:
-                print('EXpected')
-                serializer.save(paid_amount=paid_amount)
-            else:
-                serializer.save(user=request.user, paid_amount=paid_amount)
+            # NOTE: If the accessToken is not provided during POST request then the request.user is actually anonymous
+            serializer.save(paid_amount=paid_amount)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        except Exception:
+        except Exception as e:
+            print(e)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
