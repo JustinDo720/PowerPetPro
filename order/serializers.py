@@ -112,3 +112,15 @@ class CartItemSerializer(serializers.ModelSerializer):
             'get_absolute_url',
             'photo',
         )
+
+
+class UserOrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = (
+            'id',
+            'paid_amount',
+            'items'
+        )

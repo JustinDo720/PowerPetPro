@@ -196,6 +196,7 @@ export default createStore({
     clearCart(state) {
       // Just resetting the items array in our cart state
       state.cart = { items: [] };
+      localStorage.setItem("cart", JSON.stringify(state.cart))
     },
   },
   actions: {
@@ -269,9 +270,6 @@ export default createStore({
         refreshToken: refreshToken,
         is_staff: is_staff,
       });
-    },
-    clearCart(context) {
-      context.commit("clearCart");
     },
   },
   modules: {},

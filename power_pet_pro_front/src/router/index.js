@@ -22,6 +22,7 @@ import Topic from "../views/Topic";
 import MissionDetailsBox from "../views/MissionDetailsBox";
 import Checkout from "../views/Checkout";
 import Success from "../views/Success";
+import Orders from "../views/Orders";
 import store from "../store";
 
 const routes = [
@@ -148,6 +149,11 @@ const routes = [
     path: "/cart/success/",
     name: "Success",
     component: Success,
+  },
+  {
+    path: "/profile/:id/orders/",
+    name: "Orders",
+    component: Orders,
   },
 ];
 

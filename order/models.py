@@ -25,9 +25,9 @@ class Order(models.Model):
 
     def __str__(self):
         if self.user:
-            return self.user.username
+            return f'{self.user.username}: OrderNum {self.id}'
         else:
-            return self.email
+            return f'{self.email}: OrderNum {self.id}'
 
 
 # OrderItem will take care of adding items to our order model
@@ -46,9 +46,9 @@ class OrderItem(models.Model):
 
     def __str__(self):
         if self.profile:
-            msg = f'Order Item: {self.product.name} - {self.profile.username}'
+            msg = f'Order Item: {self.product.name} - {self.profile.username} - OrderNum {self.order.id}'
         else:
-            msg = f'Order Item: {self.product.name} - Guest'
+            msg = f'Order Item: {self.product.name} - {self.order.email} - OrderNum {self.order.id}'
         return msg
 
 
