@@ -1,5 +1,6 @@
 from .models import Order, OrderItem, CartItem
 from rest_framework_simplejwt.serializers import serializers
+from power_pet_pro_app.models import CustomUser
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -37,12 +38,16 @@ class OrderSerializer(serializers.ModelSerializer):
     username = serializers.SerializerMethodField('get_username')
 
     def get_username(self, order):
-        return order.user.username
+        if order.user:
+            return order.user.username
+        else:
+            return None
 
     class Meta:
         model = Order
         fields = (
             'id',
+            'user',
             'first_name',
             'last_name',
             'phone',
@@ -64,10 +69,17 @@ class OrderSerializer(serializers.ModelSerializer):
         items_data = validated_data.pop('items')
         order = Order.objects.create(**validated_data)
 
-        profile = validated_data['user']
-        # Now once we create our order  we need to make order items aka cart items
+        try:
+            profile = validated_data['user']    # Here is where we used the data['user'] from our front-end checkout
+        except Exception:
+            profile = None
+
+        # Now once we create our order we need to make order items aka cart items
         for item_data in items_data:
             OrderItem.objects.create(order=order, profile=profile, **item_data)
+
+        # Once we created our order and orderItems we need to make sure to delete those CartItems to "reset" the cart
+        CartItem.objects.filter(profile=profile).delete()   # This will delete all the CartItems relating to the profile
 
         return order
 
@@ -99,4 +111,16 @@ class CartItemSerializer(serializers.ModelSerializer):
             'price',
             'get_absolute_url',
             'photo',
+        )
+
+
+class UserOrderSerializer(serializers.ModelSerializer):
+    items = OrderItemSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = (
+            'id',
+            'paid_amount',
+            'items'
         )

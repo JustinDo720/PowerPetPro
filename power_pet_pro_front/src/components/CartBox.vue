@@ -35,7 +35,7 @@
 import { mapState } from "vuex";
 import Cookies from "cookies-js";
 import axios from "axios";
-import {toast} from "bulma-toast";
+import { toast } from "bulma-toast";
 
 export default {
   name: "CartBox",
@@ -75,24 +75,22 @@ export default {
       // by updating the cart our initalizeStorage will make sure the cart is up to date
       // since increasing the quantity already changes the state all we need to do is update our storage for refresh
       console.log(this.cart_item);
-      if(this.user_id && this.accessToken){
-       // if the user is authenticated then we will have access to the accessToken, userid etc
+      if (this.user_id && this.accessToken) {
+        // if the user is authenticated then we will have access to the accessToken, userid etc
         let headers = { Authorization: `Bearer ${this.accessToken}` };
-        axios
-          .put(
-            `profile_list/user_profile/${this.user_id}/cart/${this.cart_item.product}/`,
-            {
-              profile: this.user_id,
-              product: this.cart_item.product,
-              quantity: this.cart_item.quantity,
-              price: this.cart_item.price
-            },
-            { headers }
-          )
+        axios.put(
+          `profile_list/user_profile/${this.user_id}/cart/${this.cart_item.product}/`,
+          {
+            profile: this.user_id,
+            product: this.cart_item.product,
+            quantity: this.cart_item.quantity,
+            price: this.cart_item.price,
+          },
+          { headers }
+        );
       }
 
       localStorage.setItem("cart", JSON.stringify(this.cart));
-
     },
     removeItem(cart_item) {
       // we need to find the item's index, use splice to get rid of the item from cart and then update our cart
@@ -102,21 +100,24 @@ export default {
       // splice(index_to_remove, delete_count)
       this.cart.items.splice(cart_item_index, 1);
       // To remove items from the user we need to make sure we delete them so
-      if(this.user_id && this.accessToken){
-        axios.delete(`profile_list/user_profile/${this.user_id}/cart/${this.cart_item.product}/`).then((response)=>{
-          toast({
-            message: response.data.success,
-            type: "is-danger",
-            dismissible: true,
-            pauseOnHover: true,
-            duration: 2000, // milliseconds
-            position: "bottom-right",
+      if (this.user_id && this.accessToken) {
+        axios
+          .delete(
+            `profile_list/user_profile/${this.user_id}/cart/${this.cart_item.product}/`
+          )
+          .then((response) => {
+            toast({
+              message: response.data.success,
+              type: "is-danger",
+              dismissible: true,
+              pauseOnHover: true,
+              duration: 2000, // milliseconds
+              position: "bottom-right",
+            });
           });
-        })
-
-      }else{
+      } else {
         // If the user is not authenticated then we are going to remove from cart
-        this.updateCart()
+        this.updateCart();
       }
     },
   },

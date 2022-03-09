@@ -10,7 +10,11 @@
         <div class="columns is-centered">
           <div class="column is-5">
             <div v-if="all_topic_details">
-              <div class="box" v-for="(topic_detail, index) in all_topic_details" :key="index" >
+              <div
+                class="box"
+                v-for="(topic_detail, index) in all_topic_details"
+                :key="index"
+              >
                 <h1 class="subtitle is-3 has-text-black">
                   {{ topic_detail.mission_topic_details }}
                 </h1>
@@ -33,30 +37,31 @@
 <script>
 import axios from "axios";
 
-export default{
+export default {
   name: "Topic",
-  data(){
-    return{
+  data() {
+    return {
       all_topic_details: [],
-      main_topic: '',
-      empty_message: '',
-    }
+      main_topic: "",
+      empty_message: "",
+    };
   },
-  created(){
+  created() {
     // We need to grab the slug from the url
-    let topic_slug = this.$route.params.topic_slug
+    let topic_slug = this.$route.params.topic_slug;
     // Careful we are going to get an array of details
-    axios.get(`admin_panel/our_mission/view_topic/${topic_slug}/`).then(response=>{
-      console.log(response.data)
-      if(response.data.length >= 1){
-        this.all_topic_details = response.data
-        this.main_topic = response.data[0].mission_topic_name
-      } else {
-        this.main_topic = response.data.topic
-        this.empty_message = response.data.message
-      }
-    })
-  }
-
-}
+    axios
+      .get(`admin_panel/our_mission/view_topic/${topic_slug}/`)
+      .then((response) => {
+        console.log(response.data);
+        if (response.data.length >= 1) {
+          this.all_topic_details = response.data;
+          this.main_topic = response.data[0].mission_topic_name;
+        } else {
+          this.main_topic = response.data.topic;
+          this.empty_message = response.data.message;
+        }
+      });
+  },
+};
 </script>

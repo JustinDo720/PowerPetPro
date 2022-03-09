@@ -6,7 +6,7 @@ from power_pet_pro_app.models import Product
 
 
 class Order(models.Model):
-    user = models.ForeignKey(CustomUser, related_name='orders', on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, related_name='orders', on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.CharField(max_length=100)
@@ -24,7 +24,10 @@ class Order(models.Model):
         ordering = ['-created_at', ]
 
     def __str__(self):
-        return self.user.username
+        if self.user:
+            return f'{self.user.username}: OrderNum {self.id}'
+        else:
+            return f'{self.email}: OrderNum {self.id}'
 
 
 # OrderItem will take care of adding items to our order model
@@ -43,9 +46,9 @@ class OrderItem(models.Model):
 
     def __str__(self):
         if self.profile:
-            msg = f'Order Item: {self.product.name} - {self.profile.username}'
+            msg = f'Order Item: {self.product.name} - {self.profile.username} - OrderNum {self.order.id}'
         else:
-            msg = f'Order Item: {self.product.name} - Guest'
+            msg = f'Order Item: {self.product.name} - {self.order.email} - OrderNum {self.order.id}'
         return msg
 
 
