@@ -122,5 +122,11 @@ class UserOrderSerializer(serializers.ModelSerializer):
         fields = (
             'id',
             'paid_amount',
+            'created_at',
+            'first_name',
+            'last_name',
+            'address',
+            'city',
+            'state',
             'items'
         )

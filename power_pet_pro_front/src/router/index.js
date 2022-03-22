@@ -155,6 +155,7 @@ const routes = [
     name: "Orders",
     component: Orders,
   },
+
 ];
 
 const router = createRouter({
@@ -165,7 +166,7 @@ const router = createRouter({
 store.dispatch("initializeStore").then(() => {
   router.beforeEach((to, from, next) => {
     if (to.matched.some((response) => response.meta.requiresLogin)) {
-      if (!store.getters.isAuth) {
+      if (!store.state.accessToken) {
         next({ name: "Login" });
       } else {
         next();
