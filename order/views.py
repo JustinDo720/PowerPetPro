@@ -67,3 +67,19 @@ class LatestUserOrder(APIView):
         order = Order.objects.filter(user=user_id)[:3]
         serializer = UserOrderSerializer(order, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class IndividualUserOrder(APIView):
+    """
+        Given User id and Order number
+            - We will fetch details about their orders and display them fully
+                - for instance all of their items
+                - address being shipped to
+                - total cost etc
+    """
+    permission_classes = [IsAuthenticated,]
+
+    def get(self, request, user_id, order_id):
+        order = Order.objects.get(id=order_id, user=user_id)
+        serializer = UserOrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)

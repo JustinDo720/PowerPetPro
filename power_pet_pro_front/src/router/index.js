@@ -23,6 +23,7 @@ import MissionDetailsBox from "../views/MissionDetailsBox";
 import Checkout from "../views/Checkout";
 import Success from "../views/Success";
 import Orders from "../views/Orders";
+import IndividualOrder from "../views/IndividualOrder";
 import store from "../store";
 
 const routes = [
@@ -155,7 +156,11 @@ const routes = [
     name: "Orders",
     component: Orders,
   },
-
+  {
+    path: "/profile/:id/orders/:order_number",
+    name: "IndividualOrder",
+    component: IndividualOrder,
+  },
 ];
 
 const router = createRouter({

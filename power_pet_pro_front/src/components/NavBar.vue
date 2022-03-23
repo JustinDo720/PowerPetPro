@@ -41,6 +41,7 @@
           <span class="icon is-small">
             <i class="fas fa-bars"></i>
           </span>
+          <span> Shop </span>
         </button>
       </div>
 
@@ -57,7 +58,7 @@
         </header>
         <div class="quickview-body">
           <div class="quickview-block">
-            <aside class="menu ml-2 mt-2" v-if="is_staff">
+            <aside class="menu ml-2 mt-2" v-if="isStaff">
               <p class="menu-label">Admin</p>
               <ul class="menu-list">
                 <li>
@@ -267,6 +268,7 @@
 <script>
 import { mapState, mapGetters } from "vuex";
 import axios from "axios";
+import Cookies from "cookies-js";
 
 export default {
   name: "NavBar",
@@ -275,10 +277,11 @@ export default {
       showMobileMenu: false,
       searchTerm: "",
       showAccount: false,
+      isStaff: false,
     };
   },
   computed: {
-    ...mapState(["cart", "username", "is_staff", "store_categories"]),
+    ...mapState(["cart", "username", "store_categories"]),
     ...mapGetters(["isAuth"]),
     cartLength() {
       // return this.$store.state.cart.items.length
@@ -297,9 +300,11 @@ export default {
     },
     logOut() {
       this.$store.commit("logoutUser");
+      this.$router.push({ name: "Home" });
     },
   },
   created() {
+    this.isStaff = Cookies("is_staff");
     // we want to grab our categories
     axios.get("/category_list/").then((response) => {
       this.$store.commit("update_categories", { categories: response.data });

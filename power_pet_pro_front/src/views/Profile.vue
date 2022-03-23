@@ -42,19 +42,15 @@
         </div>
         <div class="column is-7">
           <div class="box">
-            <h1 class="title is-1 has-text-centered">
-              Recent Orders
-            </h1>
+            <h1 class="title is-1 has-text-centered">Recent Orders</h1>
             <OrderBox
               v-for="(order, index) in orders"
               :key="index"
               :order="order"
             ></OrderBox>
-            <br>
+            <br />
             <router-link :to="`/profile/${user_id}/orders/`">
-              <p class="has-text-centered has-text-link">
-                View all orders
-              </p>
+              <p class="has-text-centered has-text-link">View all orders</p>
             </router-link>
           </div>
         </div>
@@ -241,7 +237,7 @@ export default {
       orders: [],
     };
   },
-  components:{
+  components: {
     OrderBox,
   },
   methods: {
@@ -349,12 +345,13 @@ export default {
         }
         this.original_profile = original_data;
       });
-    axios.get(`latest_orders/${this.user_id}/`,{
-      headers: { Authorization: `Bearer ${this.accessToken}`}
-    }).then((response)=>{
-      this.orders = response.data
-    })
-
+    axios
+      .get(`latest_orders/${this.user_id}/`, {
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      })
+      .then((response) => {
+        this.orders = response.data;
+      });
   },
 };
 </script>
