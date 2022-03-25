@@ -121,6 +121,10 @@ class UserOrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             'id',
+            'user',
+            'email',
+            'country',
+            'phone',
             'paid_amount',
             'created_at',
             'first_name',
@@ -128,5 +132,6 @@ class UserOrderSerializer(serializers.ModelSerializer):
             'address',
             'city',
             'state',
+            'zipcode',
             'items'
         )

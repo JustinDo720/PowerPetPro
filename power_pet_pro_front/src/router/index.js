@@ -157,7 +157,7 @@ const routes = [
     component: Orders,
   },
   {
-    path: "/profile/:id/orders/:order_number",
+    path: "/profile/:id/order/:order_number",
     name: "IndividualOrder",
     component: IndividualOrder,
   },
