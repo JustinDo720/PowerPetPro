@@ -13,6 +13,8 @@ from rest_framework import status
 
 from .models import Order, OrderItem
 from .serializers import OrderItemSerializer, OrderSerializer, UserOrderSerializer
+
+
 # Create your views here.
 
 
@@ -27,7 +29,7 @@ def checkout(request):
         try:
             charge = stripe.Charge.create(
                 amount=int(paid_amount * 100),
-                currency= 'USD',
+                currency='USD',
                 description='Charge from Pet Power Pro',
                 source=serializer.validated_data['stripe_token']
             )
@@ -53,7 +55,7 @@ class UserOrder(ListAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
-        queryset = Order.objects.filter(user=user_id) # we don't need to order_by because we already ordered in meta
+        queryset = Order.objects.filter(user=user_id)  # we don't need to order_by because we already ordered in meta
         return queryset
 
 
@@ -77,9 +79,31 @@ class IndividualUserOrder(APIView):
                 - address being shipped to
                 - total cost etc
     """
-    permission_classes = [IsAuthenticated,]
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, user_id, order_id):
         order = Order.objects.get(id=order_id, user=user_id)
         serializer = UserOrderSerializer(order)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class IndividualUserOrderItems(ListAPIView):
+    """
+        Given User id and Order number
+            - We will fetch details about their orders and display them fully
+                - for instance all of their items
+                - address being shipped to
+                - total cost etc
+    """
+
+    serializer_class = OrderItemSerializer
+    permission_classes = (IsAuthenticated,)
+    pagination_class = OrderPagination  # Although this is OrderPagination we will still be using 5 items so let's reuse
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        order_id = self.kwargs['order_id']
+
+        order = Order.objects.get(user=user_id, id=order_id)
+        order_items = OrderItem.objects.filter(order=order, profile=user_id)
+        return order_items  # this is our queryset

@@ -8,6 +8,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     # Make sure the name of the SerializerMethodField is not the same as the function for it
     get_absolute_url = serializers.SerializerMethodField('get_abs_url')
     photo = serializers.SerializerMethodField('get_photo')
+    short_description = serializers.SerializerMethodField('get_description')
 
     def get_product_name(self, cart):
         return cart.product.name
@@ -19,6 +20,9 @@ class OrderItemSerializer(serializers.ModelSerializer):
     def get_photo(self, cart):
         return cart.product.get_image()
 
+    def get_description(self, cart):
+        return cart.product.get_short_description()
+
     class Meta:
         model = OrderItem
         fields = (
@@ -29,7 +33,8 @@ class OrderItemSerializer(serializers.ModelSerializer):
             'price',
             'get_absolute_url',
             'photo',
-            'name'
+            'name',
+            'short_description',
         )
 
 
@@ -133,5 +138,5 @@ class UserOrderSerializer(serializers.ModelSerializer):
             'city',
             'state',
             'zipcode',
-            'items'
+            'items',
         )

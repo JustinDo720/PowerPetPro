@@ -105,6 +105,15 @@ class Product(models.Model):
             number += 1
         return unique_slug
 
+    def get_short_description(self):
+        # We are going to return the first 100 characters
+        short_description = self.description[:101]
+
+        if len(short_description) >= 100:
+            return f'{short_description}...'
+        else:
+            return short_description
+
     # upon saving the Product
     def save(self, *args, **kwargs):
         if not self.slug:
