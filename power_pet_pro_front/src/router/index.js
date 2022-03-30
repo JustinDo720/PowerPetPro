@@ -147,7 +147,7 @@ const routes = [
     component: Checkout,
   },
   {
-    path: "/cart/success/",
+    path: "/cart/checkout/:user_id/order/:order_id/success/",
     name: "Success",
     component: Success,
   },

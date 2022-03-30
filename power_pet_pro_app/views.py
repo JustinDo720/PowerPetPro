@@ -142,6 +142,7 @@ class LatestProducts(APIView):
 
 @api_view(['POST'])  # when making an api view you have to specify which methods you want so
 def search(request):
+    # query is a data sent in our axios.post in Search.vue
     query = request.data.get('query', '')
 
     if query:

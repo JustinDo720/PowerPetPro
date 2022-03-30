@@ -11,12 +11,18 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   name: "Success",
 
   mounted() {
     // We are just setting the title of the documents
-    document.title = "Success | Pet Power Pro";
+    // document.title = "Success | Pet Power Pro";
+    let user_id = this.$route.params.user_id
+    let order_id = this.$route.params.order_id
+    axios.get(`checkout/${user_id}/order/${order_id}/success/`).then((response)=>{
+      console.log(response.data)
+    })
   },
 };
 </script>

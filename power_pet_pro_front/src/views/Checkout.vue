@@ -284,7 +284,7 @@ export default {
         .post("checkout/", data)
         .then((response) => {
           this.$store.commit("clearCart");
-          this.$router.push({ name: "Success" });
+          this.$router.push({ name: "Success", params: {user_id:Cookies("user_id"),order_id:response.data.id} });
         })
         .catch((err) => {
           this.errors.push("Something went wrong. Please try again.");

@@ -1,5 +1,7 @@
 import stripe
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 from django.conf import settings
 from order.pagination import OrderPagination
 
@@ -11,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Profile
 from .serializers import OrderItemSerializer, OrderSerializer, UserOrderSerializer
 
 
@@ -107,3 +109,26 @@ class IndividualUserOrderItems(ListAPIView):
         order = Order.objects.get(user=user_id, id=order_id)
         order_items = OrderItem.objects.filter(order=order, profile=user_id)
         return order_items  # this is our queryset
+
+
+# since we are using vue let's make this an api view for our success page on the front to call in order to send the mail
+@api_view(['GET'])
+def send_success_email(request, user_id, order_id):
+    user_profile = Profile.objects.get(id=user_id)
+    link = f'{settings.FRONTEND_BASE_URL}profile/{user_id}/order/{order_id}/'
+    email_template = render_to_string('order/email.html',
+                                      {'user_profile': user_profile, 'order_number': order_id, 'order_link': link}
+                                      )
+
+    email = EmailMessage(
+        f'PetPowerPro Order #{order_id} Summary',
+        email_template,
+        settings.EMAIL_HOST_USER,
+        ['hexobib280@f1xm.com'],
+        #[user_profile.user.email],
+    )
+
+    email.fail_silently = False
+    email.content_subtype = "html"
+    email.send()
+    return Response({'message': "Email has been sent"})
