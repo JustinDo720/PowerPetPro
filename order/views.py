@@ -115,16 +115,20 @@ class IndividualUserOrderItems(ListAPIView):
 @api_view(['GET'])
 def send_success_email(request, user_id, order_id):
     user_profile = Profile.objects.get(id=user_id)
-    link = f'{settings.FRONTEND_BASE_URL}profile/{user_id}/order/{order_id}/'
+    order_link = f'{settings.FRONTEND_BASE_URL}profile/{user_id}/order/{order_id}/'
+    feedback_link = f'{settings.FRONTEND_BASE_URL}feedback/'
     email_template = render_to_string('order/email.html',
-                                      {'user_profile': user_profile, 'order_number': order_id, 'order_link': link}
-                                      )
+                                      {'user_profile': user_profile,
+                                       'order_number': order_id,
+                                       'order_link': order_link,
+                                       'feedback_link': feedback_link,
+                                       })
 
     email = EmailMessage(
         f'PetPowerPro Order #{order_id} Summary',
         email_template,
         settings.EMAIL_HOST_USER,
-        ['hexobib280@f1xm.com'],
+        ['yetok51203@sartess.com'],
         #[user_profile.user.email],
     )
 

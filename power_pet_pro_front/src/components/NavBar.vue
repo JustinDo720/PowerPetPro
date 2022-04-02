@@ -305,6 +305,9 @@ export default {
   },
   created() {
     this.isStaff = Cookies("is_staff");
+    if(!this.isStaff){
+      this.isStaff = null
+    }
     // we want to grab our categories
     axios.get("/category_list/").then((response) => {
       this.$store.commit("update_categories", { categories: response.data });

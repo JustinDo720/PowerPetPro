@@ -8,6 +8,15 @@ from django.utils.text import slugify
 from django.db.models import Q
 
 
+BASE_RATING = (
+    (1, "Needs major improvements"),
+    (2, "You could've done better"),
+    (3, "I think you nailed it"),
+    (4, "Better than I expected"),
+    (5, "I think you excel in this area"),
+)
+
+
 # Create your models here.
 
 class Category(models.Model):
@@ -186,3 +195,47 @@ class MissionDetails(models.Model):
 
     def __str__(self):
         return f'{self.mission_topic}: {self.mission_topic_details[:30]}'
+
+
+# Obtain Feedback from our users
+# Adding questions
+class FeedBackQuestions(models.Model):
+    questions = models.CharField(max_length=500)
+
+    class Meta:
+        verbose_name_plural = "Questions"
+
+    def __str__(self):
+        return 'Question: %s' % self.questions
+
+
+class Feedback(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
+    opinions = models.TextField(max_length=500)
+    suggestions = models.TextField(max_length=500)
+    date_submitted = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-date_submitted']
+
+    def __str__(self):
+        return f'{self.user.username}: "{self.opinions[:50]}"'
+
+
+class FeedBackAnswers(models.Model):
+    """"
+        user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
+            So we actually don't need user because we already have Feedback as our foreign key
+            If we leave user with a one-to-one field then we could only submit ONE question for ONE user
+                That's not what we want
+    """
+    feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE)  # we are going to tie it to one Feedback model
+    # if answer exist then they can't answer again
+    question = models.OneToOneField(FeedBackQuestions, on_delete=models.CASCADE)
+    answer = models.IntegerField(choices=BASE_RATING, default=1)
+
+    class Meta:
+        verbose_name_plural = "Answers"
+
+    def __str__(self):
+        return f'(Feedback#{self.feedback.id}) Question#{self.question.id} Answer: {self.answer}'

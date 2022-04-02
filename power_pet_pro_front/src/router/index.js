@@ -24,6 +24,7 @@ import Checkout from "../views/Checkout";
 import Success from "../views/Success";
 import Orders from "../views/Orders";
 import IndividualOrder from "../views/IndividualOrder";
+import Feedback from "../views/Feedback";
 import store from "../store";
 
 const routes = [
@@ -52,7 +53,7 @@ const routes = [
     component: Category,
   },
   {
-    path: "/product_list/search",
+    path: "/product_list/search/",
     name: "Search",
     component: Search,
   },
@@ -157,10 +158,16 @@ const routes = [
     component: Orders,
   },
   {
-    path: "/profile/:id/order/:order_number",
+    path: "/profile/:id/order/:order_number/",
     name: "IndividualOrder",
     component: IndividualOrder,
   },
+  {
+    path: '/feedback/',
+    name: "Feedback",
+    component: Feedback,
+  },
+
 ];
 
 const router = createRouter({
