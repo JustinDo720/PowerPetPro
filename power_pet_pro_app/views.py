@@ -3,8 +3,10 @@ from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from .serializers import ProductSerializer, CategorySerializer, ProfileSerializer, CustomUserSerializer, \
-    MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, MissionDetailsSerializer
-from .models import Product, Category, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
+    MessageBoxSerializer, MissionStatementSerializer, MissionStatementTopicsSerializer, MissionDetailsSerializer, \
+    FeedbackSerializer, FeedbackQuestionsSerializer, FeedbackAnswersSerializer
+from .models import Product, Category, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails, Feedback, \
+    FeedBackAnswers, FeedBackQuestions
 from order.models import CartItem
 from order.serializers import CartItemSerializer
 from rest_framework.views import APIView
@@ -520,3 +522,50 @@ def UpdateMissionDetails(request, mission_topic):
 # def anonymous_checkout(request):
 #     serializer = CartItemSerializer()
 
+class FeedbackView(APIView):
+    """
+        Admin will be able to see the feedbacks
+    """
+    permission_classes = (IsAdminUser,)
+
+    def get(self, request):
+        feedback = Feedback.objects.all()
+        serializer = FeedbackSerializer(feedback, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def AddFeedback(request):
+    serializer = FeedbackSerializer(data=request.data)
+    # Since user is optional, we could add user as part of the request.data
+    if serializer.is_valid():
+        """
+            One thing to note, we are not adding the answers here. We need to make the feedback first and then take the
+            survey that way we would actually link all of those answers to this firstly created feedback. This then in 
+            turn, allows us to use that feedbackanswers_set.all() to retrieve all of the answers in FeedbackSerializer
+        """
+        serializer.save()
+        return Response(serializer.data, status.HTTP_201_CREATED)
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def AddFeedbackAnswers(request):
+    # We are going to use this to post and view our answers
+    if request.method == 'POST':
+        serializer = FeedbackAnswersSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+    # elif request.method == 'GET':
+
+
+@api_view(['POST'])
+@permission_classes([IsAdminUser])
+def AddFeedbackQuestions(request):
+    serializer = FeedbackQuestionsSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status.HTTP_201_CREATED)
+    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)

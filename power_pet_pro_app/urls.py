@@ -38,4 +38,8 @@ urlpatterns = [
          name='update_mission_details'),
     path('admin_panel/our_mission/add_details/', views.AddMissionDetails,
          name='add_mission_details'),
+    path('admin_panel/feedbacks/', views.FeedbackView.as_view(), name='view_feedbacks'),
+    path('admin_panel/feedbacks/add_feedback/', views.AddFeedback, name='add_feedback'),
+    path('admin_panel/feedbacks/add_feedback_answers/', views.AddFeedbackAnswers, name='add_feedback_answers'),
+    path('admin_panel/feedbacks/add_questions/', views.AddFeedbackQuestions, name='add_feedback_questions'),
 ]

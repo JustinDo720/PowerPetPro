@@ -219,7 +219,10 @@ class Feedback(models.Model):
         ordering = ['-date_submitted']
 
     def __str__(self):
-        return f'{self.user.username}: "{self.opinions[:50]}"'
+        if self.user:
+            return f'{self.user.username}: "{self.opinions[:50]}"'
+        else:
+            return f'Anonymous User: "{self.opinions[:50]}"'
 
 
 class FeedBackAnswers(models.Model):
@@ -232,10 +235,14 @@ class FeedBackAnswers(models.Model):
     feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE)  # we are going to tie it to one Feedback model
     # if answer exist then they can't answer again
     question = models.OneToOneField(FeedBackQuestions, on_delete=models.CASCADE)
+    # We could access answers based on feedback with Feedback.feedbackanswers_set.all() ## modelname_set.all()
     answer = models.IntegerField(choices=BASE_RATING, default=1)
 
     class Meta:
         verbose_name_plural = "Answers"
+
+    def get_answer_choices(self):
+        return BASE_RATING
 
     def __str__(self):
         return f'(Feedback#{self.feedback.id}) Question#{self.question.id} Answer: {self.answer}'
