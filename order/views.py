@@ -116,7 +116,7 @@ class IndividualUserOrderItems(ListAPIView):
 def send_success_email(request, user_id, order_id):
     user_profile = Profile.objects.get(id=user_id)
     order_link = f'{settings.FRONTEND_BASE_URL}profile/{user_id}/order/{order_id}/'
-    feedback_link = f'{settings.FRONTEND_BASE_URL}feedback/'
+    feedback_link = f'{settings.FRONTEND_BASE_URL}submit_feedback/'
     email_template = render_to_string('order/email.html',
                                       {'user_profile': user_profile,
                                        'order_number': order_id,

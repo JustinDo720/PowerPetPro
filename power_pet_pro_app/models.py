@@ -205,6 +205,9 @@ class FeedBackQuestions(models.Model):
     class Meta:
         verbose_name_plural = "Questions"
 
+    def get_answer_choices(self):
+        return BASE_RATING
+
     def __str__(self):
         return 'Question: %s' % self.questions
 
@@ -233,16 +236,27 @@ class FeedBackAnswers(models.Model):
                 That's not what we want
     """
     feedback = models.ForeignKey(Feedback, on_delete=models.CASCADE)  # we are going to tie it to one Feedback model
-    # if answer exist then they can't answer again
-    question = models.OneToOneField(FeedBackQuestions, on_delete=models.CASCADE)
+    # if answer exist then they can't answer again.
+    """
+        question = models.OneToOneField(FeedBackQuestions, on_delete=models.CASCADE)
+        
+        We can't use OneToOne field because one record of the question cannot relate to one record of answer 
+        What happens is you'll get '"question": ["This field must be unique."]' because you've submitted multiple ans
+        to just one question even with a different feedback pk
+        
+        Problem: Unique=False which means someone could submit another answer for the same question in the same feedback
+        Solution: Handle this with .exists()
+    """
+    question = models.ForeignKey(FeedBackQuestions, on_delete=models.CASCADE, unique=False)
     # We could access answers based on feedback with Feedback.feedbackanswers_set.all() ## modelname_set.all()
     answer = models.IntegerField(choices=BASE_RATING, default=1)
 
     class Meta:
         verbose_name_plural = "Answers"
 
-    def get_answer_choices(self):
-        return BASE_RATING
+    def get_written_ans(self):
+        # NOTE that BASE_ANSWER is a tuple so we could search using index but note that index starts at 0
+        return BASE_RATING[self.answer-1][1]    # this '1' means we are getting the written in (num, written)
 
     def __str__(self):
         return f'(Feedback#{self.feedback.id}) Question#{self.question.id} Answer: {self.answer}'

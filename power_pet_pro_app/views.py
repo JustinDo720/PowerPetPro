@@ -551,21 +551,47 @@ def AddFeedback(request):
 
 @api_view(['POST'])
 def AddFeedbackAnswers(request):
-    # We are going to use this to post and view our answers
+    # We are going to use this to post our answers
     if request.method == 'POST':
-        serializer = FeedbackAnswersSerializer(data=request.data)
+        # We need to check if the question already exists in the feedback that way we wont allow for another submission
+        print(request.data)
+        # We need to loop through all the submitted data to check if the first exists or if the questions match
+        PREVIOUS_QUESTION = 0
+        for data in request.data:
+            if FeedBackAnswers.objects.filter(feedback=data['feedback'], question=data['question']).exists() \
+                    or data['question'] == PREVIOUS_QUESTION:
+                return Response(
+                    {"question": "Submission for this question already exists"},
+                    status.HTTP_400_BAD_REQUEST)
+            PREVIOUS_QUESTION = data['question']
+
+        serializer = FeedbackAnswersSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status.HTTP_201_CREATED)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-    # elif request.method == 'GET':
 
 
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def AddFeedbackQuestions(request):
-    serializer = FeedbackQuestionsSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status.HTTP_201_CREATED)
-    return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+    if request.method == 'POST':
+        serializer = FeedbackQuestionsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status.HTTP_201_CREATED)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def ViewFeedbackQuestions(request):
+    all_questions = FeedBackQuestions.objects.all()
+    serializer = FeedbackQuestionsSerializer(all_questions, many=True)
+    return Response(serializer.data, status.HTTP_200_OK)
+
+
+@api_view(['GET'])
+def GetFeedback(request, feedback_id):
+    feedback = Feedback.objects.get(id=feedback_id)
+    serializer = FeedbackSerializer(feedback, many=False)
+    return Response(serializer.data, status.HTTP_200_OK)

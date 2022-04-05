@@ -24,7 +24,7 @@ import Checkout from "../views/Checkout";
 import Success from "../views/Success";
 import Orders from "../views/Orders";
 import IndividualOrder from "../views/IndividualOrder";
-import Feedback from "../views/Feedback";
+import SubmitFeedback from "../views/SubmitFeedback";
 import store from "../store";
 
 const routes = [
@@ -163,9 +163,9 @@ const routes = [
     component: IndividualOrder,
   },
   {
-    path: '/feedback/',
-    name: "Feedback",
-    component: Feedback,
+    path: '/submit_feedback/',
+    name: "SubmitFeedback",
+    component: SubmitFeedback,
   },
 
 ];

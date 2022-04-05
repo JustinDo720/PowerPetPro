@@ -159,24 +159,28 @@ class MissionDetailsSerializer(serializers.ModelSerializer):
 
 
 class FeedbackQuestionsSerializer(serializers.ModelSerializer):
+    ans_choices = serializers.SerializerMethodField('get_ans_choices')
+
+    def get_ans_choices(self, feedback_ans):
+        return feedback_ans.get_answer_choices()
+
     class Meta:
         model = FeedBackQuestions
-        fields = '__all__'
+        fields = (
+            'id',
+            'questions',
+            'ans_choices'
+        )
 
 
 class FeedbackAnswersSerializer(serializers.ModelSerializer):
-    ans_choices = serializers.SerializerMethodField('get_ans_choices')
-
-    def get_ans_choices(self,feedback_ans):
-        return feedback_ans.get_answer_choices()
 
     class Meta:
         model = FeedBackAnswers
         fields = (
             'feedback',
             'question',
-            'ans_choices',
-            'answer'
+            'answer',
         )
 
 
@@ -184,13 +188,14 @@ class FeedbackSerializer(serializers.ModelSerializer):
     answers = serializers.SerializerMethodField('get_answers')
 
     def get_answers(self, feedback):
-        answers = {ans.question.questions: ans.answer for ans in feedback.feedbackanswers_set.all()}
+        answers = {ans.question.questions: ans.get_written_ans() for ans in feedback.feedbackanswers_set.all()}
         print(answers)
         return answers
 
     class Meta:
         model = Feedback
         fields = (
+            'id',
             'user',
             'opinions',
             'suggestions',
