@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Category, Product, MessageBox, MissionStatement, MissionDetails, MissionStatementTopics
+from .models import Category, Product, MessageBox, MissionStatement, MissionDetails, MissionStatementTopics, Feedback, \
+    FeedBackAnswers, FeedBackQuestions
 from users.models import CustomUser, Profile
 from djoser.serializers import UserCreateSerializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -154,4 +155,50 @@ class MissionDetailsSerializer(serializers.ModelSerializer):
             'mission_topic_name', # We want to get the name of our topic
             'mission_topic_details',
             'date_added',
+        )
+
+
+class FeedbackQuestionsSerializer(serializers.ModelSerializer):
+    ans_choices = serializers.SerializerMethodField('get_ans_choices')
+
+    def get_ans_choices(self, feedback_ans):
+        return feedback_ans.get_answer_choices()
+
+    class Meta:
+        model = FeedBackQuestions
+        fields = (
+            'id',
+            'questions',
+            'ans_choices'
+        )
+
+
+class FeedbackAnswersSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = FeedBackAnswers
+        fields = (
+            'feedback',
+            'question',
+            'answer',
+        )
+
+
+class FeedbackSerializer(serializers.ModelSerializer):
+    answers = serializers.SerializerMethodField('get_answers')
+
+    def get_answers(self, feedback):
+        answers = {ans.question.questions: ans.get_written_ans() for ans in feedback.feedbackanswers_set.all()}
+        print(answers)
+        return answers
+
+    class Meta:
+        model = Feedback
+        fields = (
+            'id',
+            'user',
+            'opinions',
+            'suggestions',
+            'date_submitted',
+            'answers',
         )

@@ -1,5 +1,7 @@
 import stripe
 from django.shortcuts import render
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 from django.conf import settings
 from order.pagination import OrderPagination
 
@@ -11,8 +13,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
-from .models import Order, OrderItem
+from .models import Order, OrderItem, Profile
 from .serializers import OrderItemSerializer, OrderSerializer, UserOrderSerializer
+
+
 # Create your views here.
 
 
@@ -27,7 +31,7 @@ def checkout(request):
         try:
             charge = stripe.Charge.create(
                 amount=int(paid_amount * 100),
-                currency= 'USD',
+                currency='USD',
                 description='Charge from Pet Power Pro',
                 source=serializer.validated_data['stripe_token']
             )
@@ -53,7 +57,7 @@ class UserOrder(ListAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
-        queryset = Order.objects.filter(user=user_id) # we don't need to order_by because we already ordered in meta
+        queryset = Order.objects.filter(user=user_id)  # we don't need to order_by because we already ordered in meta
         return queryset
 
 
@@ -67,3 +71,68 @@ class LatestUserOrder(APIView):
         order = Order.objects.filter(user=user_id)[:3]
         serializer = UserOrderSerializer(order, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class IndividualUserOrder(APIView):
+    """
+        Given User id and Order number
+            - We will fetch details about their orders and display them fully
+                - for instance all of their items
+                - address being shipped to
+                - total cost etc
+    """
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, user_id, order_id):
+        order = Order.objects.get(id=order_id, user=user_id)
+        serializer = UserOrderSerializer(order)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class IndividualUserOrderItems(ListAPIView):
+    """
+        Given User id and Order number
+            - We will fetch details about their orders and display them fully
+                - for instance all of their items
+                - address being shipped to
+                - total cost etc
+    """
+
+    serializer_class = OrderItemSerializer
+    permission_classes = (IsAuthenticated,)
+    pagination_class = OrderPagination  # Although this is OrderPagination we will still be using 5 items so let's reuse
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        order_id = self.kwargs['order_id']
+
+        order = Order.objects.get(user=user_id, id=order_id)
+        order_items = OrderItem.objects.filter(order=order, profile=user_id)
+        return order_items  # this is our queryset
+
+
+# since we are using vue let's make this an api view for our success page on the front to call in order to send the mail
+@api_view(['GET'])
+def send_success_email(request, user_id, order_id):
+    user_profile = Profile.objects.get(id=user_id)
+    order_link = f'{settings.FRONTEND_BASE_URL}profile/{user_id}/order/{order_id}/'
+    feedback_link = f'{settings.FRONTEND_BASE_URL}submit_feedback/'
+    email_template = render_to_string('order/email.html',
+                                      {'user_profile': user_profile,
+                                       'order_number': order_id,
+                                       'order_link': order_link,
+                                       'feedback_link': feedback_link,
+                                       })
+
+    email = EmailMessage(
+        f'PetPowerPro Order #{order_id} Summary',
+        email_template,
+        settings.EMAIL_HOST_USER,
+        ['yetok51203@sartess.com'],
+        #[user_profile.user.email],
+    )
+
+    email.fail_silently = False
+    email.content_subtype = "html"
+    email.send()
+    return Response({'message': "Email has been sent"})

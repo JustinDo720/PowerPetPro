@@ -196,7 +196,7 @@ export default createStore({
     clearCart(state) {
       // Just resetting the items array in our cart state
       state.cart = { items: [] };
-      localStorage.setItem("cart", JSON.stringify(state.cart))
+      localStorage.setItem("cart", JSON.stringify(state.cart));
     },
   },
   actions: {

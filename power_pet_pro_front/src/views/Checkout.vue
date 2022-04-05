@@ -172,15 +172,15 @@ export default {
       card: {},
       states: [],
       countries: [],
-      chosen_state: "New York",
-      chosen_country: "United States",
-      first_name: "Logan",
-      last_name: "Do",
-      email: "logando720@gmail.com",
-      phone_number: "9292815875",
-      address: "1175 Arnow Ave",
-      city: "Bronx",
-      zip_code: "10469",
+      chosen_state: "",
+      chosen_country: "",
+      first_name: "",
+      last_name: "",
+      email: "",
+      phone_number: "",
+      address: "",
+      city: "",
+      zip_code: "",
       errors: [],
     };
   },
@@ -276,15 +276,15 @@ export default {
         stripe_token: token.id,
       };
       // We are using this to make our backend know that the requested user is actually authenticated and not anonymous
-      if(Cookies('user_id') && this.accessToken){
-        data['user'] = Cookies('user_id')
+      if (Cookies("user_id") && this.accessToken) {
+        data["user"] = Cookies("user_id");
       }
       console.log(data);
       await axios
         .post("checkout/", data)
         .then((response) => {
           this.$store.commit("clearCart");
-          this.$router.push({ name: "Success" });
+          this.$router.push({ name: "Success", params: {user_id:Cookies("user_id"),order_id:response.data.id} });
         })
         .catch((err) => {
           this.errors.push("Something went wrong. Please try again.");

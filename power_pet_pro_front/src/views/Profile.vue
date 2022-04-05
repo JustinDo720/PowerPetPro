@@ -42,60 +42,15 @@
         </div>
         <div class="column is-7">
           <div class="box">
-            <h1 class="title is-1 has-text-centered">
-              Recent Orders
-            </h1>
-            <div v-for="(order, key) in orders" :key="key">
-              <div class="card">
-                <header class="card-header">
-                  <p class="card-header-title">
-                    Order #{{ order.id }}
-                  </p>
-                   <p class="card-header-title">
-                    Total ${{ order.paid_amount }}
-                  </p>
-                </header>
-                <div v-for="(order_item, key) in order.items.slice(0,2)" :key="key">
-                  <div class="card-content" v-if="order_item.photo">
-                      <div class="media">
-                        <div class="media-left">
-                          <figure class="image is-64x64">
-                            <img :src="order_item.photo" alt="product-image">
-                          </figure>
-                        </div>
-                        <div class="media-content">
-                          <router-link :to="`/product_list/product_detail${order_item.get_absolute_url}`">
-                            <p class="title is-5 has-text-link">
-                              {{ order_item.name }}
-                            </p>
-                          </router-link>
-                          <p class="subtitle is-6"> ${{ order_item.price }} x{{ order_item.quantity }}</p>
-                        </div>
-                      </div>
-                  </div>
-                  <div class="card-content" v-else>
-                    <div class="content">
-                      <div class="content">
-                        <router-link :to="`/product_list/product_detail${order_item.get_absolute_url}`">
-                          <h5 class="has-text-link">
-                            {{ order_item.name }}
-                          </h5>
-                        </router-link>
-                        <p>
-                          ${{ order_item.price }}
-                          x{{ order_item.quantity }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <br>
-            </div>
+            <h1 class="title is-1 has-text-centered">Recent Orders</h1>
+            <OrderBox
+              v-for="(order, index) in orders"
+              :key="index"
+              :order="order"
+            ></OrderBox>
+            <br />
             <router-link :to="`/profile/${user_id}/orders/`">
-              <p class="has-text-centered has-text-link">
-                View all orders
-              </p>
+              <p class="has-text-centered has-text-link">View all orders</p>
             </router-link>
           </div>
         </div>
@@ -265,6 +220,7 @@ import Cookies from "cookies-js";
 import { toast } from "bulma-toast";
 import countries from "../assets/Profile/countries";
 import countries_and_states from "../assets/Profile/countries_and_states";
+import OrderBox from "../components/OrderBox";
 
 export default {
   name: "Profile",
@@ -280,6 +236,9 @@ export default {
       changed_info: "",
       orders: [],
     };
+  },
+  components: {
+    OrderBox,
   },
   methods: {
     cleanIndex(index) {
@@ -386,12 +345,13 @@ export default {
         }
         this.original_profile = original_data;
       });
-    axios.get(`latest_orders/${this.user_id}/`,{
-      headers: { Authorization: `Bearer ${this.accessToken}`}
-    }).then((response)=>{
-      this.orders = response.data
-    })
-
+    axios
+      .get(`latest_orders/${this.user_id}/`, {
+        headers: { Authorization: `Bearer ${this.accessToken}` },
+      })
+      .then((response) => {
+        this.orders = response.data;
+      });
   },
 };
 </script>

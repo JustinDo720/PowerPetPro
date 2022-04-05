@@ -38,4 +38,11 @@ urlpatterns = [
          name='update_mission_details'),
     path('admin_panel/our_mission/add_details/', views.AddMissionDetails,
          name='add_mission_details'),
+    path('admin_panel/feedbacks/', views.FeedbackView.as_view(), name='view_feedbacks'),
+    path('feedbacks/add_feedback/', views.AddFeedback, name='add_feedback'),
+    path('feedbacks/add_feedback_answers/', views.AddFeedbackAnswers, name='add_feedback_answers'),
+    # We could use this url to and post questions and then we have another url to get questions. Admins could only sub
+    path('admin_panel/feedbacks/add_questions/', views.AddFeedbackQuestions, name='add_feedback_questions'),
+    path('feedbacks/questions/', views.ViewFeedbackQuestions, name='feedback_questions'),
+    path('feedbacks/get_feedback/<int:feedback_id>/', views.GetFeedback, name='get_feedback'),
 ]

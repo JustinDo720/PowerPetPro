@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Category, Product, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails
+from .models import Category, Product, MessageBox, MissionStatement, MissionStatementTopics, MissionDetails, \
+    Feedback, FeedBackAnswers, FeedBackQuestions
 from order.models import CartItem, Order, OrderItem
 from users.models import Profile
 from users.models import CustomUser
@@ -16,6 +17,9 @@ models = [
     MissionStatement,
     MissionStatementTopics,
     MissionDetails,
+    Feedback,
+    FeedBackAnswers,
+    FeedBackQuestions
 ]
 # Register your models here.
 for model in models:

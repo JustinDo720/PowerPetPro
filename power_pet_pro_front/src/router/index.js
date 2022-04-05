@@ -23,6 +23,8 @@ import MissionDetailsBox from "../views/MissionDetailsBox";
 import Checkout from "../views/Checkout";
 import Success from "../views/Success";
 import Orders from "../views/Orders";
+import IndividualOrder from "../views/IndividualOrder";
+import SubmitFeedback from "../views/SubmitFeedback";
 import store from "../store";
 
 const routes = [
@@ -51,7 +53,7 @@ const routes = [
     component: Category,
   },
   {
-    path: "/product_list/search",
+    path: "/product_list/search/",
     name: "Search",
     component: Search,
   },
@@ -146,7 +148,7 @@ const routes = [
     component: Checkout,
   },
   {
-    path: "/cart/success/",
+    path: "/cart/checkout/:user_id/order/:order_id/success/",
     name: "Success",
     component: Success,
   },
@@ -155,6 +157,17 @@ const routes = [
     name: "Orders",
     component: Orders,
   },
+  {
+    path: "/profile/:id/order/:order_number/",
+    name: "IndividualOrder",
+    component: IndividualOrder,
+  },
+  {
+    path: '/submit_feedback/',
+    name: "SubmitFeedback",
+    component: SubmitFeedback,
+  },
+
 ];
 
 const router = createRouter({
@@ -165,7 +178,7 @@ const router = createRouter({
 store.dispatch("initializeStore").then(() => {
   router.beforeEach((to, from, next) => {
     if (to.matched.some((response) => response.meta.requiresLogin)) {
-      if (!store.getters.isAuth) {
+      if (!store.state.accessToken) {
         next({ name: "Login" });
       } else {
         next();
