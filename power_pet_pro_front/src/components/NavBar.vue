@@ -58,7 +58,7 @@
         </header>
         <div class="quickview-body">
           <div class="quickview-block">
-            <aside class="menu ml-2 mt-2" v-if="isStaff">
+            <aside class="menu ml-2 mt-2" v-if="isAdmin">
               <p class="menu-label">Admin</p>
               <ul class="menu-list">
                 <li>
@@ -233,6 +233,17 @@
             <p
               class="subtitle is-5"
               :class="{ 'has-text-white-bis': !showMobileMenu }"
+              v-if="isAdmin"
+            >
+              Welcome Admin,
+              <router-link :to="{ name: 'Profile' }"
+                >{{ username }}!&nbsp;</router-link
+              >
+            </p>
+            <p
+              class="subtitle is-5"
+              :class="{ 'has-text-white-bis': !showMobileMenu }"
+              v-else
             >
               Welcome,
               <router-link :to="{ name: 'Profile' }"
@@ -277,7 +288,7 @@ export default {
       showMobileMenu: false,
       searchTerm: "",
       showAccount: false,
-      isStaff: false,
+      isAdmin: false,
     };
   },
   computed: {
@@ -304,14 +315,21 @@ export default {
     },
   },
   created() {
-    this.isStaff = Cookies("is_staff");
-    if(!this.isStaff){
-      this.isStaff = null
-    }
     // we want to grab our categories
     axios.get("/category_list/").then((response) => {
       this.$store.commit("update_categories", { categories: response.data });
     });
+     /*
+    * The main Problem is that is_staff is actually string of 'true' and we can't use our store because vue life cycle
+    * comes first before our store initialize so we need to make sure we use Cookies to grab our data. Therefore,
+    * we need to change is_staff from string 'true'/'false' to it's boolean value. Otherwise v-if will not work as
+    * intended because they'll read 'false' as true as its not blank. So let's use JSON.parse.
+    *
+    * JSON.parse will parse our string value which converts the type of variable into boolean
+    * */
+    if(Cookies('is_staff')){
+      this.isAdmin = JSON.parse(Cookies('is_staff'))
+    }
   },
 };
 </script>

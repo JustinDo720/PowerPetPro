@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.db.models import Q
+# from power_pet_pro_app.models import Feedback     ## We can't do this because of circular import so check profile
 
 
 class UserAccountManager(UserManager):
@@ -23,7 +24,6 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    # We are using to='<app_label>.<Model Name>' to remove  (most likely due to a circular import) error
     first_name = models.TextField(max_length=100, blank=True, null=True)
     last_name = models.TextField(max_length=100, blank=True, null=True)
     phone_number = models.IntegerField(blank=True, null=True)
@@ -33,3 +33,6 @@ class Profile(models.Model):
     country = models.TextField(max_length=75, blank=True, null=True)
     state = models.TextField(max_length=75, blank=True, null=True)
     zip_code = models.IntegerField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.username

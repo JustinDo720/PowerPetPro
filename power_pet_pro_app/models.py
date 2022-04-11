@@ -2,7 +2,7 @@ from django.db import models
 from io import BytesIO
 from django.core.files import File
 from django.contrib.auth.models import AbstractUser, UserManager
-from users.models import CustomUser
+from users.models import CustomUser, Profile
 from PIL import Image
 from django.utils.text import slugify
 from django.db.models import Q
@@ -214,6 +214,8 @@ class FeedBackQuestions(models.Model):
 
 class Feedback(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
+    # since we have profile we could do Profile.feedback_set.first() to get the first/only feedback w/ profile model
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
     opinions = models.TextField(max_length=500)
     suggestions = models.TextField(max_length=500)
     date_submitted = models.DateTimeField(auto_now_add=True)
@@ -226,6 +228,14 @@ class Feedback(models.Model):
             return f'{self.user.username}: "{self.opinions[:50]}"'
         else:
             return f'Anonymous User: "{self.opinions[:50]}"'
+
+    # This has to be handled in signals 
+    # def save(self, *args, **kwargs):
+    #     # If we have a user lets link this feedback to the profile
+    #     if self.user:
+    #         self.user.profile.user_feedback = self.id
+    #         print(self.user.profile.user_feedback, self.id)
+    #     super().save(*args, **kwargs)
 
 
 class FeedBackAnswers(models.Model):

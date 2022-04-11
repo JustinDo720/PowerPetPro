@@ -1,9 +1,11 @@
 from django.dispatch import receiver
 from django.db.models.signals import pre_save
-from order.models import CartItem
+from power_pet_pro_app.models import Feedback
+from users.models import Profile
 
 
-@receiver(pre_save, sender=CartItem)
-def set_cart_id(sender, instance, **kwargs):
-    # What we want to do is set the id of cart = to the product id
-    instance.id = instance.product.id
+# We are saying once we receive a post save from Feedback
+@receiver(pre_save, sender=Feedback)
+def create_feedback_profile(sender, instance, **kwargs):
+    # Since we are setting the profile, we could now see the feedback that is directly related to profile
+    instance.profile = instance.user.profile

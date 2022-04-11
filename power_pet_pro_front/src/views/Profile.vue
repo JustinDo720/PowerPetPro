@@ -2,7 +2,7 @@
   <!-- Introduction section -->
   <section class="section is-small" v-if="user_profile">
     <div class="container has-text-centered">
-      <div class="box">
+      <div class="box" v-if="!isAdmin">
         <h1 class="title is-1">Hello {{ user_profile.username }}.</h1>
         <h2 class="subtitle">
           Welcome to your account page! Here, you can view or change details
@@ -10,11 +10,195 @@
           shipping and billing process. Please make sure the details below are
           up-to-date.
         </h2>
+        <button class="button is-outlined is-primary" v-if="user_profile.feedback" @click="showFeedback=!showFeedback">
+            <span>View Your Feedback</span>
+        </button>
+      </div>
+      <div class="box" v-else>
+        <h1 class="title is-1">Hello Admin {{ user_profile.username }}.</h1>
+        <h2 class="subtitle">
+          Welcome to your admin account page! You could access Admin tools and also view feedbacks along with seeing
+          your own profile.
+        </h2>
+        <div>
+          <button class="button is-outlined is-primary" v-if="user_profile.feedback" @click="showFeedback=!showFeedback">
+            <span>View Your Feedback</span>
+          </button>
+        </div>
+        <br>
+        <div class="field has-text-centered">
+          <input
+            id="adminSwitch"
+            type="checkbox"
+            name="adminSwitch"
+            class="switch is-medium is-outlined is-danger"
+            checked="checked"
+            v-model="admin_mode"
+          />
+          <label for="adminSwitch">Admin Mode</label>
+        </div>
       </div>
     </div>
   </section>
+  <!-- Admin section -->
+  <section class="section is-small" v-if="admin_mode">
+    <div class="container">
+      <div class="columns is-centered">
+        <div class="column">
+          <div class="box">
+            <h1 class="title is-1 has-text-centered">Admin Functionality</h1>
+            <div class="columns is-multiline">
+              <div class="column is-4" id="message-control">
+                <h4 class="title is-4">Message Control</h4>
+                <ul>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'ViewAllMessages',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        View All Messages
+                      </button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'MessageBox',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                      Add/Edit Message of the Day
+                      </button>
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+              <div class="column is-4" id="product-control">
+                <h4 class="title is-4">Product Control</h4>
+                <ul>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'ViewAllProducts',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        View All Products
+                      </button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'AdminProduct',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        Add Product
+                      </button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'AdminCategory',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        Add Category
+                      </button>
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+              <div class="column is-4" id="mission-control">
+                <h4 class="title is-4">Mission Control</h4>
+                <ul>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'MissionStatementBox',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        Add Mission Statement
+                      </button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'MissionStatementTopicBox',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        Add Mission Statement Topic
+                      </button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'MissionDetailsBox',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        Add Mission Details
+                      </button>
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+              <div class="column is-4" id="feedback-control">
+                <h4 class="title is-4">Feedback Control</h4>
+                <ul>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'MissionStatementBox',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        Add/View Questions
+                      </button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'MissionStatementTopicBox',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        Add Mission Statement Topic
+                      </button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'MissionDetailsBox',
+                      }"
+                    >
+                      <button class="button is-primary is-outlined">
+                        Add Mission Details
+                      </button>
+                    </router-link>
+                  </li>
+                </ul>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- Information section -->
-  <section class="section is-small" v-if="!edit_mode">
+  <section class="section is-small" v-if="!edit_mode && !admin_mode">
     <div class="container">
       <div class="columns is-centered">
         <div class="column is-7">
@@ -58,7 +242,7 @@
     </div>
   </section>
   <!-- Edit Information section -->
-  <section class="section is-small" v-else>
+  <section class="section is-small" v-if="edit_mode && !admin_mode">
     <div class="container">
       <div class="columns is-centered">
         <div class="column is-7">
@@ -168,7 +352,7 @@
   </section>
 
   <!-- Confirm Modal section -->
-  <div class="modal" :class="{ 'is-active': showConfirm }">
+  <div class="modal" :class="{ 'is-active': showConfirm }" v-if="user_profile">
     <div class="modal-background"></div>
     <div class="modal-content">
       <!-- Any other Bulma elements you want -->
@@ -213,6 +397,41 @@
       @click="showConfirm = !showConfirm"
     ></button>
   </div>
+
+  <!-- Feedback Modal -->
+  <div class="modal" :class="{'is-active': showFeedback}" v-if="user_profile.feedback">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+      <!-- Any other Bulma elements you want -->
+      <div class="card">
+        <div class="card-content">
+          <header class="card-header">
+            <p class="card-header-title" v-if="user_profile.first_name">
+              Thank you for your feedback {{ user_profile.first_name }}!
+            </p>
+            <p class="card-header-title" v-else>
+              Thank you for your feedback {{ user_profile.username }}!
+            </p>
+          </header>
+          <div class="content">
+            <strong>Opinions:</strong> "{{ user_profile.feedback.opinions }}"
+          </div>
+          <div class="content">
+            <strong>Suggestion:</strong> "{{ user_profile.feedback.suggestions }}"
+          </div>
+          <div class="content">
+              <strong>
+                Q&A
+              </strong>
+             <div v-for="(a,q, index) in user_profile.feedback.answers" :key="index">
+              <strong>{{q}}</strong>: {{ a }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close" @click="showFeedback=!showFeedback"></button>
+  </div>
 </template>
 <script>
 import axios from "axios";
@@ -221,17 +440,23 @@ import { toast } from "bulma-toast";
 import countries from "../assets/Profile/countries";
 import countries_and_states from "../assets/Profile/countries_and_states";
 import OrderBox from "../components/OrderBox";
+// import { mapGetters } from "vuex"
 
 export default {
   name: "Profile",
   data() {
     return {
-      user_profile: null, // This is where we are going to store all of our user Profile details
-      original_profile: null, // We are going to use this to check if they user changed anything
+      // Careful with setting things null they might show "Null error" so just change it to string format
+      // user_profile: null,
+      user_profile: '', // This is where we are going to store all of our user Profile details
+      original_profile: '', // We are going to use this to check if they user changed anything
       countries: [],
-      states: null,
+      states: '',
       edit_mode: false,
+      admin_mode: true,
       showConfirm: false,
+      showFeedback: false,
+      isAdmin: false,
       error_message: "",
       changed_info: "",
       orders: [],
@@ -288,7 +513,6 @@ export default {
       axios
         .put(`profile_list/user_profile/${this.user_id}/`, changed_data, config)
         .then((response) => {
-          console.log(response.data);
           this.showConfirm = !this.showConfirm;
           this.edit_mode = !this.edit_mode;
           toast({
@@ -326,6 +550,7 @@ export default {
     },
   },
   created() {
+
     // We are going to set our model countries to the our country objects
     this.states = countries_and_states.countries;
     this.states.forEach((country) => {
@@ -338,7 +563,12 @@ export default {
       })
       .then((response) => {
         this.user_profile = response.data;
-        console.log(this.user_profile);
+        this.isAdmin = response.data.is_staff;
+        if(!this.isAdmin){
+          this.admin_mode = false
+        }
+        // Once we set isAdmin we don't need is_staff to display on profile
+        delete response.data.is_staff
         let original_data = {};
         for (let key in response.data) {
           original_data[key] = response.data[key];

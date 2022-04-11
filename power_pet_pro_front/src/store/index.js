@@ -169,6 +169,7 @@ export default createStore({
       state.refreshToken = refreshToken;
       state.user_id = user_id;
       state.is_staff = is_staff;
+
       saveTokens(
         state.username,
         state.user_id,
@@ -214,6 +215,7 @@ export default createStore({
         const refreshToken = Cookies("refreshToken");
         const is_staff = Cookies("is_staff");
 
+        //let url = "http://localhost:8000/auth/jwt/verify/"
         axios
           .post("http://localhost:8000/auth/jwt/verify/", {
             token: accessToken,
@@ -234,7 +236,6 @@ export default createStore({
                 refresh: refreshToken,
               })
               .then((response) => {
-                console.log(response.data);
                 context.commit("initializeStore", {
                   username: username,
                   user_id: user_id,

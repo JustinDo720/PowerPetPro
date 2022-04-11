@@ -50,42 +50,6 @@ class ProductSerializer(serializers.ModelSerializer):
         )
 
 
-# for ProfileSerializer we need their username so lets create custom field using SerializerMethodField
-class ProfileSerializer(serializers.ModelSerializer):
-    # creating the SerializerMethodField and grabbing value from function called get_username
-    # REMOVED: trailing fields for easy index display on front end
-    username = serializers.SerializerMethodField('get_username')
-    email = serializers.SerializerMethodField('get_email')
-
-    def get_username(self, profile):
-        # Profile getting the instance we can use to retrieve the username
-        username = profile.user.username
-        return username
-
-    def get_email(self, profile):
-        # Profile getting the instance we can use to retrieve the email
-        email = profile.user.email
-        return email
-
-
-    class Meta:
-        # Make sure you dont have , after Profile because ERROR: restframework 'tuple' object has no attribute '_meta'
-        model = Profile
-        fields = (
-            'username',
-            'date_joined',
-            'email',
-            'first_name',
-            'last_name',
-            'phone_number',
-            'address',
-            'city',
-            'country',
-            'state',
-            'zip_code',
-        )
-
-
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser

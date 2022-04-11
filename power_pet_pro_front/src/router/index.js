@@ -25,6 +25,7 @@ import Success from "../views/Success";
 import Orders from "../views/Orders";
 import IndividualOrder from "../views/IndividualOrder";
 import SubmitFeedback from "../views/SubmitFeedback";
+import QuestionControl from "../views/QuestionControl";
 import store from "../store";
 
 const routes = [
@@ -166,6 +167,11 @@ const routes = [
     path: '/submit_feedback/',
     name: "SubmitFeedback",
     component: SubmitFeedback,
+  },
+  {
+    path: '/admin/question_control/',
+    name: "QuestionControl",
+    component: QuestionControl,
   },
 
 ];
