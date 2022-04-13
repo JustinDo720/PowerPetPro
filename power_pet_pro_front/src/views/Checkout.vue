@@ -7,7 +7,7 @@
           <div class="box">
             <div class="title is-2 has-text-black">Shipping Details</div>
             <p class="help has-text-grey">* All fields are required</p>
-            <div class="field">
+            <div class="field control">
               <div class="columns">
                 <div class="column control">
                   <label> First Name* </label>
@@ -181,7 +181,7 @@ export default {
       address: "",
       city: "",
       zip_code: "",
-      errors: [],
+      errors: {},
     };
   },
   computed: {
@@ -204,32 +204,26 @@ export default {
   methods: {
     submit_shipping_details() {
       // Handle individual missing fields
-      if (this.first_name === "") {
-        this.errors.push("* The first name field is missing!");
-      }
-      if (this.last_name === "") {
-        this.errors.push("* The last name field is missing!");
-      }
-      if (this.address === "") {
-        this.errors.push("* The address field is missing!");
-      }
-      if (this.email === "") {
-        this.errors.push("* The email field is missing!");
-      }
-      if (this.phone_number === "") {
-        this.errors.push("* The phone number field is missing!");
-      }
-      if (this.city === "") {
-        this.errors.push("* The city field is missing!");
-      }
-      if (this.zip_code === "") {
-        this.errors.push("* The zip code field is missing!");
-      }
-      if (this.chosen_country === "") {
-        this.errors.push("* The country field is missing!");
-      }
-      if (this.chosen_state === "") {
-        this.errors.push("* The state field is missing!");
+      let fields = [
+          {'first name': this.first_name},
+          {'last name':this.last_name},
+          {'address':this.address},
+          {'email':this.email},
+          {'phone number':this.phone_number},
+          {'city':this.city},
+          {'zip code':this.zip_code},
+          {'country':this.chosen_country},
+          {'state':this.chosen_state}
+      ]
+
+      for (let field in fields){
+        let field_name = Object.keys(fields[field])[0]
+        let field_value = fields[field][field_name]
+        if(field_value === ""){
+          this.errors[field_name] = `* The ${field_name} field is missing!`;
+        } else {
+          delete this.errors[field_name]
+        }
       }
 
       if (!this.errors.length) {
@@ -237,9 +231,7 @@ export default {
         this.stripe.createToken(this.card).then((result) => {
           if (result.error) {
             this.$store.commit("setIsLoading", false);
-            this.errors.push(
-              "Something went wrong with Stripe. Please try again"
-            );
+            this.errors["stripe"] = "* Something went wrong with the Payment. Please try again"
             console.log(result.error.message);
           } else {
             console.log(result.token.id);

@@ -243,6 +243,11 @@
                     Reset Password
                   </a>
                 </router-link>
+                <router-link :to="{ name: 'CheckOrder' }">
+                  <a class="dropdown-item" @click="showAccount = !showAccount">
+                    Check Order
+                  </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -270,15 +275,40 @@
               >
             </p>
           </span>
-
           <span>
-            <button class="button" @click="logOut()">
-              <span> Log out </span>
-              <span class="icon is-medium">
-                <i class="fas fa-sign-out-alt"></i>
-              </span>
-            </button>
-          </span>
+              <button class="button is-small" @click="logOut()">
+                <span> Log Out </span>
+                <span class="icon is-medium">
+                  <i class="fas fa-sign-out-alt"></i>
+                </span>
+              </button>
+            </span>
+          <div class="navbar-item">
+            <div class="dropdown" :class="{'is-active' : showFunction}">
+              <div class="dropdown-trigger">
+                <button
+                    class="button is-small"
+                    aria-haspopup="true"
+                    aria-controls="dropdown-menu4"
+                    @click="showFunction = !showFunction"
+                >
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                <div class="dropdown-content">
+                  <router-link :to="{ name: 'CheckOrder' }">
+                    <a class="dropdown-item" @click="showFunction = !showFunction">
+                      Check Your Order
+                    </a>
+                  </router-link>
+
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="navbar-item">
           <router-link :to="{ name: 'Cart' }">
@@ -308,6 +338,7 @@ export default {
       searchTerm: "",
       showAccount: false,
       isAdmin: false,
+      showFunction: false,
     };
   },
   computed: {

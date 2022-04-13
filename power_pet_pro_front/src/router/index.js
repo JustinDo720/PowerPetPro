@@ -27,6 +27,7 @@ import IndividualOrder from "../views/IndividualOrder";
 import SubmitFeedback from "../views/SubmitFeedback";
 import QuestionControl from "../views/QuestionControl";
 import AllFeedbacks from "../views/AllFeedbacks";
+import CheckOrder from "../views/CheckOrder";
 import store from "../store";
 
 const routes = [
@@ -178,6 +179,11 @@ const routes = [
     path: '/admin/all_feedbacks/',
     name: "AllFeedbacks",
     component: AllFeedbacks,
+  },
+  {
+    path: '/check_order/',
+    name: "CheckOrder",
+    component: CheckOrder,
   },
 
 ];

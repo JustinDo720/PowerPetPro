@@ -136,3 +136,12 @@ def send_success_email(request, user_id, order_id):
     email.content_subtype = "html"
     email.send()
     return Response({'message': "Email has been sent"})
+
+
+@api_view(['POST'])
+def check_order_number(request, order_id):
+    if request.data['user_id']:
+        if Order.objects.filter(id=order_id, user=request.data['user_id']).exists():
+            return Response({'order_exists': True}, status.HTTP_200_OK)
+
+    return Response({'order_exists': False}, status.HTTP_200_OK)
