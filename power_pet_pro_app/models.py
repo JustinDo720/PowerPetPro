@@ -76,6 +76,13 @@ class Product(models.Model):
         else:
             return ''
 
+    def get_image_name(self):
+        if self.image:
+            image_split = self.image.url.split('/')     # ['', media, product_image, image_name]
+            return image_split[3]   # getting the image_name NOTE: take into considering to trailing slash
+        else:
+            return ""
+
     def get_thumbnail(self):
         if self.thumbnail:
             return 'http://127.0.0.1:8000' + self.thumbnail.url
@@ -223,19 +230,14 @@ class Feedback(models.Model):
     class Meta:
         ordering = ['-date_submitted']
 
+    def get_grading_rule(self):
+        return BASE_RATING
+
     def __str__(self):
         if self.user:
             return f'{self.user.username}: "{self.opinions[:50]}"'
         else:
             return f'Anonymous User: "{self.opinions[:50]}"'
-
-    # This has to be handled in signals 
-    # def save(self, *args, **kwargs):
-    #     # If we have a user lets link this feedback to the profile
-    #     if self.user:
-    #         self.user.profile.user_feedback = self.id
-    #         print(self.user.profile.user_feedback, self.id)
-    #     super().save(*args, **kwargs)
 
 
 class FeedBackAnswers(models.Model):
@@ -267,6 +269,9 @@ class FeedBackAnswers(models.Model):
     def get_written_ans(self):
         # NOTE that BASE_ANSWER is a tuple so we could search using index but note that index starts at 0
         return BASE_RATING[self.answer-1][1]    # this '1' means we are getting the written in (num, written)
+
+    def get_score(self):
+        return BASE_RATING[self.answer-1][0]    # this '0' means we are getting the num in (num, written)
 
     def __str__(self):
         return f'(Feedback#{self.feedback.id}) Question#{self.question.id} Answer: {self.answer}'

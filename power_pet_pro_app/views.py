@@ -9,9 +9,10 @@ from .models import Product, Category, MessageBox, MissionStatement, MissionStat
     FeedBackAnswers, FeedBackQuestions
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
-from power_pet_pro_app.pagination import ProductResultsSetPagination, MessageBarViewPagination
+from power_pet_pro_app.pagination import ProductResultsSetPagination, MessageBarViewPagination, \
+    FeedbackResultsSetPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated, IsAdminUser
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, parser_classes
 from django.db.models import Q
 from rest_framework_simplejwt.views import TokenObtainPairView
 from power_pet_pro_app.serializers import MyTokenObtainPairSerializer
@@ -160,6 +161,7 @@ class PostProduct(APIView):
 
 @api_view(['DELETE', 'PUT'])
 @permission_classes([IsAdminUser])
+@parser_classes([MultiPartParser])
 def updateProduct(request, product_id):
     # We are going to to use this view to take care up updating and deleting our products
     try:
@@ -410,16 +412,14 @@ def UpdateMissionDetails(request, mission_topic):
 # def anonymous_checkout(request):
 #     serializer = CartItemSerializer()
 
-class FeedbackView(APIView):
+class FeedbackView(ListAPIView):
     """
         Admin will be able to see the feedbacks
     """
+    queryset = Feedback.objects.all()
     permission_classes = (IsAdminUser,)
-
-    def get(self, request):
-        feedback = Feedback.objects.all()
-        serializer = FeedbackSerializer(feedback, many=True)
-        return Response(serializer.data, status.HTTP_200_OK)
+    serializer_class = FeedbackSerializer
+    pagination_class = FeedbackResultsSetPagination
 
 
 @api_view(['POST'])
@@ -464,7 +464,7 @@ def AddFeedbackAnswers(request):
 @permission_classes([IsAdminUser])
 def AddFeedbackQuestions(request):
     if request.method == 'POST':
-        serializer = FeedbackQuestionsSerializer(data=request.data)
+        serializer = FeedbackQuestionsSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status.HTTP_201_CREATED)
@@ -476,6 +476,16 @@ def ViewFeedbackQuestions(request):
     all_questions = FeedBackQuestions.objects.all()
     serializer = FeedbackQuestionsSerializer(all_questions, many=True)
     return Response(serializer.data, status.HTTP_200_OK)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAdminUser])
+def RemoveFeedbackQuestions(request, question_id):
+    if request.method == 'DELETE':
+        question = FeedBackQuestions.objects.get(id=question_id)
+        question.delete()
+        return Response({"success": f'"{question.questions}" has been removed. Please refresh your page.'},
+                        status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])

@@ -39,6 +39,7 @@ urlpatterns = [
     path('feedbacks/add_feedback_answers/', views.AddFeedbackAnswers, name='add_feedback_answers'),
     # We could use this url to and post questions and then we have another url to get questions. Admins could only sub
     path('admin_panel/feedbacks/add_questions/', views.AddFeedbackQuestions, name='add_feedback_questions'),
+    path('admin_panel/feedbacks/remove_questions/<int:question_id>/', views.RemoveFeedbackQuestions, name='remove_feedback_questions'),
     path('feedbacks/questions/', views.ViewFeedbackQuestions, name='feedback_questions'),
     path('feedbacks/get_feedback/<int:feedback_id>/', views.GetFeedback, name='get_feedback'),
 ]

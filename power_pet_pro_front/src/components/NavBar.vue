@@ -59,7 +59,7 @@
         <div class="quickview-body">
           <div class="quickview-block">
             <aside class="menu ml-2 mt-2" v-if="isAdmin">
-              <p class="menu-label">Admin</p>
+              <p class="menu-label title is-4">Admin</p>
               <ul class="menu-list">
                 <li>
                   <router-link
@@ -68,7 +68,7 @@
                       name: 'ViewAllMessages',
                     }"
                   >
-                    View All Messages
+                    <button class="button is-light is-danger">View All Messages</button>
                   </router-link>
                 </li>
                 <li>
@@ -78,7 +78,7 @@
                       name: 'MessageBox',
                     }"
                   >
-                    Add/Edit Message of the Day
+                    <button class="button is-light is-danger">Add/Edit Message of the Day</button>
                   </router-link>
                 </li>
                 <li>
@@ -88,7 +88,7 @@
                       name: 'ViewAllProducts',
                     }"
                   >
-                    View All Products
+                    <button class="button is-light is-danger">View All Products</button>
                   </router-link>
                 </li>
                 <li>
@@ -98,7 +98,7 @@
                       name: 'AdminProduct',
                     }"
                   >
-                    Add Product
+                    <button class="button is-light is-danger">Add Product</button>
                   </router-link>
                 </li>
                 <li>
@@ -108,7 +108,7 @@
                       name: 'AdminCategory',
                     }"
                   >
-                    Add Category
+                    <button class="button is-light is-danger">Add Category</button>
                   </router-link>
                 </li>
                 <li>
@@ -118,7 +118,7 @@
                       name: 'MissionStatementBox',
                     }"
                   >
-                    Add Mission Statement
+                    <button class="button is-light is-danger">Add Mission Statement</button>
                   </router-link>
                 </li>
                 <li>
@@ -128,7 +128,7 @@
                       name: 'MissionStatementTopicBox',
                     }"
                   >
-                    Add Mission Statement Topic
+                    <button class="button is-light is-danger">Add Mission Statement Topic</button>
                   </router-link>
                 </li>
                 <li>
@@ -138,14 +138,33 @@
                       name: 'MissionDetailsBox',
                     }"
                   >
-                    Add Mission Details
+                    <button class="button is-light is-danger">Add Mission Details</button>
                   </router-link>
                 </li>
+                <li>
+                    <router-link
+                      :to="{
+                        name: 'QuestionControl',
+                      }"
+                    >
+                      <button class="button is-light is-danger">Add/View Questions</button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'AllFeedbacks',
+                      }"
+                    >
+                      <button class="button is-light is-danger">View All User Feedback</button>
+                    </router-link>
+                  </li>
+
               </ul>
             </aside>
 
             <aside class="menu ml-2 mt-2">
-              <p class="menu-label">General</p>
+              <p class="menu-label title is-4">General</p>
               <ul class="menu-list">
                 <li v-for="(category, index) in store_categories" :key="index">
                   <router-link
@@ -157,7 +176,7 @@
                       },
                     }"
                   >
-                    {{ category.name }}
+                    <button class="button is-light is-link">{{ category.name }}</button>
                   </router-link>
                 </li>
               </ul>

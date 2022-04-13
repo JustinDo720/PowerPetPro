@@ -157,7 +157,7 @@
                   <li>
                     <router-link
                       :to="{
-                        name: 'MissionStatementBox',
+                        name: 'QuestionControl',
                       }"
                     >
                       <button class="button is-primary is-outlined">
@@ -168,22 +168,11 @@
                   <li>
                     <router-link
                       :to="{
-                        name: 'MissionStatementTopicBox',
+                        name: 'AllFeedbacks',
                       }"
                     >
                       <button class="button is-primary is-outlined">
-                        Add Mission Statement Topic
-                      </button>
-                    </router-link>
-                  </li>
-                  <li>
-                    <router-link
-                      :to="{
-                        name: 'MissionDetailsBox',
-                      }"
-                    >
-                      <button class="button is-primary is-outlined">
-                        Add Mission Details
+                        View All User Feedback
                       </button>
                     </router-link>
                   </li>
@@ -218,7 +207,7 @@
             :key="index"
           >
             <div class="card-content">
-              <div class="content is-large">
+              <div class="content is-large" v-if="index !== 'feedback'">
                 {{ cleanIndex(index) }}: {{ user_info }}
               </div>
             </div>

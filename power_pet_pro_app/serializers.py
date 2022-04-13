@@ -46,6 +46,7 @@ class ProductSerializer(serializers.ModelSerializer):
             # These are for the images
             'get_absolute_url',
             'get_image',
+            'get_image_name',
             'get_thumbnail',
         )
 
@@ -149,20 +150,43 @@ class FeedbackAnswersSerializer(serializers.ModelSerializer):
 
 
 class FeedbackSerializer(serializers.ModelSerializer):
+    total_score = serializers.SerializerMethodField('get_total_score')
     answers = serializers.SerializerMethodField('get_answers')
+    username = serializers.SerializerMethodField('get_username')
+    grading_rule = serializers.SerializerMethodField('get_grading_rule')
+
+    def get_total_score(self, feedback):
+        ans_set = feedback.feedbackanswers_set.all()
+        # answers = {ans.question.questions: ans.get_written_ans() for ans in feedback.feedbackanswers_set.all()}
+        answers = {ans.question.questions: {'ans': ans.get_written_ans(), 'score': ans.get_score()} for ans in ans_set}
+        total_score = 0
+        scores = [a["score"] for (q, a) in answers.items()]
+        for score in scores:
+            total_score += score
+
+        return total_score
 
     def get_answers(self, feedback):
-        answers = {ans.question.questions: ans.get_written_ans() for ans in feedback.feedbackanswers_set.all()}
-        print(answers)
+        ans_set = feedback.feedbackanswers_set.all()
+        answers = {ans.question.questions: ans.get_written_ans() for ans in ans_set}
         return answers
+
+    def get_username(self, feedback):
+        return feedback.user.username
+
+    def get_grading_rule(self, feedback):
+        return feedback.get_grading_rule()
 
     class Meta:
         model = Feedback
         fields = (
             'id',
             'user',
+            'username',
             'opinions',
             'suggestions',
             'date_submitted',
             'answers',
+            'total_score',
+            'grading_rule',
         )
