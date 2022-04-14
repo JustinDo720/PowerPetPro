@@ -2,7 +2,7 @@ from django.db import models
 from io import BytesIO
 from django.core.files import File
 from django.contrib.auth.models import AbstractUser, UserManager
-from users.models import CustomUser
+from users.models import CustomUser, Profile
 from PIL import Image
 from django.utils.text import slugify
 from django.db.models import Q
@@ -75,6 +75,13 @@ class Product(models.Model):
             return 'http://127.0.0.1:8000' + self.image.url
         else:
             return ''
+
+    def get_image_name(self):
+        if self.image:
+            image_split = self.image.url.split('/')     # ['', media, product_image, image_name]
+            return image_split[3]   # getting the image_name NOTE: take into considering to trailing slash
+        else:
+            return ""
 
     def get_thumbnail(self):
         if self.thumbnail:
@@ -214,12 +221,17 @@ class FeedBackQuestions(models.Model):
 
 class Feedback(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, blank=True, null=True)
+    # since we have profile we could do Profile.feedback_set.first() to get the first/only feedback w/ profile model
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, blank=True, null=True)
     opinions = models.TextField(max_length=500)
     suggestions = models.TextField(max_length=500)
     date_submitted = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-date_submitted']
+
+    def get_grading_rule(self):
+        return BASE_RATING
 
     def __str__(self):
         if self.user:
@@ -257,6 +269,9 @@ class FeedBackAnswers(models.Model):
     def get_written_ans(self):
         # NOTE that BASE_ANSWER is a tuple so we could search using index but note that index starts at 0
         return BASE_RATING[self.answer-1][1]    # this '1' means we are getting the written in (num, written)
+
+    def get_score(self):
+        return BASE_RATING[self.answer-1][0]    # this '0' means we are getting the num in (num, written)
 
     def __str__(self):
         return f'(Feedback#{self.feedback.id}) Question#{self.question.id} Answer: {self.answer}'

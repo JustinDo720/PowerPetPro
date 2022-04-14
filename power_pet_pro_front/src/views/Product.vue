@@ -1,33 +1,53 @@
 <template>
   <div>
-    <div class="columns is-multiline">
-      <div class="column is-9">
-        <figure class="image mb-6">
-          <img :src="product.get_image" />
-        </figure>
-        <h1 class="title">
-          {{ product.name }}
-        </h1>
-        <p>
-          {{ product.description }}
-        </p>
+    <div class="columns is-multiline" :class="{'is-centered': !product.get_image}">
+      <div class="column is-9" v-if="product.get_image">
+        <div class="container">
+          <figure>
+            <p class="image mb-6 image is-16by9">
+              <img :src="product.get_image" />
+            </p>
+          </figure>
+        </div>
+
       </div>
 
-      <div class="column is-3">
-        <h2 class="subtitle">Information</h2>
-        <p><strong>Price: </strong>${{ product.price }}</p>
-        <div class="field has-addons mt-6">
-          <div class="control">
-            <input type="number" class="input" v-model="quantity" />
+      <div class="column"
+           :class="{'is-3': product.get_image, 'has-text-centered': !product.get_image, 'is-half': !product.get_image}">
+        <div class="content box has-background-info has-text-white mr-2">
+          <h1 class="title has-text-white">
+            {{ product.name }}
+          </h1>
+          <div class="box has-background-primary">
+            <p>
+              {{ product.description }}
+            </p>
           </div>
-          <div class="control">
-            <button class="button is-primary" @click="addToCart()">
-              <span class="icon is-small">
-                <i class="fas fa-plus"></i>
-              </span>
-              <span> Add To Cart </span>
-            </button>
+
+          <h4 class="title is-4">
+            <strong>Price: </strong>
+            <span class="has-text-danger-dark">
+              ${{ product.price }}
+            </span>
+          </h4>
+          <div :class="{'columns': !product.get_image, 'is-centered': !product.get_image}">
+            <div :class="{'column':!product.get_image, 'is-half':!product.get_image}">
+              <div class="field has-addons mt-6">
+                <div class="control">
+                  <input type="number" class="input" v-model="quantity" />
+                </div>
+                <div class="control">
+                  <button class="button is-primary" @click="addToCart()">
+                    <span class="icon is-small">
+                      <i class="fas fa-plus"></i>
+                    </span>
+                    <span> Add To Cart </span>
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
       </div>
     </div>

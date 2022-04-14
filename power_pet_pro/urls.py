@@ -22,6 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('power_pet_pro_app.urls')),
     path('', include('order.urls')),
+    path('', include('users.urls')),
     path('auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.jwt')),
     path('api-auth/', include('rest_framework.urls')),

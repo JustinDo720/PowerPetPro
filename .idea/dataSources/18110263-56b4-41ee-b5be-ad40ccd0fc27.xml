@@ -366,22 +366,22 @@
     <table id="172" parent="2" name="order_orderitem"/>
     <table id="173" parent="2" name="power_pet_pro_app_category"/>
     <table id="174" parent="2" name="power_pet_pro_app_feedback"/>
-    <table id="175" parent="2" name="power_pet_pro_app_feedbackquestions"/>
-    <table id="176" parent="2" name="power_pet_pro_app_messagebox"/>
-    <table id="177" parent="2" name="power_pet_pro_app_missiondetails"/>
-    <table id="178" parent="2" name="power_pet_pro_app_missionstatement"/>
-    <table id="179" parent="2" name="power_pet_pro_app_missionstatementtopics"/>
-    <table id="180" parent="2" name="power_pet_pro_app_product"/>
-    <table id="181" parent="2" name="sqlite_master">
+    <table id="175" parent="2" name="power_pet_pro_app_feedbackanswers"/>
+    <table id="176" parent="2" name="power_pet_pro_app_feedbackquestions"/>
+    <table id="177" parent="2" name="power_pet_pro_app_messagebox"/>
+    <table id="178" parent="2" name="power_pet_pro_app_missiondetails"/>
+    <table id="179" parent="2" name="power_pet_pro_app_missionstatement"/>
+    <table id="180" parent="2" name="power_pet_pro_app_missionstatementtopics"/>
+    <table id="181" parent="2" name="power_pet_pro_app_product"/>
+    <table id="182" parent="2" name="sqlite_master">
       <System>1</System>
     </table>
-    <table id="182" parent="2" name="sqlite_sequence">
+    <table id="183" parent="2" name="sqlite_sequence">
       <System>1</System>
     </table>
-    <table id="183" parent="2" name="users_customuser"/>
-    <table id="184" parent="2" name="users_customuser_groups"/>
-    <table id="185" parent="2" name="users_customuser_user_permissions"/>
-    <table id="186" parent="2" name="users_profile"/>
+    <table id="184" parent="2" name="users_customuser"/>
+    <table id="185" parent="2" name="users_customuser_groups"/>
+    <table id="186" parent="2" name="users_customuser_user_permissions"/>
     <argument id="187" parent="6">
       <ArgumentDirection>R</ArgumentDirection>
     </argument>
@@ -1877,91 +1877,92 @@ model</ColNames>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="607" parent="175" name="questions">
+    <column id="607" parent="175" name="answer">
       <Position>2</Position>
-      <DataType>varchar(500)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <key id="608" parent="175">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <column id="609" parent="176" name="id">
-      <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="610" parent="176" name="msg">
-      <Position>2</Position>
-      <DataType>text|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="611" parent="176" name="date_added">
-      <Position>3</Position>
-      <DataType>datetime|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="612" parent="176" name="sqlite_autoindex_power_pet_pro_app_messagebox_1">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>msg</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <key id="613" parent="176">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <key id="614" parent="176">
-      <ColNames>msg</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_messagebox_1</UnderlyingIndexName>
-    </key>
-    <column id="615" parent="177" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="616" parent="177" name="date_added">
-      <Position>2</Position>
-      <DataType>datetime|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="617" parent="177" name="mission_topic_id">
+    <column id="608" parent="175" name="feedback_id">
       <Position>3</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="618" parent="177" name="mission_topic_details">
+    <column id="609" parent="175" name="question_id">
       <Position>4</Position>
-      <DataType>text|0s</DataType>
+      <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="619" parent="177" name="sqlite_autoindex_power_pet_pro_app_missiondetails_1">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>mission_topic_details</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <index id="620" parent="177" name="power_pet_pro_app_missiondetails_mission_topic_id_3894e26a">
-      <ColNames>mission_topic_id</ColNames>
+    <index id="610" parent="175" name="power_pet_pro_app_feedbackanswers_feedback_id_d6b6af31">
+      <ColNames>feedback_id</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="621" parent="177">
+    <index id="611" parent="175" name="power_pet_pro_app_feedbackanswers_question_id_20c4a16e">
+      <ColNames>question_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="612" parent="175">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="622" parent="177">
-      <ColNames>mission_topic_details</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_missiondetails_1</UnderlyingIndexName>
-    </key>
-    <foreign-key id="623" parent="177">
-      <ColNames>mission_topic_id</ColNames>
-      <RefTableName>power_pet_pro_app_missionstatementtopics</RefTableName>
+    <foreign-key id="613" parent="175">
+      <ColNames>feedback_id</ColNames>
+      <RefTableName>power_pet_pro_app_feedback</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
+    <foreign-key id="614" parent="175">
+      <ColNames>question_id</ColNames>
+      <RefTableName>power_pet_pro_app_feedbackquestions</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <column id="615" parent="176" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="616" parent="176" name="questions">
+      <Position>2</Position>
+      <DataType>varchar(500)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <key id="617" parent="176">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <column id="618" parent="177" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="619" parent="177" name="msg">
+      <Position>2</Position>
+      <DataType>text|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="620" parent="177" name="date_added">
+      <Position>3</Position>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="621" parent="177" name="sqlite_autoindex_power_pet_pro_app_messagebox_1">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>msg</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="622" parent="177">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="623" parent="177">
+      <ColNames>msg</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_messagebox_1</UnderlyingIndexName>
+    </key>
     <column id="624" parent="178" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
@@ -1973,69 +1974,70 @@ model</ColNames>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="626" parent="178" name="main_statement">
+    <column id="626" parent="178" name="mission_topic_id">
       <Position>3</Position>
+      <DataType>bigint|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="627" parent="178" name="mission_topic_details">
+      <Position>4</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="627" parent="178" name="sqlite_autoindex_power_pet_pro_app_missionstatement_1">
+    <index id="628" parent="178" name="sqlite_autoindex_power_pet_pro_app_missiondetails_1">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>main_statement</ColNames>
+      <ColNames>mission_topic_details</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="628" parent="178">
+    <index id="629" parent="178" name="power_pet_pro_app_missiondetails_mission_topic_id_3894e26a">
+      <ColNames>mission_topic_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="630" parent="178">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="629" parent="178">
-      <ColNames>main_statement</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_missionstatement_1</UnderlyingIndexName>
+    <key id="631" parent="178">
+      <ColNames>mission_topic_details</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_missiondetails_1</UnderlyingIndexName>
     </key>
-    <column id="630" parent="179" name="id">
+    <foreign-key id="632" parent="178">
+      <ColNames>mission_topic_id</ColNames>
+      <RefTableName>power_pet_pro_app_missionstatementtopics</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <column id="633" parent="179" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="631" parent="179" name="topic">
+    <column id="634" parent="179" name="date_added">
       <Position>2</Position>
-      <DataType>varchar(300)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="632" parent="179" name="date_added">
-      <Position>3</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="633" parent="179" name="slug">
-      <Position>4</Position>
-      <DataType>varchar(50)|0s</DataType>
+    <column id="635" parent="179" name="main_statement">
+      <Position>3</Position>
+      <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="634" parent="179" name="sqlite_autoindex_power_pet_pro_app_missionstatementtopics_1">
+    <index id="636" parent="179" name="sqlite_autoindex_power_pet_pro_app_missionstatement_1">
       <NameSurrogate>1</NameSurrogate>
-      <ColNames>topic</ColNames>
+      <ColNames>main_statement</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="635" parent="179" name="sqlite_autoindex_power_pet_pro_app_missionstatementtopics_2">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>slug</ColNames>
-      <ColumnCollations></ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <key id="636" parent="179">
+    <key id="637" parent="179">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="637" parent="179">
-      <ColNames>topic</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_missionstatementtopics_1</UnderlyingIndexName>
-    </key>
     <key id="638" parent="179">
-      <ColNames>slug</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_missionstatementtopics_2</UnderlyingIndexName>
+      <ColNames>main_statement</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_missionstatement_1</UnderlyingIndexName>
     </key>
     <column id="639" parent="180" name="id">
       <Position>1</Position>
@@ -2043,232 +2045,228 @@ model</ColNames>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="640" parent="180" name="slug">
+    <column id="640" parent="180" name="topic">
+      <Position>2</Position>
+      <DataType>varchar(300)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="641" parent="180" name="date_added">
+      <Position>3</Position>
+      <DataType>datetime|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <column id="642" parent="180" name="slug">
+      <Position>4</Position>
+      <DataType>varchar(50)|0s</DataType>
+      <NotNull>1</NotNull>
+    </column>
+    <index id="643" parent="180" name="sqlite_autoindex_power_pet_pro_app_missionstatementtopics_1">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>topic</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <index id="644" parent="180" name="sqlite_autoindex_power_pet_pro_app_missionstatementtopics_2">
+      <NameSurrogate>1</NameSurrogate>
+      <ColNames>slug</ColNames>
+      <ColumnCollations></ColumnCollations>
+      <Unique>1</Unique>
+    </index>
+    <key id="645" parent="180">
+      <ColNames>id</ColNames>
+      <Primary>1</Primary>
+    </key>
+    <key id="646" parent="180">
+      <ColNames>topic</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_missionstatementtopics_1</UnderlyingIndexName>
+    </key>
+    <key id="647" parent="180">
+      <ColNames>slug</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_missionstatementtopics_2</UnderlyingIndexName>
+    </key>
+    <column id="648" parent="181" name="id">
+      <Position>1</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <SequenceIdentity>null</SequenceIdentity>
+    </column>
+    <column id="649" parent="181" name="slug">
       <Position>2</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="641" parent="180" name="description">
+    <column id="650" parent="181" name="description">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="642" parent="180" name="price">
+    <column id="651" parent="181" name="price">
       <Position>4</Position>
       <DataType>decimal|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="643" parent="180" name="image">
+    <column id="652" parent="181" name="image">
       <Position>5</Position>
       <DataType>varchar(100)|0s</DataType>
     </column>
-    <column id="644" parent="180" name="thumbnail">
+    <column id="653" parent="181" name="thumbnail">
       <Position>6</Position>
       <DataType>varchar(100)|0s</DataType>
     </column>
-    <column id="645" parent="180" name="date_added">
+    <column id="654" parent="181" name="date_added">
       <Position>7</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="646" parent="180" name="category_id">
+    <column id="655" parent="181" name="category_id">
       <Position>8</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="647" parent="180" name="name">
+    <column id="656" parent="181" name="name">
       <Position>9</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="648" parent="180" name="sqlite_autoindex_power_pet_pro_app_product_1">
+    <index id="657" parent="181" name="sqlite_autoindex_power_pet_pro_app_product_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>slug</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="649" parent="180" name="sqlite_autoindex_power_pet_pro_app_product_2">
+    <index id="658" parent="181" name="sqlite_autoindex_power_pet_pro_app_product_2">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>name</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="650" parent="180" name="power_pet_pro_app_product_category_id_1425d6f8">
+    <index id="659" parent="181" name="power_pet_pro_app_product_category_id_1425d6f8">
       <ColNames>category_id</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <key id="651" parent="180">
+    <key id="660" parent="181">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="652" parent="180">
+    <key id="661" parent="181">
       <ColNames>slug</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_product_1</UnderlyingIndexName>
     </key>
-    <key id="653" parent="180">
+    <key id="662" parent="181">
       <ColNames>name</ColNames>
       <UnderlyingIndexName>sqlite_autoindex_power_pet_pro_app_product_2</UnderlyingIndexName>
     </key>
-    <foreign-key id="654" parent="180">
+    <foreign-key id="663" parent="181">
       <ColNames>category_id</ColNames>
       <RefTableName>power_pet_pro_app_category</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
-    <column id="655" parent="181" name="type">
+    <column id="664" parent="182" name="type">
       <Position>1</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="656" parent="181" name="name">
+    <column id="665" parent="182" name="name">
       <Position>2</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="657" parent="181" name="tbl_name">
+    <column id="666" parent="182" name="tbl_name">
       <Position>3</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="658" parent="181" name="rootpage">
+    <column id="667" parent="182" name="rootpage">
       <Position>4</Position>
       <DataType>int|0s</DataType>
     </column>
-    <column id="659" parent="181" name="sql">
+    <column id="668" parent="182" name="sql">
       <Position>5</Position>
       <DataType>text|0s</DataType>
     </column>
-    <column id="660" parent="182" name="name">
+    <column id="669" parent="183" name="name">
       <Position>1</Position>
     </column>
-    <column id="661" parent="182" name="seq">
+    <column id="670" parent="183" name="seq">
       <Position>2</Position>
     </column>
-    <column id="662" parent="183" name="id">
+    <column id="671" parent="184" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="663" parent="183" name="password">
+    <column id="672" parent="184" name="password">
       <Position>2</Position>
       <DataType>varchar(128)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="664" parent="183" name="last_login">
+    <column id="673" parent="184" name="last_login">
       <Position>3</Position>
       <DataType>datetime|0s</DataType>
     </column>
-    <column id="665" parent="183" name="is_superuser">
+    <column id="674" parent="184" name="is_superuser">
       <Position>4</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="666" parent="183" name="is_staff">
+    <column id="675" parent="184" name="is_staff">
       <Position>5</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="667" parent="183" name="is_active">
+    <column id="676" parent="184" name="is_active">
       <Position>6</Position>
       <DataType>bool|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="668" parent="183" name="date_joined">
+    <column id="677" parent="184" name="date_joined">
       <Position>7</Position>
       <DataType>datetime|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="669" parent="183" name="username">
+    <column id="678" parent="184" name="username">
       <Position>8</Position>
       <DataType>text|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="670" parent="183" name="first_name">
+    <column id="679" parent="184" name="first_name">
       <Position>9</Position>
       <DataType>varchar(150)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="671" parent="183" name="email">
+    <column id="680" parent="184" name="email">
       <Position>10</Position>
       <DataType>varchar(250)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="672" parent="183" name="last_name">
+    <column id="681" parent="184" name="last_name">
       <Position>11</Position>
       <DataType>varchar(150)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="673" parent="183" name="sqlite_autoindex_users_customuser_1">
+    <index id="682" parent="184" name="sqlite_autoindex_users_customuser_1">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>username</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="674" parent="183" name="sqlite_autoindex_users_customuser_2">
+    <index id="683" parent="184" name="sqlite_autoindex_users_customuser_2">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>email</ColNames>
       <ColumnCollations></ColumnCollations>
       <Unique>1</Unique>
-    </index>
-    <key id="675" parent="183">
-      <ColNames>id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <key id="676" parent="183">
-      <ColNames>username</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_users_customuser_1</UnderlyingIndexName>
-    </key>
-    <key id="677" parent="183">
-      <ColNames>email</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_users_customuser_2</UnderlyingIndexName>
-    </key>
-    <column id="678" parent="184" name="id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
-    </column>
-    <column id="679" parent="184" name="customuser_id">
-      <Position>2</Position>
-      <DataType>bigint|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="680" parent="184" name="group_id">
-      <Position>3</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <index id="681" parent="184" name="users_customuser_groups_customuser_id_group_id_76b619e3_uniq">
-      <ColNames>customuser_id
-group_id</ColNames>
-      <ColumnCollations>
-</ColumnCollations>
-      <Unique>1</Unique>
-    </index>
-    <index id="682" parent="184" name="users_customuser_groups_customuser_id_958147bf">
-      <ColNames>customuser_id</ColNames>
-      <ColumnCollations></ColumnCollations>
-    </index>
-    <index id="683" parent="184" name="users_customuser_groups_group_id_01390b14">
-      <ColNames>group_id</ColNames>
-      <ColumnCollations></ColumnCollations>
     </index>
     <key id="684" parent="184">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <foreign-key id="685" parent="184">
-      <ColNames>customuser_id</ColNames>
-      <RefTableName>users_customuser</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
-    <foreign-key id="686" parent="184">
-      <ColNames>group_id</ColNames>
-      <RefTableName>auth_group</RefTableName>
-      <RefColNames>id</RefColNames>
-      <Deferrable>1</Deferrable>
-      <InitiallyDeferred>1</InitiallyDeferred>
-    </foreign-key>
+    <key id="685" parent="184">
+      <ColNames>username</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_users_customuser_1</UnderlyingIndexName>
+    </key>
+    <key id="686" parent="184">
+      <ColNames>email</ColNames>
+      <UnderlyingIndexName>sqlite_autoindex_users_customuser_2</UnderlyingIndexName>
+    </key>
     <column id="687" parent="185" name="id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
@@ -2280,24 +2278,24 @@ group_id</ColNames>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="689" parent="185" name="permission_id">
+    <column id="689" parent="185" name="group_id">
       <Position>3</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <index id="690" parent="185" name="users_customuser_user_permissions_customuser_id_permission_id_7a7debf6_uniq">
+    <index id="690" parent="185" name="users_customuser_groups_customuser_id_group_id_76b619e3_uniq">
       <ColNames>customuser_id
-permission_id</ColNames>
+group_id</ColNames>
       <ColumnCollations>
 </ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <index id="691" parent="185" name="users_customuser_user_permissions_customuser_id_5771478b">
+    <index id="691" parent="185" name="users_customuser_groups_customuser_id_958147bf">
       <ColNames>customuser_id</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
-    <index id="692" parent="185" name="users_customuser_user_permissions_permission_id_baaa2f74">
-      <ColNames>permission_id</ColNames>
+    <index id="692" parent="185" name="users_customuser_groups_group_id_01390b14">
+      <ColNames>group_id</ColNames>
       <ColumnCollations></ColumnCollations>
     </index>
     <key id="693" parent="185">
@@ -2312,8 +2310,8 @@ permission_id</ColNames>
       <InitiallyDeferred>1</InitiallyDeferred>
     </foreign-key>
     <foreign-key id="695" parent="185">
-      <ColNames>permission_id</ColNames>
-      <RefTableName>auth_permission</RefTableName>
+      <ColNames>group_id</ColNames>
+      <RefTableName>auth_group</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>
@@ -2324,65 +2322,45 @@ permission_id</ColNames>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="697" parent="186" name="first_name">
+    <column id="697" parent="186" name="customuser_id">
       <Position>2</Position>
-      <DataType>text|0s</DataType>
-    </column>
-    <column id="698" parent="186" name="phone_number">
-      <Position>3</Position>
-      <DataType>integer|0s</DataType>
-    </column>
-    <column id="699" parent="186" name="address">
-      <Position>4</Position>
-      <DataType>text|0s</DataType>
-    </column>
-    <column id="700" parent="186" name="city">
-      <Position>5</Position>
-      <DataType>text|0s</DataType>
-    </column>
-    <column id="701" parent="186" name="date_joined">
-      <Position>6</Position>
-      <DataType>date|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="702" parent="186" name="country">
-      <Position>7</Position>
-      <DataType>text|0s</DataType>
-    </column>
-    <column id="703" parent="186" name="state">
-      <Position>8</Position>
-      <DataType>text|0s</DataType>
-    </column>
-    <column id="704" parent="186" name="zip_code">
-      <Position>9</Position>
-      <DataType>integer|0s</DataType>
-    </column>
-    <column id="705" parent="186" name="user_id">
-      <Position>10</Position>
       <DataType>bigint|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="706" parent="186" name="last_name">
-      <Position>11</Position>
-      <DataType>text|0s</DataType>
+    <column id="698" parent="186" name="permission_id">
+      <Position>3</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
     </column>
-    <index id="707" parent="186" name="sqlite_autoindex_users_profile_1">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>user_id</ColNames>
-      <ColumnCollations></ColumnCollations>
+    <index id="699" parent="186" name="users_customuser_user_permissions_customuser_id_permission_id_7a7debf6_uniq">
+      <ColNames>customuser_id
+permission_id</ColNames>
+      <ColumnCollations>
+</ColumnCollations>
       <Unique>1</Unique>
     </index>
-    <key id="708" parent="186">
+    <index id="700" parent="186" name="users_customuser_user_permissions_customuser_id_5771478b">
+      <ColNames>customuser_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <index id="701" parent="186" name="users_customuser_user_permissions_permission_id_baaa2f74">
+      <ColNames>permission_id</ColNames>
+      <ColumnCollations></ColumnCollations>
+    </index>
+    <key id="702" parent="186">
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <key id="709" parent="186">
-      <ColNames>user_id</ColNames>
-      <UnderlyingIndexName>sqlite_autoindex_users_profile_1</UnderlyingIndexName>
-    </key>
-    <foreign-key id="710" parent="186">
-      <ColNames>user_id</ColNames>
+    <foreign-key id="703" parent="186">
+      <ColNames>customuser_id</ColNames>
       <RefTableName>users_customuser</RefTableName>
+      <RefColNames>id</RefColNames>
+      <Deferrable>1</Deferrable>
+      <InitiallyDeferred>1</InitiallyDeferred>
+    </foreign-key>
+    <foreign-key id="704" parent="186">
+      <ColNames>permission_id</ColNames>
+      <RefTableName>auth_permission</RefTableName>
       <RefColNames>id</RefColNames>
       <Deferrable>1</Deferrable>
       <InitiallyDeferred>1</InitiallyDeferred>

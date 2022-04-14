@@ -58,8 +58,8 @@
         </header>
         <div class="quickview-body">
           <div class="quickview-block">
-            <aside class="menu ml-2 mt-2" v-if="isStaff">
-              <p class="menu-label">Admin</p>
+            <aside class="menu ml-2 mt-2" v-if="isAdmin">
+              <p class="menu-label title is-4">Admin</p>
               <ul class="menu-list">
                 <li>
                   <router-link
@@ -68,7 +68,7 @@
                       name: 'ViewAllMessages',
                     }"
                   >
-                    View All Messages
+                    <button class="button is-light is-danger">View All Messages</button>
                   </router-link>
                 </li>
                 <li>
@@ -78,7 +78,7 @@
                       name: 'MessageBox',
                     }"
                   >
-                    Add/Edit Message of the Day
+                    <button class="button is-light is-danger">Add/Edit Message of the Day</button>
                   </router-link>
                 </li>
                 <li>
@@ -88,7 +88,7 @@
                       name: 'ViewAllProducts',
                     }"
                   >
-                    View All Products
+                    <button class="button is-light is-danger">View All Products</button>
                   </router-link>
                 </li>
                 <li>
@@ -98,7 +98,7 @@
                       name: 'AdminProduct',
                     }"
                   >
-                    Add Product
+                    <button class="button is-light is-danger">Add Product</button>
                   </router-link>
                 </li>
                 <li>
@@ -108,7 +108,7 @@
                       name: 'AdminCategory',
                     }"
                   >
-                    Add Category
+                    <button class="button is-light is-danger">Add Category</button>
                   </router-link>
                 </li>
                 <li>
@@ -118,7 +118,7 @@
                       name: 'MissionStatementBox',
                     }"
                   >
-                    Add Mission Statement
+                    <button class="button is-light is-danger">Add Mission Statement</button>
                   </router-link>
                 </li>
                 <li>
@@ -128,7 +128,7 @@
                       name: 'MissionStatementTopicBox',
                     }"
                   >
-                    Add Mission Statement Topic
+                    <button class="button is-light is-danger">Add Mission Statement Topic</button>
                   </router-link>
                 </li>
                 <li>
@@ -138,14 +138,33 @@
                       name: 'MissionDetailsBox',
                     }"
                   >
-                    Add Mission Details
+                    <button class="button is-light is-danger">Add Mission Details</button>
                   </router-link>
                 </li>
+                <li>
+                    <router-link
+                      :to="{
+                        name: 'QuestionControl',
+                      }"
+                    >
+                      <button class="button is-light is-danger">Add/View Questions</button>
+                    </router-link>
+                  </li>
+                  <li>
+                    <router-link
+                      :to="{
+                        name: 'AllFeedbacks',
+                      }"
+                    >
+                      <button class="button is-light is-danger">View All User Feedback</button>
+                    </router-link>
+                  </li>
+
               </ul>
             </aside>
 
             <aside class="menu ml-2 mt-2">
-              <p class="menu-label">General</p>
+              <p class="menu-label title is-4">General</p>
               <ul class="menu-list">
                 <li v-for="(category, index) in store_categories" :key="index">
                   <router-link
@@ -157,7 +176,7 @@
                       },
                     }"
                   >
-                    {{ category.name }}
+                    <button class="button is-light is-link">{{ category.name }}</button>
                   </router-link>
                 </li>
               </ul>
@@ -224,6 +243,11 @@
                     Reset Password
                   </a>
                 </router-link>
+                <router-link :to="{ name: 'CheckOrder' }">
+                  <a class="dropdown-item" @click="showAccount = !showAccount">
+                    Check Order
+                  </a>
+                </router-link>
               </div>
             </div>
           </div>
@@ -233,6 +257,17 @@
             <p
               class="subtitle is-5"
               :class="{ 'has-text-white-bis': !showMobileMenu }"
+              v-if="isAdmin"
+            >
+              Welcome Admin,
+              <router-link :to="{ name: 'Profile' }"
+                >{{ username }}!&nbsp;</router-link
+              >
+            </p>
+            <p
+              class="subtitle is-5"
+              :class="{ 'has-text-white-bis': !showMobileMenu }"
+              v-else
             >
               Welcome,
               <router-link :to="{ name: 'Profile' }"
@@ -240,15 +275,40 @@
               >
             </p>
           </span>
-
           <span>
-            <button class="button" @click="logOut()">
-              <span> Log out </span>
-              <span class="icon is-medium">
-                <i class="fas fa-sign-out-alt"></i>
-              </span>
-            </button>
-          </span>
+              <button class="button is-small" @click="logOut()">
+                <span> Log Out </span>
+                <span class="icon is-medium">
+                  <i class="fas fa-sign-out-alt"></i>
+                </span>
+              </button>
+            </span>
+          <div class="navbar-item">
+            <div class="dropdown" :class="{'is-active' : showFunction}">
+              <div class="dropdown-trigger">
+                <button
+                    class="button is-small"
+                    aria-haspopup="true"
+                    aria-controls="dropdown-menu4"
+                    @click="showFunction = !showFunction"
+                >
+                  <span class="icon is-small">
+                    <i class="fas fa-angle-down"></i>
+                  </span>
+                </button>
+              </div>
+              <div class="dropdown-menu" id="dropdown-menu4" role="menu">
+                <div class="dropdown-content">
+                  <router-link :to="{ name: 'CheckOrder' }">
+                    <a class="dropdown-item" @click="showFunction = !showFunction">
+                      Check Your Order
+                    </a>
+                  </router-link>
+
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="navbar-item">
           <router-link :to="{ name: 'Cart' }">
@@ -277,7 +337,8 @@ export default {
       showMobileMenu: false,
       searchTerm: "",
       showAccount: false,
-      isStaff: false,
+      isAdmin: false,
+      showFunction: false,
     };
   },
   computed: {
@@ -304,14 +365,21 @@ export default {
     },
   },
   created() {
-    this.isStaff = Cookies("is_staff");
-    if(!this.isStaff){
-      this.isStaff = null
-    }
     // we want to grab our categories
     axios.get("/category_list/").then((response) => {
       this.$store.commit("update_categories", { categories: response.data });
     });
+     /*
+    * The main Problem is that is_staff is actually string of 'true' and we can't use our store because vue life cycle
+    * comes first before our store initialize so we need to make sure we use Cookies to grab our data. Therefore,
+    * we need to change is_staff from string 'true'/'false' to it's boolean value. Otherwise v-if will not work as
+    * intended because they'll read 'false' as true as its not blank. So let's use JSON.parse.
+    *
+    * JSON.parse will parse our string value which converts the type of variable into boolean
+    * */
+    if(Cookies('is_staff')){
+      this.isAdmin = JSON.parse(Cookies('is_staff'))
+    }
   },
 };
 </script>
