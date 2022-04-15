@@ -38,7 +38,7 @@ export default createStore({
     },
     // Let's go ahead and make a function that changes the cart items
     addToCart(state, { item_object }) {
-      let item = item_object; // this will allow us to just access products or quantity must easier
+      let item = item_object; // this will allow us to just access products or quantity much easier
       // We want to check if the product exist using the ids.
       // So instead of using cart_item.product.id like before we are just using .product because .product is the id
       const exists = state.cart.items.filter(
@@ -93,6 +93,13 @@ export default createStore({
           price: item.product.price,
           get_absolute_url: item.product.get_absolute_url,
         };
+
+        // Make sure to add in the product images if they have
+        if(item.product.image){
+          cart_item_format['photo'] = item.product.get_image
+          cart_item_format['thumbnail'] = item.product.get_thumbnail
+        }
+
         // once we make this new format, we are going to push it
         state.cart.items.push(cart_item_format);
       }

@@ -151,7 +151,7 @@ const routes = [
     component: Checkout,
   },
   {
-    path: "/cart/checkout/:user_id/order/:order_id/success/",
+    path: "/cart/checkout/order/:order_id/success/",
     name: "Success",
     component: Success,
   },
@@ -161,7 +161,7 @@ const routes = [
     component: Orders,
   },
   {
-    path: "/profile/:id/order/:order_number/",
+    path: "/profile/order/:order_number/",
     name: "IndividualOrder",
     component: IndividualOrder,
   },

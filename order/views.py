@@ -10,7 +10,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework import status
 
 from .models import Order, OrderItem, Profile
@@ -81,10 +81,10 @@ class IndividualUserOrder(APIView):
                 - address being shipped to
                 - total cost etc
     """
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
-    def get(self, request, user_id, order_id):
-        order = Order.objects.get(id=order_id, user=user_id)
+    def get(self, request, order_id):
+        order = Order.objects.get(id=order_id)
         serializer = UserOrderSerializer(order)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -99,43 +99,56 @@ class IndividualUserOrderItems(ListAPIView):
     """
 
     serializer_class = OrderItemSerializer
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = OrderPagination  # Although this is OrderPagination we will still be using 5 items so let's reuse
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
         order_id = self.kwargs['order_id']
 
-        order = Order.objects.get(user=user_id, id=order_id)
-        order_items = OrderItem.objects.filter(order=order, profile=user_id)
+        order = Order.objects.get(id=order_id)
+        order_items = OrderItem.objects.filter(order=order)
         return order_items  # this is our queryset
 
 
 # since we are using vue let's make this an api view for our success page on the front to call in order to send the mail
-@api_view(['GET'])
-def send_success_email(request, user_id, order_id):
-    user_profile = Profile.objects.get(id=user_id)
-    order_link = f'{settings.FRONTEND_BASE_URL}profile/{user_id}/order/{order_id}/'
+@api_view(['POST'])
+def send_success_email(request, order_id):
+    data = request.data
+    # All of the base context
+    order_link = f'{settings.FRONTEND_BASE_URL}profile/order/{order_id}/'   # NOT WORKING
     feedback_link = f'{settings.FRONTEND_BASE_URL}submit_feedback/'
-    email_template = render_to_string('order/email.html',
-                                      {'user_profile': user_profile,
-                                       'order_number': order_id,
-                                       'order_link': order_link,
-                                       'feedback_link': feedback_link,
-                                       })
+    context = {
+         'order_number': order_id,
+         'order_link': order_link,
+         'feedback_link': feedback_link,
+    }
+
+    # The main idea is that if we have a user_id then the user is auth if not then they must be an anonymous user
+
+    # So we actually can't use user_id to access the email bc it would give us the user's email but what if they change
+    # the order email to another email then we'll be sending the email of the order to the wrong person
+    if 'user_id' in data and 'order_email' in data:
+        user_profile = Profile.objects.get(id=data['user_id'])
+        user_email = data['order_email']
+        context['user_profile'] = user_profile
+    elif 'anonymous_user_email' in request.data:
+        # The only other way to access the anonymous user is through email
+        user_email = data['anonymous_user_email']
+        context['user_email'] = user_email
+
+    email_template = render_to_string('order/email.html', context)
 
     email = EmailMessage(
         f'PetPowerPro Order #{order_id} Summary',
         email_template,
         settings.EMAIL_HOST_USER,
-        ['yetok51203@sartess.com'],
-        #[user_profile.user.email],
+        [user_email],
     )
 
     email.fail_silently = False
     email.content_subtype = "html"
     email.send()
-    return Response({'message': "Email has been sent"})
+    return Response({'message': "An email has been sent to:", 'email': user_email})
 
 
 @api_view(['POST'])

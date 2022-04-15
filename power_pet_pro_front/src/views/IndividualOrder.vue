@@ -193,10 +193,12 @@ export default {
     }
   },
   created() {
-    let user_id = this.$route.params.id
     let order_id = this.$route.params.order_number
-    let config = { headers: { Authorization: `Bearer ${this.accessToken}`} }
-    axios.get(`profile/${user_id}/order/${order_id}/`, config).then((response)=>{
+    let config = { }
+    if(this.accessToken){
+      config['headers'] = { Authorization: `Bearer ${this.accessToken}`}
+    }
+    axios.get(`profile/order/${order_id}/`, config).then((response)=>{
       let order_details = response.data
       this.order_number = order_details.id
       this.paid_amount = order_details.paid_amount
@@ -217,7 +219,7 @@ export default {
       }
 
       // We need to retrieve the paginated items
-      axios.get(`profile/${user_id}/order/${order_id}/items/`, config).then((response)=>{
+      axios.get(`profile/order/${order_id}/items/`, config).then((response)=>{
         this.items = response.data.results
         if(response.data.next){
           this.next_page = response.data.next

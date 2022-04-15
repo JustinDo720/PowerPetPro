@@ -270,13 +270,17 @@ export default {
       // We are using this to make our backend know that the requested user is actually authenticated and not anonymous
       if (Cookies("user_id") && this.accessToken) {
         data["user"] = Cookies("user_id");
+        Cookies.set('order_email', this.email)
+      } else {
+        // our user is anonymous so let's set our their email in our cookies for us to email them their order
+        Cookies.set('anonymous_user_email', this.email)
       }
       console.log(data);
       await axios
         .post("checkout/", data)
         .then((response) => {
           this.$store.commit("clearCart");
-          this.$router.push({ name: "Success", params: {user_id:Cookies("user_id"),order_id:response.data.id} });
+          this.$router.push({ name: "Success", params: {order_id:response.data.id} });
         })
         .catch((err) => {
           this.errors.push("Something went wrong. Please try again.");

@@ -5,28 +5,33 @@ from power_pet_pro_app.models import CustomUser
 
 class OrderItemSerializer(serializers.ModelSerializer):
     name = serializers.SerializerMethodField('get_product_name')
+    email = serializers.SerializerMethodField('get_email')
     # Make sure the name of the SerializerMethodField is not the same as the function for it
     get_absolute_url = serializers.SerializerMethodField('get_abs_url')
     photo = serializers.SerializerMethodField('get_photo')
     short_description = serializers.SerializerMethodField('get_description')
 
-    def get_product_name(self, cart):
-        return cart.product.name
+    def get_product_name(self, order_item):
+        return order_item.product.name
+
+    def get_email(self, order_item):
+        return order_item.order.email 
 
     # This cannot be get_absolute_url which brings up a config error
-    def get_abs_url(self, cart):
-        return cart.product.get_absolute_url()
+    def get_abs_url(self, order_item):
+        return order_item.product.get_absolute_url()
 
-    def get_photo(self, cart):
-        return cart.product.get_image()
+    def get_photo(self, order_item):
+        return order_item.product.get_image()
 
-    def get_description(self, cart):
-        return cart.product.get_short_description()
+    def get_description(self, order_item):
+        return order_item.product.get_short_description()
 
     class Meta:
         model = OrderItem
         fields = (
             'profile',
+            'email',
             'product',
             'order',
             'quantity',
