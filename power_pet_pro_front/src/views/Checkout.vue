@@ -234,7 +234,6 @@ export default {
             this.errors["stripe"] = "* Something went wrong with the Payment. Please try again"
             console.log(result.error.message);
           } else {
-            console.log(result.token.id);
             this.stripeTokenHandler(result.token);
           }
         });
@@ -269,21 +268,26 @@ export default {
       };
       // We are using this to make our backend know that the requested user is actually authenticated and not anonymous
       if (Cookies("user_id") && this.accessToken) {
-        data["user"] = Cookies("user_id");
-        Cookies.set('order_email', this.email)
+          data["user"] = Cookies("user_id");
+          Cookies.set('order_email', this.email)
+        let config = {headers: {Authorization: `Bearer ${this.accessToken}`}}
+        // let's make sure we wait for this post request but we could only post if there's a user_id
+        await axios.put(`profile_list/user_profile/${Cookies('user_id')}/`,data,config)
       } else {
         // our user is anonymous so let's set our their email in our cookies for us to email them their order
         Cookies.set('anonymous_user_email', this.email)
       }
-      console.log(data);
-      await axios
+
+      console.log(data)
+
+      axios
         .post("checkout/", data)
         .then((response) => {
           this.$store.commit("clearCart");
           this.$router.push({ name: "Success", params: {order_id:response.data.id} });
         })
         .catch((err) => {
-          this.errors.push("Something went wrong. Please try again.");
+          this.errors['checkout'] = err.message
         });
 
       // We need to set loading off because we initially set it true in submit_shipping_details

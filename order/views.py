@@ -153,8 +153,13 @@ def send_success_email(request, order_id):
 
 @api_view(['POST'])
 def check_order_number(request, order_id):
-    if request.data['user_id']:
-        if Order.objects.filter(id=order_id, user=request.data['user_id']).exists():
+    # We made sure to have request.data['email'] because we need another identifier aside from user_id for guest users
+    email = request.data['email']
+    if 'user_id' in request.data:
+        if Order.objects.filter(id=order_id, user=request.data['user_id'], email=email).exists():
             return Response({'order_exists': True}, status.HTTP_200_OK)
-
+    else:
+        # guest users
+        if Order.objects.filter(id=order_id, email=email).exists():
+            return Response({'order_exists': True}, status.HTTP_200_OK)
     return Response({'order_exists': False}, status.HTTP_200_OK)

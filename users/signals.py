@@ -7,7 +7,12 @@ from users.models import CustomUser
 @receiver(post_save, sender=CustomUser)
 def create_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(id=instance.id, user=instance, first_name=instance.first_name, last_name=instance.last_name)
+        print('email'+instance.email)
+        Profile.objects.create(id=instance.id,
+                               email=instance.email,
+                               user=instance,
+                               first_name=instance.first_name,
+                               last_name=instance.last_name)
 
 
 @receiver(post_save, sender=CustomUser)

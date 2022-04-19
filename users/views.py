@@ -35,6 +35,7 @@ class UserProfile(APIView):
     def put(self, request, user_id, *args, **kwargs):
         user_profile = self.get_object(user_id)
         profile_serializer = ProfileSerializer(user_profile, data=request.data)
+        # One thing to note is that if we send email in request.data we won't be able to update our email bc profile doesn't have email
         if profile_serializer.is_valid():
             profile_serializer.save()
             return Response(profile_serializer.data, status=status.HTTP_201_CREATED)

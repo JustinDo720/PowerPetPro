@@ -24,6 +24,7 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    email = models.EmailField(max_length=250, unique=True, blank=False, null=False)
     first_name = models.TextField(max_length=100, blank=True, null=True)
     last_name = models.TextField(max_length=100, blank=True, null=True)
     phone_number = models.IntegerField(blank=True, null=True)

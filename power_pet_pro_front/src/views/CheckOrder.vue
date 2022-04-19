@@ -3,7 +3,7 @@
     <h1 class="title is-1">
       Check Your Order
     </h1>
-    <h3 class="subtitle is-3">Use your Order Number to check your order details</h3>
+    <h3 class="subtitle is-3">Use your Order Number and Email Address to check your order details</h3>
   </div>
   <section class="section is-small">
     <div class="columns is-centered">
@@ -11,15 +11,30 @@
         <div class="container">
           <div class="box content has-text-centered has-background-success-light">
             <h3 class="title is-3">
-              Enter your Order Number:
+              Enter your Email and Order Number:
             </h3>
             <div class="field">
-              <input class="input is-medium is-focused"
+              <div class="control has-icons-left">
+                <input class="input is-focused is-medium" type="email" placeholder="Email Address" v-model="email">
+                <span class="icon is-medium is-left">
+                  <i class="fas fa-envelope"></i>
+                </span>
+              </div>
+            </div>
+            <div class="field">
+              <div class="control has-icons-left">
+                  <input class="input is-medium is-focused"
                      type="text"
                      placeholder="Order Number"
                      v-model="OrderNum"
                      @keydown.enter="check_order_number()"
-              >
+                  >
+                  <span class="icon is-medium is-left">
+                    <i class="fas fa-hashtag"></i>
+                  </span>
+
+              </div>
+
             </div>
             <button class="button is-primary" @click="check_order_number()">
               Check Order #{{ OrderNum }}
@@ -46,6 +61,7 @@ export default{
     return{
       OrderNum: '',
       error_msg: '',
+      email: '',
     }
   },
   methods: {
@@ -54,7 +70,9 @@ export default{
       if(order_number){
         this.error_msg = '' // Let's reset our error message
         // We need to check if the order number exists if not let's give an another error message
-        let data = {}
+        let data = {
+          'email': this.email,
+        }
 
         if (this.user_id){
           data['user_id'] = this.user_id
@@ -72,11 +90,11 @@ export default{
             }
 
           } else {
-            this.error_msg = "* Your Order Number does not exist. Please double check that you've entered in the right number."
+            this.error_msg = "* Please check if this order number appears on the email that we've sent to you."
           }
         })
       } else {
-        this.error_msg = "* Please enter in your Order Number"
+        this.error_msg = "* Please enter in your Order Number."
       }
     }
   },

@@ -3,7 +3,7 @@
     <div class="columns is-multiline">
       <div class="column is-12">
         <h1 class="title">Thank you</h1>
-        <p>
+        <p v-if="!isLoading">
           Your order will be processed by our agents within the next 2 days. {{ message }} <span class="is-link">{{ email }}</span>.
           Please check your inbox for further information about your order.
         </p>
@@ -14,6 +14,8 @@
 <script>
 import axios from "axios";
 import Cookies from 'cookies-js'
+import { mapState } from 'vuex'
+
 export default {
   name: "Success",
   data(){
@@ -22,9 +24,13 @@ export default {
       email: ''
     }
   },
+  computed:{
+    ...mapState(['isLoading'])
+  },
   mounted() {
     // We are just setting the title of the documents
     // document.title = "Success | Pet Power Pro";
+    this.$store.commit('setIsLoading', true)  // we are going to make sure we have the email and message
     let data = {}
     let order_id = this.$route.params.order_id
     if(Cookies('user_id')){
@@ -38,6 +44,7 @@ export default {
       console.log(response.data)
       this.message = response.data.message
       this.email = response.data.email
+      this.$store.commit('setIsLoading', false)
     })
   },
 };
