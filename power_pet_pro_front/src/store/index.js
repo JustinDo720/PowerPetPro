@@ -77,9 +77,6 @@ export default createStore({
               },
               { headers }
             )
-            .then((r) => {
-              console.log(r);
-            });
         }
         // before we push our item we want it to be in our specific format
         // since our products are no longer under product key we need the name, price and abs_url

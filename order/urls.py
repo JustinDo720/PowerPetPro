@@ -10,4 +10,5 @@ urlpatterns = [
     path('profile/order/<int:order_id>/', views.IndividualUserOrder.as_view(), name='orders'),
     path('profile/order/<int:order_id>/items/', views.IndividualUserOrderItems.as_view(), name='orders'),
     path('check_order/<int:order_id>/', views.check_order_number, name='check_order_number'),
+    path('check_email/', views.check_email, name='check_email')
 ]

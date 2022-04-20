@@ -163,3 +163,16 @@ def check_order_number(request, order_id):
         if Order.objects.filter(id=order_id, email=email).exists():
             return Response({'order_exists': True}, status.HTTP_200_OK)
     return Response({'order_exists': False}, status.HTTP_200_OK)
+
+
+@api_view(['POST'])
+def check_email(request):
+    # For guest users we are going to check if the email exist in our db and if so we could recommend them to reset etc
+    email = request.data['email']
+    if Profile.objects.filter(email=email).exists():
+        profile_username = Profile.objects.filter(email=email)[0].user.username
+        return Response({'msg': f'The email does exist with a username: {profile_username}',
+                         'exists': True}, status=status.HTTP_200_OK)
+
+    # if it doesn't exist then let's return a message saying it doesn't exist
+    return Response({'exists': False}, status=status.HTTP_200_OK)

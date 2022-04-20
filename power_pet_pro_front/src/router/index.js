@@ -89,6 +89,7 @@ const routes = [
     path: "/reset_password/",
     name: "ResetPassword",
     component: ResetPassword, // This will grab the email and send an email with the reset link
+    props: true
   },
   {
     path: "/password/reset/confirm/:uid/:token",

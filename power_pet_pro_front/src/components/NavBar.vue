@@ -348,7 +348,7 @@ export default {
       // return this.$store.state.cart.items.length
       let totalLength = 0;
       for (let i = 0; i < this.cart.items.length; i++) {
-        totalLength += this.cart.items[i].quantity;
+        totalLength += parseInt(this.cart.items[i].quantity);
       }
       return totalLength;
     },

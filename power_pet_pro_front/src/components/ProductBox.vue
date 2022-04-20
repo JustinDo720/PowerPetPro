@@ -37,9 +37,7 @@ export default {
   },
   methods: {
     viewDetails(product_abs_url) {
-      console.log(product_abs_url);
       let product_url = "/product_list/product_detail" + product_abs_url;
-      console.log(product_url);
       // what we want to do is push to our product url. the product_abs_url is like: /category_slug/product_slug/
       this.$router.push(product_url);
     },

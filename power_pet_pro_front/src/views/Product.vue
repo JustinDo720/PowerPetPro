@@ -87,9 +87,8 @@ export default {
         this.quantity = 1;
       }
 
-      if (this.product.get_image()) {
-        console.log("yaeh we got photo");
-        this.product["photo"] = this.product.get_image();
+      if (this.product.get_image) {
+        this.product["photo"] = this.product.get_image;
       }
       const item = {
         product: this.product,
@@ -99,7 +98,6 @@ export default {
       const current_cart_ids = JSON.parse(
         localStorage.getItem("cart")
       ).items.map((item) => item.product.id);
-      console.log(current_cart_ids);
       this.$store.commit("addToCart", {
         item_object: item,
         current_cart: current_cart_ids,
