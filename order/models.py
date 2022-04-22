@@ -9,7 +9,7 @@ class Order(models.Model):
     user = models.ForeignKey(CustomUser, related_name='orders', on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.CharField(max_length=100)
+    email = models.CharField(max_length=100, null=False, blank=False)   # This can't be unique otherwise order alr exist
     address = models.CharField(max_length=100)
     zipcode = models.CharField(max_length=80)
     phone = models.CharField(max_length=100)

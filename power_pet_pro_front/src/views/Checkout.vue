@@ -30,7 +30,28 @@
               </div>
               <div class="columns">
                 <div class="column control">
-                  <label> Email* </label>
+                  <label>Email* </label>
+                  <div class="notification is-warning is-light" v-if="active_email">
+                    <p>
+                      This email is linked to an active account.
+                    </p>
+                    <p>
+                      Would you like to reset your password?
+                      <router-link :to="{name: 'ResetPassword', params: {registered_email: email}}">
+                        <button class="button is-small is-danger is-outlined">
+                          Reset Password Here
+                        </button>
+                      </router-link>
+                    </p>
+                    <p>
+                      <button
+                          class="button is-outlined is-success is-small"
+                          @click="continue_purchase()"
+                      >
+                        Let Me Continue With My Purchase
+                      </button>
+                    </p>
+                  </div>
                   <input
                     class="input"
                     type="email"
@@ -159,10 +180,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapGetters } from "vuex";
 import Cookies from "cookies-js";
 import countries_and_states from "../assets/Profile/countries_and_states";
 import axios from "axios";
+import { toast } from 'bulma-toast';
 
 export default {
   name: "Checkout",
@@ -177,15 +199,18 @@ export default {
       first_name: "",
       last_name: "",
       email: "",
+      active_email: false,
       phone_number: "",
       address: "",
       city: "",
       zip_code: "",
       errors: {},
+      continue_order: false,
     };
   },
   computed: {
     ...mapState(["cart", "accessToken"]),
+    ...mapGetters(["isAuth"]),
     country_states() {
       let country_selected = {};
       if (this.chosen_country) {
@@ -202,7 +227,7 @@ export default {
     },
   },
   methods: {
-    submit_shipping_details() {
+    async submit_shipping_details() {
       // Handle individual missing fields
       let fields = [
           {'first name': this.first_name},
@@ -221,12 +246,30 @@ export default {
         let field_value = fields[field][field_name]
         if(field_value === ""){
           this.errors[field_name] = `* The ${field_name} field is missing!`;
+        } else if(field_name === 'email' && field_value !== '' && !this.isAuth && !this.continue_order){
+          // this email field has been filled in and this user is anonymous so let's check if the email has been used
+          await axios.post('check_email/', {email: this.email}).then((r)=>{
+            if(r.data.exists){
+              toast({
+                  message: r.data.msg,
+                  type: "is-info",
+                  dismissible: true,
+                  pauseOnHover: true,
+                  position: "bottom-right",
+                  duration: 15000   // 15 seconds
+              })
+              this.active_email = true;
+            }
+          })
         } else {
           delete this.errors[field_name]
         }
       }
 
-      if (!this.errors.length) {
+      // We don't have errors and active email notification isn't opened
+      console.log('before stripe: ',this.active_email)
+      if (!Object.keys(this.errors).length && !this.active_email) {
+        console.log(!this.active_email, this.active_email)
         this.$store.commit("setIsLoading", true);
         this.stripe.createToken(this.card).then((result) => {
           if (result.error) {
@@ -234,7 +277,6 @@ export default {
             this.errors["stripe"] = "* Something went wrong with the Payment. Please try again"
             console.log(result.error.message);
           } else {
-            console.log(result.token.id);
             this.stripeTokenHandler(result.token);
           }
         });
@@ -269,22 +311,37 @@ export default {
       };
       // We are using this to make our backend know that the requested user is actually authenticated and not anonymous
       if (Cookies("user_id") && this.accessToken) {
-        data["user"] = Cookies("user_id");
+          data["user"] = Cookies("user_id");
+          Cookies.set('order_email', this.email)
+        let config = {headers: {Authorization: `Bearer ${this.accessToken}`}}
+        // let's make sure we wait for this post request but we could only post if there's a user_id
+        await axios.put(`profile_list/user_profile/${Cookies('user_id')}/`,data,config)
+      } else {
+        // our user is anonymous so let's set our their email in our cookies for us to email them their order
+        Cookies.set('anonymous_user_email', this.email)
       }
-      console.log(data);
-      await axios
+
+      console.log(data)
+
+      axios
         .post("checkout/", data)
         .then((response) => {
           this.$store.commit("clearCart");
-          this.$router.push({ name: "Success", params: {user_id:Cookies("user_id"),order_id:response.data.id} });
+          this.$router.push({ name: "Success", params: {order_id:response.data.id} });
         })
         .catch((err) => {
-          this.errors.push("Something went wrong. Please try again.");
+          this.errors['checkout'] = err.message
         });
 
       // We need to set loading off because we initially set it true in submit_shipping_details
       this.$store.commit("setIsLoading", false);
     },
+    continue_purchase(){
+      this.active_email = !this.active_email
+      this.continue_order = !this.continue_order
+      console.log(this.active_email)
+      this.submit_shipping_details()
+    }
   },
   created() {
     // We are going to set our model countries to the our country objects

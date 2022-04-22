@@ -89,6 +89,7 @@ const routes = [
     path: "/reset_password/",
     name: "ResetPassword",
     component: ResetPassword, // This will grab the email and send an email with the reset link
+    props: true
   },
   {
     path: "/password/reset/confirm/:uid/:token",
@@ -151,7 +152,7 @@ const routes = [
     component: Checkout,
   },
   {
-    path: "/cart/checkout/:user_id/order/:order_id/success/",
+    path: "/cart/checkout/order/:order_id/success/",
     name: "Success",
     component: Success,
   },
@@ -161,7 +162,7 @@ const routes = [
     component: Orders,
   },
   {
-    path: "/profile/:id/order/:order_number/",
+    path: "/profile/order/:order_number/",
     name: "IndividualOrder",
     component: IndividualOrder,
   },

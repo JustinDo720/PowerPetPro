@@ -69,6 +69,13 @@ import { toast } from "bulma-toast";
 
 export default {
   name: "ResetPassword",
+  props:{
+    registered_email: {
+      type: String,
+      required: false,
+      default: '',
+    }
+  },
   data() {
     return {
       user_email: "",
@@ -107,5 +114,10 @@ export default {
       }
     },
   },
+  created(){
+    if(this.registered_email){
+      this.user_email = this.registered_email
+    }
+  }
 };
 </script>

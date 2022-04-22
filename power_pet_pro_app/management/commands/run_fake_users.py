@@ -44,11 +44,12 @@ class Command(BaseCommand):
                 # We are going to set this user as superuser
                 if name.lower() == 'justi':
                     # Creating Admin User Instance
-                    admin_user = CustomUser.objects.create_user(username=name, password=DEFAULT_PASSWORD,
+                    # We need to add email asap if not users_customuser.email will have integrityError
+                    email = 'justindo720@gmail.com'
+                    admin_user = CustomUser.objects.create_user(username=name, password=DEFAULT_PASSWORD, email=email,
                                                                 is_superuser=True, is_staff=True)
                     admin_user.first_name = 'Justin'
                     admin_user.last_name = 'Do'
-                    admin_user.email = 'justindo720@gmail.com'
                     admin_user.save()
 
                     # Profile User
@@ -64,10 +65,10 @@ class Command(BaseCommand):
                     print(admin_user)
                 else:
                     # Creating Default User Instance
-                    default_user = CustomUser.objects.create_user(username=name, password=DEFAULT_PASSWORD)
+                    email = fake.unique.email()
+                    default_user = CustomUser.objects.create_user(username=name, password=DEFAULT_PASSWORD, email=email)
                     default_user.first_name = fake.first_name()
                     default_user.last_name = fake.last_name()
-                    default_user.email = fake.unique.email()
                     default_user.save()
 
                     # Profile User

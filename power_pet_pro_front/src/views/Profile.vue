@@ -316,7 +316,6 @@
                     v-model="user_profile[index]"
                     :disabled="
                       index === 'date_joined' ||
-                      index === 'email' ||
                       index === 'username'
                     "
                   />

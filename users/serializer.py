@@ -7,7 +7,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     # creating the SerializerMethodField and grabbing value from function called get_username
     # REMOVED: trailing fields for easy index display on front end
     username = serializers.SerializerMethodField('get_username')
-    email = serializers.SerializerMethodField('get_email')
     feedback = serializers.SerializerMethodField('get_feedback')
     is_staff = serializers.SerializerMethodField('get_is_staff')
 
@@ -15,11 +14,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         # Profile getting the instance we can use to retrieve the username
         username = profile.user.username
         return username
-
-    def get_email(self, profile):
-        # Profile getting the instance we can use to retrieve the email
-        email = profile.user.email
-        return email
 
     def get_feedback(self, profile):
         # We are going to return feedback which could be null so

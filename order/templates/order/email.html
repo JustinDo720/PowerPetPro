@@ -2,16 +2,21 @@
 <html lang="en">
     <body>
         <div>
-            <h3>
-                Hello {{ user_profile.first_name }} {{ user_profile.last_name }}!!
-            </h3>
+            {% if user_profile %}
+                <h3>
+                    Hello {{ user_profile.first_name }} {{ user_profile.last_name }}!!
+                </h3>
+            {% elif user_email %}
+                <h3>
+                    Hello {{ user_email }}!!
+                </h3>
+            {% endif %}
         </div>
         <div>
             <p>
                 Thank you for purchasing from PowerPetPro. We are pleased to announce that we have received your order
                 <a href="{{ order_link }}">
-                    {{ order_number }}
-                </a>. You could view your order by clicking the order number or this link:
+                    {{ order_number }}</a>. You could view your order by clicking the order number or this link:
                 <a href="{{ order_link }}">
                     {{ order_link }}
                 </a>. There, you could view all of your items, shipping address and so forth. If there are any issues,
@@ -27,17 +32,17 @@
                 </i>
             </p>
         </div>
+        <div class="center-div">
+            <a href="{{ feedback_link }}" class="button">
+                Submit Feedback
+            </a>
+        </div>
         <br>
         <div>
             <p>
                 Huge thanks for joining the process,<br>
                 Justin Do &#128540;
             </p>
-        </div>
-        <div class="center-div">
-            <a href="{{ feedback_link }}" class="button">
-                Submit Feedback
-            </a>
         </div>
 
     </body>
