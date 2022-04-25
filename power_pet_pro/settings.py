@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'corsheaders',
     'order',
+    'storages',
 
     # Default Django Apps
     'django.contrib.admin',
@@ -240,3 +241,47 @@ FRONTEND_BASE_URL = 'http://localhost:8080/'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 STRIPE_SECRET_KEY = os.getenv('POWER_PET_PRO_STRIPE_SECRET_TEST_KEY')
+
+# AWS S3 Config
+AWS_ACCESS_KEY_ID = os.getenv('POWER_PET_PRO_S3_ACCESS_KEY')
+AWS_SECRET_ACCESS_KEY = os.getenv('POWER_PET_PRO_S3_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('POWER_PET_PRO_S3_BUCKET_NAME')
+
+AWS_S3_FILE_OVERWRITE = False   # We are just going to give the file a different name
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+
+'''
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+<CORSRule>
+    <AllowedOrigin>*</AllowedOrigin>
+    <AllowedMethod>GET</AllowedMethod>
+    <AllowedMethod>POST</AllowedMethod>
+    <AllowedMethod>PUT</AllowedMethod>
+    <AllowedHeader>*</AllowedHeader>
+</CORSRule>
+</CORSConfiguration>
+'''
+
+'''
+CORS in JSON format
+[
+    {
+        "AllowedHeaders": [
+            "*"
+        ],
+        "AllowedMethods": [
+            "GET",
+            "HEAD",
+            "POST",
+            "PUT"
+        ],
+        "AllowedOrigins": [
+            "*"
+        ],
+        "ExposeHeaders": []
+    }
+]
+'''

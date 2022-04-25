@@ -57,7 +57,7 @@ class Product(models.Model):
     description = models.TextField(blank=True, null=True)
     price = models.DecimalField(max_digits=6, decimal_places=2)
     image = models.ImageField(upload_to='product_image/', blank=True, null=True)
-    thumbnail = models.ImageField(upload_to='product_image/', blank=True, null=True)
+    thumbnail = models.ImageField(upload_to='product_thumbnail/', blank=True, null=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -72,27 +72,29 @@ class Product(models.Model):
 
     def get_image(self):
         if self.image:
-            return 'http://127.0.0.1:8000' + self.image.url
+            return self.image.url
         else:
             return ''
 
     def get_image_name(self):
         if self.image:
-            image_split = self.image.url.split('/')     # ['', media, product_image, image_name]
-            return image_split[3]   # getting the image_name NOTE: take into considering to trailing slash
+            image_split = self.image.url.split('/')     # ['', media, product_image, image_name_with_aws]
+            print(image_split)
+            image_aws_name = image_split[4].split('?')      # [image_name, aws_config]
+            return image_aws_name[0]
         else:
             return ""
 
     def get_thumbnail(self):
         if self.thumbnail:
-            return 'http://127.0.0.1:8000' + self.thumbnail.url
+            return self.thumbnail.url
         else:
             if self.image:
                 # Our function make_thumbnail will use pillow etc to resize
                 self.thumbnail = self.make_thumbnail(self.image)
                 self.save()
 
-                return 'http://127.0.0.1:8000' + self.thumbnail.url
+                return self.thumbnail.url
             else:
                 return ''
 
